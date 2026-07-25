@@ -61,13 +61,14 @@ Download TXT
 
 
 </div>
+
+
 <script>
 
 let hasilTXT = "";
 
-function bacaFile(){
 
-hasilTXT = skuUnik.join("\n");
+function bacaFile(){
 
 let file = document.getElementById("file").files[0];
 
@@ -106,6 +107,10 @@ let sku = baris.map(function(data){
 let skuUnik = [...new Set(sku)];
 
 
+// Simpan hasil untuk download
+hasilTXT = skuUnik.join("\n");
+
+
 // Hitung duplicate
 let duplicate = sku.length - skuUnik.length;
 
@@ -142,6 +147,9 @@ ${duplicate}
 reader.readAsText(file);
 
 }
+
+
+
 function downloadTXT(){
 
 if(hasilTXT==""){
@@ -165,6 +173,8 @@ link.download = "hasil_stock_opname.txt";
 link.click();
 
 }
+
+
 </script>
 
 </body>
