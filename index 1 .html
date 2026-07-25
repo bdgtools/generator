@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Generate Itemize Stock Opname</title>
+
+<style>
+body{
+  font-family: Arial;
+  padding:20px;
+}
+
+h2{
+  color:#333;
+}
+
+textarea{
+  width:100%;
+  height:150px;
+}
+
+button{
+  padding:10px 20px;
+  cursor:pointer;
+}
+
+table{
+  margin-top:20px;
+  border-collapse:collapse;
+  width:100%;
+}
+
+td,th{
+  border:1px solid #ccc;
+  padding:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Generate Itemize Stock Opname</h2>
+
+<p>
+Masukkan data barcode:
+</p>
+
+<textarea id="inputData" placeholder="Contoh:
+899999001
+899999002
+899999003">
+</textarea>
+
+<br><br>
+
+<button onclick="generate()">
+Generate
+</button>
+
+
+<h3>Result</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>No</th>
+<th>Barcode</th>
+</tr>
+</thead>
+
+<tbody id="hasil">
+
+</tbody>
+
+</table>
+
+
+<script>
+
+function generate(){
+
+let data=document
+.getElementById("inputData")
+.value
+.trim()
+.split("\n");
+
+
+let hasil="";
+
+
+data.forEach((item,index)=>{
+
+hasil += `
+<tr>
+<td>${index+1}</td>
+<td>${item}</td>
+</tr>
+`;
+
+});
+
+
+document.getElementById("hasil").innerHTML=hasil;
+
+
+}
+
+</script>
+
+
+</body>
+</html>
