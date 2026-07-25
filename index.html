@@ -147,9 +147,31 @@ th{
 
 
 <body>
+<div id="loginPage" class="container">
 
+<h1>Stock Balance Check Generator</h1>
 
-<div class="container">
+<div class="box">
+
+<h3>Login</h3>
+
+<label>Store Code</label><br>
+<input type="text" id="storeCode" placeholder="Contoh: JW2001"
+style="width:100%;padding:10px;margin-bottom:10px;">
+
+<label>Password</label><br>
+<input type="password" id="password" placeholder="Password"
+style="width:100%;padding:10px;">
+
+<button onclick="login()" style="margin-top:20px;">
+LOGIN
+</button>
+
+<p id="loginMsg" style="color:red;"></p>
+
+</div>
+
+<div class="container" id="mainPage" style="display:none;">
 
 
 <h1>Stock Balance Check Generator</h1>
@@ -612,6 +634,26 @@ row.style.display="none";
 
 });
 
+
+}
+function login(){
+
+const store = document.getElementById("storeCode").value.trim().toUpperCase();
+
+const pass = document.getElementById("password").value.trim();
+
+if(store==="JW2001" && pass==="CHPL"){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("mainPage").style.display="block";
+
+}
+else{
+
+document.getElementById("loginMsg").innerHTML="Store Code atau Password salah.";
+
+}
 
 }
 
