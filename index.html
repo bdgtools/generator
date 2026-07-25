@@ -1,77 +1,12 @@
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Website</title>
+</head>
 
-function processFile(){
+<body>
+<h1>Stock Opname Generator</h1>
+<p>Website berjalan</p>
+</body>
 
-  const file = document.getElementById("fileInput").files[0];
-
-  if(!file){
-    alert("Silahkan pilih file terlebih dahulu");
-    return;
-  }
-
-
-  const reader = new FileReader();
-
-
-  reader.onload = function(e){
-
-    let text = e.target.result;
-
-
-    // Pecah data per baris
-    let rows = text.split(/\r?\n/).filter(row => row.trim() !== "");
-
-
-    // Ambil kolom pertama sebagai SKU
-    let skuList = rows.map(row => {
-
-      let cols = row.split(",");
-
-      return cols[0].trim();
-
-    });
-
-
-    // Hitung SKU unik
-    let uniqueSKU = [...new Set(skuList)];
-
-
-    // Hitung duplicate
-    let duplicate = skuList.length - uniqueSKU.length;
-
-
-
-    document.getElementById("result").innerHTML =
-    `
-    <b>Hasil Proses</b>
-    <hr>
-
-    Nama File :
-    ${file.name}
-
-    <br><br>
-
-    Total Data :
-    ${rows.length}
-
-    <br>
-
-    Total SKU Unik :
-    ${uniqueSKU.length}
-
-    <br>
-
-    Duplicate SKU :
-    ${duplicate}
-
-    `;
-
-
-  };
-
-
-  reader.readAsText(file);
-
-}
-
-</script>
+</html>
