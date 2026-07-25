@@ -6,6 +6,63 @@
 
 <style>
 
+.summary{
+  display:flex;
+  gap:15px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+
+.card{
+  flex:1;
+  min-width:150px;
+  padding:15px;
+  border-radius:8px;
+  text-align:center;
+  font-weight:bold;
+}
+
+
+.total{
+  background:#eee;
+}
+
+
+.sesuai{
+  background:#d4edda;
+  color:green;
+}
+
+
+.lebih{
+  background:#fff3cd;
+  color:#b88600;
+}
+
+
+.kurang{
+  background:#f8d7da;
+  color:red;
+}
+.plus{
+  color:#b88600;
+  background:#fff3cd;
+  font-weight:bold;
+}
+
+.minus{
+  color:red;
+  background:#f8d7da;
+  font-weight:bold;
+}
+
+.sama{
+  color:green;
+  background:#d4edda;
+  font-weight:bold;
+}
+
 body{
   font-family: Arial, sans-serif;
   padding:30px;
@@ -79,7 +136,7 @@ th{
 
 <h3>1. Upload Scan Fisik</h3>
 
-<input type="file" id="fisikFile">
+<input type="file" id="fisikFile" multiple>
 
 </div>
 
@@ -100,6 +157,8 @@ GENERATE
 </button>
 
 
+
+<div id="summary"></div>
 
 <div id="hasil"></div>
 
@@ -241,23 +300,51 @@ reader.readAsText(file);
 
 async function generateData(){
 
-
-let fisik=document.getElementById("fisikFile").files[0];
+let fisikFiles=document.getElementById("fisikFile").files;
 
 let sistem=document.getElementById("sistemFile").files[0];
 
 
-if(!fisik || !sistem){
+if(fisikFiles.length==0 || !sistem){
 
-alert("Upload kedua file terlebih dahulu");
+alert("Upload file fisik dan sistem terlebih dahulu");
 
 return;
 
 }
 
 
+// gabungkan semua file fisik
 
-dataFisik=await bacaFisik(fisik);
+dataFisik={};
+
+
+for(let i=0;i<fisikFiles.length;i++){
+
+let hasil = await bacaFisik(fisikFiles[i]);
+
+
+Object.keys(hasil).forEach(sku=>{
+
+
+if(!dataFisik[sku]){
+
+dataFisik[sku]=hasil[sku];
+
+}
+else{
+
+dataFisik[sku].qty += hasil[sku].qty;
+
+}
+
+
+});
+
+
+}
+
+
 
 dataSistem=await bacaSistem(sistem);
 
@@ -274,6 +361,11 @@ tampilkan();
 
 function tampilkan(){
 
+let totalSKU = Object.keys(dataFisik).length;
+
+let sesuai = 0;
+let lebih = 0;
+let kurang = 0;
 
 let html=`
 
@@ -285,6 +377,7 @@ let html=`
 <th>Rack Number</th>
 <th>Fisik</th>
 <th>Sistem</th>
+<th>Selisih</th>
 <th>Deskripsi</th>
 
 </tr>
@@ -299,7 +392,35 @@ Object.keys(dataFisik).forEach(sku=>{
 let fisik=dataFisik[sku];
 
 let sistem=dataSistem[sku] || {};
+let qtySistem = Number(sistem.system) || 0;
 
+let selisih = fisik.qty - qtySistem;
+
+
+if(selisih == 0){
+  sesuai++;
+}
+else if(selisih > 0){
+  lebih++;
+}
+else{
+  kurang++;
+}
+
+let selisih = fisik.qty - (Number(sistem.system) || 0);
+
+
+let warna = "";
+
+if(selisih > 0){
+warna="plus";
+}
+else if(selisih < 0){
+warna="minus";
+}
+else{
+warna="sama";
+}
 
 
 html+=`
@@ -310,9 +431,13 @@ html+=`
 
 <td>${fisik.rack}</td>
 
-<td>${fisik.qty}</td>
+<td class="${warna}">
+${selisih}
+</td>
 
 <td>${sistem.system || 0}</td>
+
+<td>${fisik.qty - (Number(sistem.system) || 0)}</td>
 
 <td>${sistem.desc || "-"}</td>
 
@@ -327,6 +452,39 @@ html+=`
 
 html+=`</table>`;
 
+document.getElementById("summary").innerHTML =
+
+`
+
+<div class="summary">
+
+<div class="card total">
+Total SKU<br>
+${totalSKU}
+</div>
+
+
+<div class="card sesuai">
+Sesuai (0)<br>
+${sesuai}
+</div>
+
+
+<div class="card lebih">
+Lebih (+)<br>
+${lebih}
+</div>
+
+
+<div class="card kurang">
+Kurang (-)<br>
+${kurang}
+</div>
+
+
+</div>
+
+`;
 
 document.getElementById("hasil").innerHTML=html;
 
