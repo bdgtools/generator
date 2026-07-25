@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>Stock Opname Generator</title>
+<title>Stock Balance Check Generator</title>
 
 <style>
 
@@ -108,15 +108,33 @@ table{
 
 th,td{
   border:1px solid #ccc;
-  padding:8px;
+  padding:4px 6px;
   text-align:center;
+  font-size:12px;
 }
 
 
 th{
-  background:#eee;
+  font-size:12px;
+  white-space:nowrap;
+}
+#hasilContainer{
+  margin-top:20px;
+  max-height:500px;
+  overflow-y:auto;
+  border:1px solid #ddd;
 }
 
+
+#hasilContainer table{
+  margin-top:0;
+}
+
+
+#hasilContainer thead{
+  position:sticky;
+  top:0;
+}
 
 </style>
 
@@ -129,7 +147,7 @@ th{
 <div class="container">
 
 
-<h1>Stock Opname Generator</h1>
+<h1>Stock Balance Check Generator</h1>
 
 
 <div class="box">
@@ -156,11 +174,37 @@ th{
 GENERATE
 </button>
 
-
-
 <div id="summary"></div>
 
+
+<div style="margin-top:20px">
+
+<input 
+type="text" 
+id="search"
+placeholder="Cari SKU atau Deskripsi..."
+onkeyup="filterTabel()"
+style="padding:10px;width:250px;"
+>
+
+
+<select id="filter" onchange="filterTabel()" style="padding:10px">
+
+<option value="all">Semua</option>
+<option value="plus">Lebih (+)</option>
+<option value="minus">Kurang (-)</option>
+<option value="sama">Sesuai (0)</option>
+
+</select>
+
+</div>
+
+
+<div id="hasilContainer">
+
 <div id="hasil"></div>
+
+</div>
 
 
 </div>
@@ -371,6 +415,8 @@ let html=`
 
 <table>
 
+<thead>
+
 <tr>
 
 <th>SKU</th>
@@ -382,8 +428,27 @@ let html=`
 
 </tr>
 
+</thead>
+
+<tbody>
+
+</tr>
+
 `;
-Object.keys(dataFisik).forEach(sku=>{
+Object.keys(dataFisik)
+.sort((a,b)=>{
+
+return dataFisik[a].rack.localeCompare(
+dataFisik[b].rack,
+undefined,
+{
+numeric:true,
+sensitivity:"base"
+}
+);
+
+})
+.forEach(sku=>{
 
 
 let fisik=dataFisik[sku];
@@ -421,8 +486,11 @@ else{
 }
 
 
-
 html+=`
+
+</tbody>
+
+</table>`;`
 
 <tr>
 
@@ -486,7 +554,65 @@ document.getElementById("hasil").innerHTML=html;
 
 
 }
+function filterTabel(){
 
+let keyword = document
+.getElementById("search")
+.value
+.toLowerCase();
+
+
+let filter = document
+.getElementById("filter")
+.value;
+
+
+let rows = document
+.querySelectorAll("#hasil table tr");
+
+
+rows.forEach((row,index)=>{
+
+
+if(index==0) return;
+
+
+let text=row.innerText.toLowerCase();
+
+
+let cocokCari=text.includes(keyword);
+
+
+let cocokFilter=true;
+
+
+if(filter!="all"){
+
+let selisihCell=row.children[4];
+
+
+cocokFilter=
+selisihCell.classList.contains(filter);
+
+}
+
+
+if(cocokCari && cocokFilter){
+
+row.style.display="";
+
+}
+else{
+
+row.style.display="none";
+
+}
+
+
+});
+
+
+}
 
 </script>
 
