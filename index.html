@@ -29,19 +29,19 @@
 }
 
 
-.sesuai{
+.tally{
   background:#d4edda;
   color:green;
 }
 
 
-.lebih{
+.extra{
   background:#fff3cd;
   color:#b88600;
 }
 
 
-.kurang{
+.short{
   background:#f8d7da;
   color:red;
 }
@@ -196,9 +196,9 @@ style="padding:10px;width:250px;"
 <select id="filter" onchange="filterTabel()" style="padding:10px">
 
 <option value="all">Semua</option>
-<option value="plus">Lebih (+)</option>
-<option value="minus">Kurang (-)</option>
-<option value="sama">Sesuai (0)</option>
+<option value="plus">extra (+)</option>
+<option value="minus">short (-)</option>
+<option value="sama">tally (0)</option>
 
 </select>
 
@@ -356,7 +356,7 @@ let sistem=document.getElementById("sistemFile").files[0];
 
 if(fisikFiles.length==0 || !sistem){
 
-alert("Upload file fisik dan sistem terlebih dahulu");
+alert("Upload file fisik dan sistem terextra dahulu");
 
 return;
 
@@ -412,9 +412,9 @@ function tampilkan(){
 
 let totalSKU = Object.keys(dataFisik).length;
 
-let sesuai = 0;
-let lebih = 0;
-let kurang = 0;
+let tally = 0;
+let extra = 0;
+let short = 0;
 
 let html=`
 
@@ -465,13 +465,13 @@ let selisih = fisik.qty - qtySistem;
 
 
 if(selisih == 0){
-  sesuai++;
+  tally++;
 }
 else if(selisih > 0){
-  lebih++;
+  extra++;
 }
 else{
-  kurang++;
+  short++;
 }
 
 
@@ -529,21 +529,21 @@ ${totalSKU}
 </div>
 
 
-<div class="card sesuai">
-Sesuai (0)<br>
-${sesuai}
+<div class="card tally">
+tally (0)<br>
+${tally}
 </div>
 
 
-<div class="card lebih">
-Lebih (+)<br>
-${lebih}
+<div class="card extra">
+extra (+)<br>
+${extra}
 </div>
 
 
-<div class="card kurang">
-Kurang (-)<br>
-${kurang}
+<div class="card short">
+short (-)<br>
+${short}
 </div>
 
 
