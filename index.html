@@ -63,7 +63,11 @@ Download TXT
 </div>
 <script>
 
+let hasilTXT = "";
+
 function bacaFile(){
+
+hasilTXT = skuUnik.join("\n");
 
 let file = document.getElementById("file").files[0];
 
@@ -138,7 +142,29 @@ ${duplicate}
 reader.readAsText(file);
 
 }
+function downloadTXT(){
 
+if(hasilTXT==""){
+alert("Belum ada data");
+return;
+}
+
+
+let blob = new Blob(
+[hasilTXT],
+{type:"text/plain"}
+);
+
+
+let link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+
+link.download = "hasil_stock_opname.txt";
+
+link.click();
+
+}
 </script>
 
 </body>
