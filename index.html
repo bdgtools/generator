@@ -4,15 +4,107 @@
 
 <title>Stock Opname Generator</title>
 
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  padding: 40px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+#hasil {
+  margin-top: 20px;
+  text-align: left;
+}
+</style>
+
 </head>
 
 <body>
 
+<div class="container">
+
 <h1>Stock Opname Generator</h1>
 
-<p>Website sudah kembali normal</p>
+<p>Pilih file TXT hasil stock opname</p>
 
-<input type="file">
+<input type="file" id="file">
+
+<br>
+
+<button onclick="bacaFile()">
+Baca File
+</button>
+
+
+<div id="hasil">
+</div>
+
+
+</div>
+
+
+<script>
+
+function bacaFile(){
+
+let file = document.getElementById("file").files[0];
+
+
+if(!file){
+alert("Pilih file terlebih dahulu");
+return;
+}
+
+
+let reader = new FileReader();
+
+
+reader.onload = function(e){
+
+let isi = e.target.result;
+
+
+let jumlahBaris = isi.split(/\r?\n/).filter(x=>x.trim()!="").length;
+
+
+document.getElementById("hasil").innerHTML =
+
+`
+<h3>Hasil:</h3>
+
+Nama File :
+${file.name}
+
+<br><br>
+
+Jumlah Baris :
+${jumlahBaris}
+
+`;
+
+};
+
+
+reader.readAsText(file);
+
+}
+
+</script>
+
 
 </body>
 </html>
