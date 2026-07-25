@@ -118,7 +118,6 @@ button:hover{
 
 }
 
-
 .total{
  background:#111;
  color:white;
@@ -130,18 +129,15 @@ button:hover{
  color:#111;
 }
 
-
 .extra{
  background:#fff3cd;
  color:#8a6500;
 }
 
-
 .short{
  background:#dc3545;
  color:white;
 }
-
 
 table{
 
@@ -151,7 +147,6 @@ table{
 
 }
 
-
 th{
 
  background:#111;
@@ -160,14 +155,12 @@ th{
 
 }
 
-
 td{
 
  padding:8px;
  border:1px solid #ddd;
 
 }
-
 
 .plus{
 
@@ -177,7 +170,6 @@ td{
 
 }
 
-
 .minus{
 
  background:#dc3545;
@@ -186,7 +178,6 @@ td{
 
 }
 
-
 .sama{
 
  background:#d4edda;
@@ -194,21 +185,23 @@ td{
  font-weight:bold;
 
 }
-
-
-#hasilContainer{
-  margin-top:20px;
-  max-height:500px;
-  overflow-y:auto;
-  border:1px solid #ddd;
+  
+#hasilContainer table{
+  width:100%;
 }
 
 
-#hasilContainer thead{
+#hasilContainer thead th{
+
   position:sticky;
   top:0;
-  z-index:10;
+  background:#111;
+  color:white;
+  z-index:5;
+  padding:10px;
+
 }
+
 
 #hasilContainer th{
   background:white;
@@ -218,12 +211,31 @@ td{
   position:sticky;
   top:0;
 }
+.actionBtn{
+  height:42px;
+  padding:0 20px;
+  border-radius:8px;
+  font-weight:bold;
+  border:none;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+
+.generateBtn{
+  background:#111;
+  color:white;
+}
+
+
 .downloadBtn{
   background:#FFD400;
   color:#111;
-  font-weight:bold;
   border:2px solid #111;
 }
+
 
 </style>
 
@@ -297,14 +309,14 @@ td{
 
   </div>
 
-
-  <button onclick="generateData()">
-    Generate
-  </button>
-  
-  <button class="downloadBtn" onclick="downloadExcel()">
-⬇ Download Variance (.xlsx)
+ <button class="actionBtn generateBtn" onclick="generateData()">
+  GENERATE
 </button>
+
+<button class="actionBtn downloadBtn" onclick="downloadExcel()">
+  ⬇ Download Variance (.xlsx)
+</button>
+
 
   <div id="summary"></div>
 
@@ -527,23 +539,10 @@ dataSistem=await bacaSistem(sistem);
 
 
 
-tampilkan();
-
-
-
-}
-
-
 
 
 function tampilkan(){
-
-let totalSKU = Object.keys(dataFisik).length;
-
-let tally = 0;
-let extra = 0;
-let short = 0;
-
+tampilkan();
 let html=`
 
 <table>
@@ -554,16 +553,26 @@ let html=`
 
 <th>SKU</th>
 <th>Rack Number</th>
-<th>Fisik</th>
-<th>Sistem</th>
-<th>Selisih</th>
-<th>Deskripsi</th>
+<th>Physics</th>
+<th>System</th>
+<th>Variance</th>
+<th>Description</th>
 
 </tr>
 
 </thead>
 
 <tbody>
+
+`;
+
+}
+
+let totalSKU = Object.keys(dataFisik).length;
+
+let tally = 0;
+let extra = 0;
+let short = 0;
 
 `;
 Object.keys(dataFisik)
