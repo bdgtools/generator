@@ -2,9 +2,97 @@
 <html>
 <head>
 
-<title>Stock Balance Check Generator</title>
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<h1>
+Stock Balance Check Generator
+</h1>
+
+</div>
 
 <style>
+  
+body{
+  font-family:'Arial', sans-serif;
+  padding:30px;
+  background:#111;
+}
+
+
+.container{
+  background:white;
+  max-width:950px;
+  margin:auto;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.25);
+}
+
+
+h1{
+  text-align:center;
+  color:#111;
+  font-size:28px;
+}
+
+
+.header{
+  background:#FFD400;
+  padding:20px;
+  border-radius:15px 15px 0 0;
+  text-align:center;
+}
+
+
+.logo{
+  width:150px;
+  margin-bottom:10px;
+}
+
+
+.box{
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  border:2px solid #FFD400;
+  background:#fff;
+}
+
+
+label{
+  font-weight:bold;
+  color:#111;
+}
+
+
+input, select{
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+
+
+button{
+
+  background:#111;
+  color:white;
+  border:none;
+  padding:12px 25px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+
+}
+
+
+button:hover{
+
+  background:#FFD400;
+  color:#111;
+
+}
+
 
 .summary{
   display:flex;
@@ -15,109 +103,95 @@
 
 
 .card{
+
   flex:1;
-  min-width:150px;
-  padding:15px;
-  border-radius:8px;
+  min-width:160px;
+  padding:20px;
+  border-radius:12px;
   text-align:center;
   font-weight:bold;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+
 }
 
 
 .total{
-  background:#eee;
+ background:#111;
+ color:white;
 }
 
 
 .tally{
-  background:#d4edda;
-  color:green;
+ background:#FFD400;
+ color:#111;
 }
 
 
 .extra{
-  background:#fff3cd;
-  color:#b88600;
+ background:#fff3cd;
+ color:#8a6500;
 }
 
 
 .short{
-  background:#f8d7da;
-  color:red;
-}
-.plus{
-  color:#b88600;
-  background:#fff3cd;
-  font-weight:bold;
-}
-
-.minus{
-  color:red;
-  background:#f8d7da;
-  font-weight:bold;
-}
-
-.sama{
-  color:green;
-  background:#d4edda;
-  font-weight:bold;
-}
-
-body{
-  font-family: Arial, sans-serif;
-  padding:30px;
-  background:#f5f5f5;
-}
-
-
-.container{
-  background:white;
-  max-width:900px;
-  margin:auto;
-  padding:25px;
-  border-radius:10px;
-}
-
-
-h1{
-  text-align:center;
-}
-
-
-.box{
-  margin-top:20px;
-  padding:15px;
-  border:1px solid #ddd;
-  border-radius:8px;
-}
-
-
-button{
-  padding:10px 20px;
-  margin-top:15px;
-  cursor:pointer;
+ background:#dc3545;
+ color:white;
 }
 
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-}
 
+ width:100%;
+ border-collapse:collapse;
+ margin-top:20px;
 
-th,td{
-  border:1px solid #ccc;
-  padding:4px 6px;
-  text-align:center;
-  font-size:12px;
 }
 
 
 th{
-  font-size:12px;
-  white-space:nowrap;
+
+ background:#111;
+ color:white;
+ padding:10px;
+
 }
+
+
+td{
+
+ padding:8px;
+ border:1px solid #ddd;
+
+}
+
+
+.plus{
+
+ background:#fff3cd;
+ color:#856404;
+ font-weight:bold;
+
+}
+
+
+.minus{
+
+ background:#dc3545;
+ color:white;
+ font-weight:bold;
+
+}
+
+
+.sama{
+
+ background:#d4edda;
+ color:#155724;
+ font-weight:bold;
+
+}
+
+
 #hasilContainer{
   margin-top:20px;
   max-height:500px;
