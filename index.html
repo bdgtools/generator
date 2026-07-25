@@ -5,177 +5,337 @@
 <title>Stock Opname Generator</title>
 
 <style>
-body {
-  font-family: Arial;
-  text-align: center;
-  padding: 40px;
+
+body{
+  font-family: Arial, sans-serif;
+  padding:30px;
+  background:#f5f5f5;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  padding: 25px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+
+.container{
+  background:white;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  border-radius:10px;
 }
 
-button {
-  padding: 10px 20px;
-  margin-top: 15px;
-  cursor: pointer;
+
+h1{
+  text-align:center;
 }
 
-#hasil {
-  margin-top: 20px;
-  text-align: left;
+
+.box{
+  margin-top:20px;
+  padding:15px;
+  border:1px solid #ddd;
+  border-radius:8px;
 }
+
+
+button{
+  padding:10px 20px;
+  margin-top:15px;
+  cursor:pointer;
+}
+
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+
+th,td{
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+}
+
+
+th{
+  background:#eee;
+}
+
+
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
+
 <h1>Stock Opname Generator</h1>
 
-<p>Pilih file TXT hasil stock opname</p>
 
-<input type="file" id="file">
+<div class="box">
 
-<br>
+<h3>1. Upload Scan Fisik</h3>
 
-<button onclick="bacaFile()">
-Baca File
+<input type="file" id="fisikFile">
+
+</div>
+
+
+
+<div class="box">
+
+<h3>2. Upload TXT Sistem</h3>
+
+<input type="file" id="sistemFile">
+
+</div>
+
+
+
+<button onclick="generateData()">
+GENERATE
 </button>
 
 
-<div id="hasil">
-</div>
 
-<br>
-
-<button onclick="downloadTXT()">
-Download TXT
-</button>
+<div id="hasil"></div>
 
 
 </div>
+
 
 
 <script>
 
-let hasilTXT = "";
+
+let dataFisik = {};
+let dataSistem = {};
 
 
-function bacaFile(){
 
-let file = document.getElementById("file").files[0];
+// membaca file fisik
 
+function bacaFisik(file){
 
-if(!file){
-alert("Pilih file terlebih dahulu");
-return;
-}
+return new Promise((resolve)=>{
 
 
 let reader = new FileReader();
 
 
-reader.onload = function(e){
-
-let isi = e.target.result;
+reader.onload=function(e){
 
 
-// Pisahkan per baris
-let baris = isi
+let rows=e.target.result
 .split(/\r?\n/)
-.filter(x => x.trim() !== "");
+.filter(x=>x.trim()!="");
 
 
-// Ambil SKU kolom pertama
-let sku = baris.map(function(data){
+let hasil={};
 
-    let kolom = data.split(",");
 
-    return kolom[0].trim();
+rows.forEach(row=>{
+
+
+let col=row.split(",");
+
+
+let rack=col[0].trim();
+let sku=col[1].trim();
+let qty=Number(col[2]);
+
+
+if(!hasil[sku]){
+
+hasil[sku]={
+rack:rack,
+qty:0
+};
+
+}
+
+
+hasil[sku].qty += qty;
+
 
 });
 
 
-// Hitung SKU unik
-let skuUnik = [...new Set(sku)];
+resolve(hasil);
 
-
-// Simpan hasil untuk download
-hasilTXT = skuUnik.join("\n");
-
-
-// Hitung duplicate
-let duplicate = sku.length - skuUnik.length;
-
-
-
-document.getElementById("hasil").innerHTML =
-
-`
-<h3>Hasil Stock Opname</h3>
-
-Nama File :
-${file.name}
-
-<br><br>
-
-Total Data :
-${baris.length}
-
-<br>
-
-Total SKU Unik :
-${skuUnik.length}
-
-<br>
-
-Duplicate SKU :
-${duplicate}
-
-`;
 
 };
 
 
 reader.readAsText(file);
 
+
+});
+
+
 }
 
 
 
-function downloadTXT(){
 
-if(hasilTXT==""){
-alert("Belum ada data");
+// membaca file sistem
+
+function bacaSistem(file){
+
+return new Promise((resolve)=>{
+
+
+let reader=new FileReader();
+
+
+reader.onload=function(e){
+
+
+let rows=e.target.result
+.split(/\r?\n/)
+.filter(x=>x.trim()!="");
+
+
+let hasil={};
+
+
+rows.forEach(row=>{
+
+
+let col=row.split(",");
+
+
+let sku=col[0].trim();
+
+
+hasil[sku]={
+
+system:col[3],
+desc:col[8]
+
+};
+
+
+});
+
+
+resolve(hasil);
+
+
+};
+
+
+reader.readAsText(file);
+
+
+});
+
+}
+
+
+
+
+
+async function generateData(){
+
+
+let fisik=document.getElementById("fisikFile").files[0];
+
+let sistem=document.getElementById("sistemFile").files[0];
+
+
+if(!fisik || !sistem){
+
+alert("Upload kedua file terlebih dahulu");
+
 return;
+
 }
 
 
-let blob = new Blob(
-[hasilTXT],
-{type:"text/plain"}
-);
+
+dataFisik=await bacaFisik(fisik);
+
+dataSistem=await bacaSistem(sistem);
 
 
-let link = document.createElement("a");
 
-link.href = URL.createObjectURL(blob);
+tampilkan();
 
-link.download = "hasil_stock_opname.txt";
 
-link.click();
+
+}
+
+
+
+
+function tampilkan(){
+
+
+let html=`
+
+<table>
+
+<tr>
+
+<th>SKU</th>
+<th>Rack Number</th>
+<th>Fisik</th>
+<th>Sistem</th>
+<th>Deskripsi</th>
+
+</tr>
+
+`;
+
+
+
+Object.keys(dataFisik).forEach(sku=>{
+
+
+let fisik=dataFisik[sku];
+
+let sistem=dataSistem[sku] || {};
+
+
+
+html+=`
+
+<tr>
+
+<td>${sku}</td>
+
+<td>${fisik.rack}</td>
+
+<td>${fisik.qty}</td>
+
+<td>${sistem.system || 0}</td>
+
+<td>${sistem.desc || "-"}</td>
+
+</tr>
+
+`;
+
+
+});
+
+
+
+html+=`</table>`;
+
+
+document.getElementById("hasil").innerHTML=html;
+
 
 }
 
 
 </script>
+
 
 </body>
 </html>
