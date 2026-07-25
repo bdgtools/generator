@@ -15,21 +15,18 @@ Stock Balance Check Generator
 <style>
   
 body{
-  font-family:'Arial', sans-serif;
-  padding:30px;
+  font-family:Arial,sans-serif;
+  padding:15px;
   background:#111;
 }
-
-
 .container{
   background:white;
   max-width:950px;
   margin:auto;
-  padding:30px;
+  padding:20px;
   border-radius:15px;
   box-shadow:0 8px 25px rgba(0,0,0,0.25);
 }
-
 
 h1{
   text-align:center;
@@ -40,19 +37,25 @@ h1{
 
 .header{
   background:#FFD400;
-  padding:20px;
-  border-radius:15px 15px 0 0;
+  padding:10px;
+  border-radius:12px;
   text-align:center;
+  margin-bottom:15px;
 }
-
 
 .logo{
-  width:180px;
+  width:90px;
   height:auto;
   display:block;
-  margin:auto;
+  margin:0 auto 5px auto;
 }
 
+.header h1{
+  margin:0;
+  font-size:20px;
+  color:#111;
+}
+  
 .box{
   margin-top:20px;
   padding:20px;
@@ -215,6 +218,12 @@ td{
   position:sticky;
   top:0;
 }
+.downloadBtn{
+  background:#FFD400;
+  color:#111;
+  font-weight:bold;
+  border:2px solid #111;
+}
 
 </style>
 
@@ -290,9 +299,12 @@ td{
 
 
   <button onclick="generateData()">
-    GENERATE
+    Generate
   </button>
-
+  
+  <button class="downloadBtn" onclick="downloadExcel()">
+⬇ Download Variance (.xlsx)
+</button>
 
   <div id="summary"></div>
 
@@ -327,6 +339,8 @@ td{
 
 
 </div>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
 
@@ -728,6 +742,95 @@ row.style.display="none";
 
 
 }
+function downloadExcel(){
+
+let hasilExport = [];
+
+
+Object.keys(dataFisik).forEach(sku=>{
+
+  let fisik = dataFisik[sku];
+
+  let sistem = dataSistem[sku] || {};
+
+  let qtySistem = Number(sistem.system) || 0;
+
+  let selisih = fisik.qty - qtySistem;
+
+
+  // hanya ambil yang berbeda
+  if(selisih != 0){
+
+    hasilExport.push({
+
+      "SKU": sku,
+
+      "Rack Number": fisik.rack,
+
+      "Fisik": fisik.qty,
+
+      "Sistem": qtySistem,
+
+      "Selisih": selisih,
+
+      "Status": selisih > 0 ? "EXTRA" : "SHORT",
+
+      "Deskripsi": sistem.desc || "-"
+
+    });
+
+  }
+
+
+});
+
+
+if(hasilExport.length === 0){
+
+  alert("Tidak ada selisih. Semua SKU tally.");
+
+  return;
+
+}
+
+
+// buat excel
+
+let worksheet =
+XLSX.utils.json_to_sheet(hasilExport);
+
+
+let workbook =
+XLSX.utils.book_new();
+
+
+XLSX.utils.book_append_sheet(
+  workbook,
+  worksheet,
+  "Stock Difference"
+);
+
+
+// nama file
+
+let store =
+sessionStorage.getItem("storeCode") || "STORE";
+
+
+let tanggal =
+new Date()
+.toISOString()
+.slice(0,10);
+
+
+XLSX.writeFile(
+  workbook,
+  `Stock_Check_${store}_${tanggal}.xlsx`
+);
+
+
+}
+
 async function login(){
 
   const store = document.getElementById("storeCode").value.trim().toUpperCase();
