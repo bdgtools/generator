@@ -145,100 +145,118 @@ th{
 
 </head>
 
-
 <body>
 <div id="loginPage" class="container">
 
-<h1>Stock Balance Check Generator</h1>
+  <h1>Stock Balance Check Generator</h1>
 
-<div class="box">
+  <div class="box">
 
-<h3>Login</h3>
+    <h3>Login</h3>
 
-<label>Store Code</label><br>
-<input type="text" id="storeCode" placeholder="Contoh: JW2001"
-style="width:100%;padding:10px;margin-bottom:10px;">
+    <label>Store Code</label><br>
+    <input 
+      type="text" 
+      id="storeCode"
+      placeholder="Contoh: JW2001"
+      style="width:100%;padding:10px;margin-bottom:10px;">
 
-<label>Password</label><br>
-<input type="password" id="password" placeholder="Password"
-style="width:100%;padding:10px;">
+    <label>Password</label><br>
+    <input 
+      type="password"
+      id="password"
+      placeholder="Password"
+      style="width:100%;padding:10px;">
 
-<button onclick="login()" style="margin-top:20px;">
-LOGIN
+    <button onclick="login()" style="margin-top:20px;">
+      LOGIN
+    </button>
+
+    <p id="loginMsg" style="color:red;"></p>
+
+  </div>
+
+</div>
+
+
+<!-- MAIN PAGE -->
+
+<div id="mainPage" class="container" style="display:none;">
+
+  <h1>Stock Balance Check Generator</h1>
+  <div id="storeInfo"
+       style="text-align:center;
+              font-weight:bold;
+              color:#0066cc;
+              margin-bottom:20px;">
+  </div>
+
+  <button onclick="logout()" style="float:right;margin-top:-45px;">
+  Logout
 </button>
 
-<p id="loginMsg" style="color:red;"></p>
+<div style="clear:both;"></div>
 
-</div>
+  <div class="box">
 
-<div class="container" id="mainPage" style="display:none;">
+    <h3>1. Upload Scan Fisik</h3>
 
+    <input type="file" id="fisikFile" multiple>
 
-<h1>Stock Balance Check Generator</h1>
-
-
-<div class="box">
-
-<h3>1. Upload Scan Fisik</h3>
-
-<input type="file" id="fisikFile" multiple>
-
-</div>
+  </div>
 
 
+  <div class="box">
 
-<div class="box">
+    <h3>2. Upload File Export Shelf</h3>
 
-<h3>2. Upload File Export Shelf</h3>
+    <input type="file" id="sistemFile">
 
-<input type="file" id="sistemFile">
-
-</div>
-
+  </div>
 
 
-<button onclick="generateData()">
-GENERATE
-</button>
-
-<div id="summary"></div>
+  <button onclick="generateData()">
+    GENERATE
+  </button>
 
 
-<div style="margin-top:20px">
-
-<input 
-type="text" 
-id="search"
-placeholder="Cari SKU atau Deskripsi..."
-onkeyup="filterTabel()"
-style="padding:10px;width:250px;"
->
+  <div id="summary"></div>
 
 
-<select id="filter" onchange="filterTabel()" style="padding:10px">
+  <div style="margin-top:20px">
 
-<option value="all">Semua</option>
-<option value="plus">extra (+)</option>
-<option value="minus">short (-)</option>
-<option value="sama">tally (0)</option>
-
-</select>
-
-</div>
+    <input 
+      type="text"
+      id="search"
+      placeholder="Cari SKU atau Deskripsi..."
+      onkeyup="filterTabel()"
+      style="padding:10px;width:250px;">
 
 
-<div id="hasilContainer">
+    <select id="filter" onchange="filterTabel()" style="padding:10px">
 
-<div id="hasil"></div>
+      <option value="all">Semua</option>
+      <option value="plus">extra (+)</option>
+      <option value="minus">short (-)</option>
+      <option value="sama">tally (0)</option>
 
-</div>
+    </select>
+
+  </div>
+
+
+  <div id="hasilContainer">
+
+    <div id="hasil"></div>
+
+  </div>
 
 
 </div>
-
-
 
 <script>
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
 
 
 let dataFisik = {};
@@ -636,24 +654,82 @@ row.style.display="none";
 
 
 }
-function login(){
+async function login(){
 
-const store = document.getElementById("storeCode").value.trim().toUpperCase();
+  const store = document.getElementById("storeCode").value.trim().toUpperCase();
+  const pass = document.getElementById("password").value.trim();
 
-const pass = document.getElementById("password").value.trim();
+  if(store === "" || pass === ""){
+    document.getElementById("loginMsg").innerHTML = "Store Code dan Password wajib diisi.";
+    return;
+  }
 
-if(store==="JW2001" && pass==="CHPL"){
+  document.getElementById("loginMsg").innerHTML = "Sedang login...";
 
-document.getElementById("loginPage").style.display="none";
+  try{
 
-document.getElementById("mainPage").style.display="block";
+    const response = await fetch(
+      `${GAS_URL}?storeCode=${encodeURIComponent(store)}&password=${encodeURIComponent(pass)}`
+    );
 
+    const result = await response.json();
+
+    if(result.success){
+
+      sessionStorage.setItem("storeCode", result.storeCode);
+      sessionStorage.setItem("storeName", result.storeName);
+
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("mainPage").style.display = "block";
+
+      document.getElementById("loginMsg").innerHTML = "";
+
+      if(document.getElementById("storeInfo")){
+        document.getElementById("storeInfo").innerHTML =
+          `${result.storeCode} - ${result.storeName}`;
+      }
+
+    }else{
+
+      document.getElementById("loginMsg").innerHTML =
+        "Store Code / Password salah atau user tidak aktif.";
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+
+    document.getElementById("loginMsg").innerHTML =
+      "Tidak dapat terhubung ke server.";
+
+  }
 }
-else{
 
-document.getElementById("loginMsg").innerHTML="Store Code atau Password salah.";
+function logout(){
 
+  sessionStorage.clear();
+
+  document.getElementById("mainPage").style.display = "none";
+  document.getElementById("loginPage").style.display = "block";
+
+  document.getElementById("password").value = "";
+  document.getElementById("loginMsg").innerHTML = "";
 }
+
+window.onload = function(){
+
+  if(sessionStorage.getItem("storeCode")){
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+
+    document.getElementById("storeInfo").innerHTML =
+      sessionStorage.getItem("storeCode") +
+      " - " +
+      sessionStorage.getItem("storeName");
+
+  }
 
 }
 
