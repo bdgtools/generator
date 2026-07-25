@@ -383,18 +383,17 @@ let html=`
 </tr>
 
 `;
-
-
-
 Object.keys(dataFisik).forEach(sku=>{
 
 
 let fisik=dataFisik[sku];
 
 let sistem=dataSistem[sku] || {};
+
 let qtySistem = Number(sistem.system) || 0;
 
 let selisih = fisik.qty - qtySistem;
+
 
 
 if(selisih == 0){
@@ -407,20 +406,20 @@ else{
   kurang++;
 }
 
-let selisih = fisik.qty - (Number(sistem.system) || 0);
 
 
 let warna = "";
 
 if(selisih > 0){
-warna="plus";
+  warna="plus";
 }
 else if(selisih < 0){
-warna="minus";
+  warna="minus";
 }
 else{
-warna="sama";
+  warna="sama";
 }
+
 
 
 html+=`
@@ -431,13 +430,13 @@ html+=`
 
 <td>${fisik.rack}</td>
 
+<td>${fisik.qty}</td>
+
+<td>${qtySistem}</td>
+
 <td class="${warna}">
 ${selisih}
 </td>
-
-<td>${sistem.system || 0}</td>
-
-<td>${fisik.qty - (Number(sistem.system) || 0)}</td>
 
 <td>${sistem.desc || "-"}</td>
 
@@ -445,10 +444,7 @@ ${selisih}
 
 `;
 
-
 });
-
-
 
 html+=`</table>`;
 
