@@ -202,11 +202,6 @@ td{
 
 }
 
-
-#hasilContainer th{
-  background:white;
-}
-
 #hasilContainer thead{
   position:sticky;
   top:0;
@@ -483,66 +478,68 @@ reader.readAsText(file);
 
 }
 
-
-
-
-
 async function generateData(){
 
-let fisikFiles=document.getElementById("fisikFile").files;
+  let fisikFiles = document.getElementById("fisikFile").files;
 
-let sistem=document.getElementById("sistemFile").files[0];
+  let sistem = document.getElementById("sistemFile").files[0];
 
 
-if(fisikFiles.length==0 || !sistem){
+  if(fisikFiles.length==0 || !sistem){
 
-alert("Upload file fisik dan sistem terextra dahulu");
+    alert("Upload file fisik dan sistem terlebih dahulu");
 
-return;
+    return;
+
+  }
+
+
+  dataFisik={};
+
+
+  for(let i=0;i<fisikFiles.length;i++){
+
+
+    let hasil = await bacaFisik(fisikFiles[i]);
+
+
+    Object.keys(hasil).forEach(sku=>{
+
+
+      if(!dataFisik[sku]){
+
+        dataFisik[sku]=hasil[sku];
+
+      }
+      else{
+
+        dataFisik[sku].qty += hasil[sku].qty;
+
+      }
+
+
+    });
+
+
+  }
+
+
+  dataSistem = await bacaSistem(sistem);
+
+
+  tampilkan();
+
 
 }
-
-
-// gabungkan semua file fisik
-
-dataFisik={};
-
-
-for(let i=0;i<fisikFiles.length;i++){
-
-let hasil = await bacaFisik(fisikFiles[i]);
-
-
-Object.keys(hasil).forEach(sku=>{
-
-
-if(!dataFisik[sku]){
-
-dataFisik[sku]=hasil[sku];
-
-}
-else{
-
-dataFisik[sku].qty += hasil[sku].qty;
-
-}
-
-
-});
-
-
-}
-
-
-
-dataSistem=await bacaSistem(sistem);
-
-
-
-
-
 function tampilkan(){
-tampilkan();
+
+let totalSKU = Object.keys(dataFisik).length;
+
+let tally = 0;
+let extra = 0;
+let short = 0;
+
+
 let html=`
 
 <table>
@@ -550,14 +547,12 @@ let html=`
 <thead>
 
 <tr>
-
 <th>SKU</th>
 <th>Rack Number</th>
-<th>Physics</th>
+<th>Physical</th>
 <th>System</th>
 <th>Variance</th>
 <th>Description</th>
-
 </tr>
 
 </thead>
@@ -566,15 +561,7 @@ let html=`
 
 `;
 
-}
 
-let totalSKU = Object.keys(dataFisik).length;
-
-let tally = 0;
-let extra = 0;
-let short = 0;
-
-`;
 Object.keys(dataFisik)
 .sort((a,b)=>{
 
@@ -595,34 +582,44 @@ let fisik=dataFisik[sku];
 
 let sistem=dataSistem[sku] || {};
 
-let qtySistem = Number(sistem.system) || 0;
+let qtySistem=Number(sistem.system)||0;
 
-let selisih = fisik.qty - qtySistem;
+let selisih=fisik.qty-qtySistem;
 
 
+if(selisih==0){
 
-if(selisih == 0){
-  tally++;
+tally++;
+
 }
-else if(selisih > 0){
-  extra++;
-}
-else{
-  short++;
-}
+else if(selisih>0){
 
+extra++;
 
-
-let warna = "";
-
-if(selisih > 0){
-  warna="plus";
-}
-else if(selisih < 0){
-  warna="minus";
 }
 else{
-  warna="sama";
+
+short++;
+
+}
+
+
+let warna="";
+
+if(selisih>0){
+
+warna="plus";
+
+}
+else if(selisih<0){
+
+warna="minus";
+
+}
+else{
+
+warna="sama";
+
 }
 
 
@@ -650,48 +647,51 @@ ${selisih}
 `;
 
 
+
 });
 
-html+=`</table>`;
 
-document.getElementById("summary").innerHTML =
+html+=`
+
+</tbody>
+
+</table>
+
+`;
+
+
+document.getElementById("summary").innerHTML=
 
 `
 
 <div class="summary">
 
 <div class="card total">
-Total SKU<br>
-${totalSKU}
+Total SKU<br>${totalSKU}
 </div>
-
 
 <div class="card tally">
-tally (0)<br>
-${tally}
+Tally (0)<br>${tally}
 </div>
-
 
 <div class="card extra">
-extra (+)<br>
-${extra}
+Extra (+)<br>${extra}
 </div>
-
 
 <div class="card short">
-short (-)<br>
-${short}
+Short (-)<br>${short}
 </div>
-
 
 </div>
 
 `;
 
+
 document.getElementById("hasil").innerHTML=html;
 
 
 }
+
 function filterTabel(){
 
 let keyword = document
