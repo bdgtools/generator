@@ -55,8 +55,6 @@ Baca File
 
 
 </div>
-
-
 <script>
 
 function bacaFile(){
@@ -78,21 +76,53 @@ reader.onload = function(e){
 let isi = e.target.result;
 
 
-let jumlahBaris = isi.split(/\r?\n/).filter(x=>x.trim()!="").length;
+// Pisahkan per baris
+let baris = isi
+.split(/\r?\n/)
+.filter(x => x.trim() !== "");
+
+
+// Ambil SKU kolom pertama
+let sku = baris.map(function(data){
+
+    let kolom = data.split(",");
+
+    return kolom[0].trim();
+
+});
+
+
+// Hitung SKU unik
+let skuUnik = [...new Set(sku)];
+
+
+// Hitung duplicate
+let duplicate = sku.length - skuUnik.length;
+
 
 
 document.getElementById("hasil").innerHTML =
 
 `
-<h3>Hasil:</h3>
+<h3>Hasil Stock Opname</h3>
 
 Nama File :
 ${file.name}
 
 <br><br>
 
-Jumlah Baris :
-${jumlahBaris}
+Total Data :
+${baris.length}
+
+<br>
+
+Total SKU Unik :
+${skuUnik.length}
+
+<br>
+
+Duplicate SKU :
+${duplicate}
 
 `;
 
@@ -104,7 +134,6 @@ reader.readAsText(file);
 }
 
 </script>
-
 
 </body>
 </html>
