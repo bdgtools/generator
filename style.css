@@ -211,25 +211,30 @@ h1{
 }
 .header{
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
     background:#FFD400;
 
-    padding:15px 20px;
-
     border-radius:12px;
+
+    padding:18px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
 
 }
 .headerLeft{
 
     display:flex;
+
     align-items:center;
-    gap:15px;
+
+    gap:18px;
+
+    margin:auto;
 
 }
-
 .headerText h1{
 
     margin:0;
