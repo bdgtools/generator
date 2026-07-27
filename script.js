@@ -54,9 +54,7 @@ function login(){
 
 
             document.getElementById("storeInfo").innerHTML =
-            "Store : " + data.storeName +
-            " (" + data.storeCode + ")";
-
+            `Hello, ${data.storeCode} - ${data.storeName}`;
 
             // simpan session
 
