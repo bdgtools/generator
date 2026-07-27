@@ -3,14 +3,15 @@
 
 .loginHeader{
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:18px;
-
     background:#FFD400;
 
-    border-radius:12px;
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:18px;
 
     padding:25px;
 
@@ -18,32 +19,43 @@
 
 .loginLogo{
 
-    width:80px;
-    height:auto;
+    width:85px;
 
 }
 
 .loginTitle{
 
-    text-align:left;
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
 
 }
 
 .loginTitle h1{
 
     margin:0;
+
     font-size:28px;
+
+    color:#111;
 
 }
 
 .loginTitle p{
 
-    margin:5px 0 0;
+    margin-top:5px;
+
     color:#444;
+
     font-size:14px;
 
-}
-.loginHeader img{
+    text-align:center;
+
+}.loginHeader img{
 
     width:90px;
 
@@ -57,18 +69,20 @@
 }
 .loginBox{
 
-    max-width:420px;
+    width:100%;
+    max-width:550px;
 
-    margin:50px auto;
+    margin:60px auto;
 
-    background:white;
+    background:#fff;
 
-    border-radius:15px;
+    border-radius:18px;
 
     overflow:hidden;
 
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
 
+}
 }
 .loginBtn{
 
