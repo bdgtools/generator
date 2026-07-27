@@ -400,137 +400,77 @@ return data;
 
 
 }
-function prosesStock(fisik,sistem){
+function prosesStock(fisik, sistem){
 
+    let hasil = [];
 
-let hasil=[];
+    // Hanya loop SKU yang ada di scan fisik
+    Object.keys(fisik).forEach(sku=>{
 
+        if(sistem[sku]){
 
-// ======================
-// 1. SKU DARI SYSTEM
-// ======================
+            let qtySystem = sistem[sku].system;
+            let qtyFisik = fisik[sku];
 
-Object.keys(sistem).forEach(sku=>{
+            let selisih = qtySystem - qtyFisik;
 
+            let status = "Tally";
 
-let qtyFisik = fisik[sku] || 0;
+            if(selisih < 0){
+                status = "Short";
+            }else if(selisih > 0){
+                status = "Extra";
+            }
 
-let qtySystem = sistem[sku].system;
+            hasil.push({
 
+                sku: sku,
+                rack: sistem[sku].rack,
+                desc: sistem[sku].desc,
+                system: qtySystem,
+                fisik: qtyFisik,
+                selisih: selisih,
+                status: status
 
-let selisih = qtySystem - qtyFisik;
+            });
 
+        }else{
 
-let status="Tally";
+            // SKU scan tetapi tidak ada di Export Shelf
+            hasil.push({
 
+                sku: sku,
+                rack: "-",
+                desc: "SKU Tidak Ada Di Export Shelf",
+                system: 0,
+                fisik: fisik[sku],
+                selisih: -fisik[sku],
+                status: "Not In System"
 
-if(selisih < 0){
+            });
 
-    status="Short";
+        }
 
-}
+    });
 
+    // Urutkan berdasarkan rack
+    hasil.sort((a,b)=>{
 
-if(selisih > 0){
+        if(a.rack === "-") return 1;
+        if(b.rack === "-") return -1;
 
-    status="Extra";
+        return a.rack.localeCompare(
+            b.rack,
+            undefined,
+            {
+                numeric:true,
+                sensitivity:"base"
+            }
+        );
 
-}
+    });
 
-
-
-hasil.push({
-
-
-sku:sku,
-
-rack:sistem[sku].rack,
-
-desc:sistem[sku].desc,
-
-system:qtySystem,
-
-fisik:qtyFisik,
-
-selisih:selisih,
-
-status:status
-
-
-});
-
-
-
-});
-
-
-
-
-
-// ======================
-// 2. SKU FISIK TAPI TIDAK ADA SYSTEM
-// ======================
-
-
-Object.keys(fisik).forEach(sku=>{
-
-
-if(!sistem[sku]){
-
-
-hasil.push({
-
-
-sku:sku,
-
-rack:"-",
-
-desc:"SKU Tidak Ada Di Export Shelf",
-
-system:0,
-
-fisik:fisik[sku],
-
-selisih:0 - fisik[sku],
-
-status:"Not In System"
-
-
-});
-
-
-}
-
-
-
-});
-
-
-
-
-// ======================
-// SORT BY RACK NUMBER
-// ======================
-
-hasil.sort((a,b)=>{
-
-
-return a.rack.localeCompare(
-    b.rack,
-    undefined,
-    {
-        numeric:true,
-        sensitivity:"base"
-    }
-);
-
-
-});
-
-
-
-return hasil;
-
+    return hasil;
 
 }
 function tampilkanSummary(data){
