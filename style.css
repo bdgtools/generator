@@ -178,11 +178,34 @@ h1{
 }
 .header{
 
-  background:#FFD400;
-  padding:10px;
-  border-radius:12px;
-  text-align:center;
-  margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:#FFD400;
+
+    padding:15px 20px;
+
+    border-radius:12px;
+
+}
+.headerLeft{
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+}
+
+.headerText h1{
+
+    margin:0;
+
+}
+
+.headerText p{
+
+    margin:5px 0 0;
 
 }
 
