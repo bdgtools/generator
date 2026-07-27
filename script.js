@@ -603,36 +603,25 @@ overflow:auto;
 data.forEach(row=>{
 
 
-let cls="sama";
+const status = row.status.trim();
 
+let cls = "sama";
 
-if(row.status=="Not In System"){
-
-    cls="notSystem";
-
-}
-
-
-if(row.status=="Short"){
+if(status==="Short"){
 
     cls="minus";
 
 }
-
-
-if(row.status=="Extra"){
+else if(status==="Extra"){
 
     cls="plus";
 
 }
-
-
-if(row.status=="Not In System"){
+else if(status==="Not In System"){
 
     cls="notSystem";
 
 }
-
 
 html+=`
 
@@ -660,8 +649,6 @@ html+=`
 
 
 });
-
-
 
 html+=`
 
