@@ -396,28 +396,31 @@ td{
 
 .plus{
 
- background:#fff3cd;
- color:#856404;
- font-weight:bold;
+    background:#FFF8D6;
+    color:#111;
 
 }
 
 .minus{
 
- background:#dc3545;
- color:white;
- font-weight:bold;
+    background:#FFD6D6;
+    color:#111;
 
 }
 
 .sama{
 
- background:#d4edda;
- color:#155724;
- font-weight:bold;
+    background:#DFF5E4;
+    color:#111;
 
 }
-  
+
+.notSystem{
+
+    background:#ECECEC;
+    color:#111;
+
+}  
 #hasilContainer table{
   width:100%;
 }
