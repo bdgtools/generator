@@ -742,3 +742,75 @@ document.getElementById("hasil")
 
 
 }
+function downloadExcel(){
+
+
+    if(hasilGlobal.length === 0){
+
+        alert("Belum ada data hasil generate");
+        return;
+
+    }
+
+
+
+    let exportData = hasilGlobal.map(row=>{
+
+
+        return {
+
+            SKU: row.sku,
+
+            Rack: row.rack,
+
+            Description: row.desc,
+
+            "Qty System": row.system,
+
+            "Qty Fisik": row.fisik,
+
+            "Selisih": row.selisih,
+
+            Status: row.status
+
+        };
+
+
+    });
+
+
+
+    let ws = XLSX.utils.json_to_sheet(exportData);
+    ws['!cols'] = [
+
+    {wch:15}, // SKU
+    {wch:15}, // Rack
+    {wch:35}, // Description
+    {wch:12},
+    {wch:12},
+    {wch:12},
+    {wch:15}
+
+];
+
+
+
+    let wb = XLSX.utils.book_new();
+
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "Stock Balance"
+    );
+
+
+
+    XLSX.writeFile(
+        wb,
+        "Stock_Balance_Result.xlsx"
+    );
+
+
+}
+
