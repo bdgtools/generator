@@ -222,3 +222,37 @@ function backDashboard(){
 
 
 }
+// ======================
+// GENERATE STOCK BALANCE
+// ======================
+
+function generateData(){
+
+    const fisikFile = document.getElementById("fisikFile").files[0];
+    const sistemFile = document.getElementById("sistemFile").files[0];
+
+
+    if(!fisikFile){
+
+        alert("Silahkan upload file Scan Fisik terlebih dahulu");
+        return;
+
+    }
+
+
+    if(!sistemFile){
+
+        alert("Silahkan upload file Export Shelf terlebih dahulu");
+        return;
+
+    }
+
+
+    alert(
+        "File siap diproses\n\n" +
+        "Scan Fisik : " + fisikFile.name +
+        "\nExport Shelf : " + sistemFile.name
+    );
+
+
+}
