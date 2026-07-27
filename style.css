@@ -1,0 +1,331 @@
+<style>
+.menuGrid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:20px;
+
+margin-top:25px;
+
+}
+
+.menuCard{
+
+    background:#fff;
+
+    border:2px solid #FFD400;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    text-align:center;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+
+}
+
+.menuCard:hover{
+
+    transform:translateY(-6px);
+
+    background:#FFD400;
+
+    box-shadow:0 12px 25px rgba(0,0,0,.25);
+
+}
+.menuCard h3{
+
+    margin-top:10px;
+
+    margin-bottom:8px;
+
+    color:#111;
+
+}
+.menuCard p{
+
+    color:#666;
+
+    font-size:14px;
+
+}
+
+.icon{
+
+    font-size:55px;
+
+    margin-bottom:15px;
+
+}
+  
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#111;
+}
+.container{
+
+    max-width:1200px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+
+}
+
+h1{
+  text-align:center;
+  color:#111;
+  font-size:28px;
+}
+.header{
+
+  background:#FFD400;
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+  margin-bottom:15px;
+
+}
+
+.logo{
+  width:90px;
+  height:auto;
+  display:block;
+  margin:0 auto 5px auto;
+}
+
+.header h1{
+
+  margin:0;
+  font-size:20px;
+  color:#111;
+
+}
+  
+.box{
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  border:2px solid #FFD400;
+  background:#fff;
+}
+
+
+label{
+  font-weight:bold;
+  color:#111;
+}
+
+
+input, select{
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+
+
+button{
+
+    background:#111;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    padding:12px 25px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-weight:bold;
+
+}
+
+
+button:hover{
+
+    background:#FFD400;
+
+    color:#111;
+
+    transform:translateY(-2px);
+
+}
+
+.summary{
+  display:flex;
+  gap:15px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+
+.card{
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+}
+tbody tr:nth-child(even){
+
+    background:#fafafa;
+
+}
+
+.total{
+ background:#111;
+ color:white;
+}
+
+
+.tally{
+ background:#FFD400;
+ color:#111;
+}
+
+.extra{
+ background:#fff3cd;
+ color:#8a6500;
+}
+
+.short{
+ background:#dc3545;
+ color:white;
+}
+
+table{
+
+ width:100%;
+ border-collapse:collapse;
+ margin-top:20px;
+
+}
+
+th{
+
+ background:#111;
+ color:white;
+ padding:10px;
+
+}
+
+td{
+
+ padding:8px;
+ border:1px solid #ddd;
+
+}
+
+.plus{
+
+ background:#fff3cd;
+ color:#856404;
+ font-weight:bold;
+
+}
+
+.minus{
+
+ background:#dc3545;
+ color:white;
+ font-weight:bold;
+
+}
+
+.sama{
+
+ background:#d4edda;
+ color:#155724;
+ font-weight:bold;
+
+}
+  
+#hasilContainer table{
+  width:100%;
+}
+
+
+#hasilContainer thead th{
+
+  position:sticky;
+  top:0;
+  background:#111;
+  color:white;
+  z-index:5;
+  padding:10px;
+
+}
+
+#hasilContainer thead{
+  position:sticky;
+  top:0;
+}
+.actionBtn{
+  height:42px;
+  padding:0 20px;
+  border-radius:8px;
+  font-weight:bold;
+  border:none;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+
+.generateBtn{
+  background:#111;
+  color:white;
+}
+
+.downloadBtn{
+  background:#111;
+  color:white;
+}
+@media(max-width:768px){
+
+.menuGrid{
+
+    grid-template-columns:1fr;
+
+}
+
+.summary{
+
+    flex-direction:column;
+
+}
+
+.container{
+
+    padding:15px;
+
+}
+
+button{
+
+    width:100%;
+
+    margin-top:10px;
+
+}
+}
+  
+</style>
