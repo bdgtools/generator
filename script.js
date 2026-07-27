@@ -261,8 +261,8 @@ function generateData(){
 
         const hasil =
         prosesStock(fisik,sistem);
-
-
+        
+        tampilkanSummary(hasil);
         tampilkanHasil(hasil);
 
 
@@ -458,9 +458,107 @@ status:status
 
 });
 
+// SORT BERDASARKAN RACK NUMBER
+hasil.sort((a,b)=>{
+
+    return a.rack.localeCompare(b.rack, undefined, {
+        numeric:true,
+        sensitivity:"base"
+    });
+
+});
 
 
 return hasil;
+
+
+}
+function tampilkanSummary(data){
+
+
+let totalSKU = data.length;
+
+let tally = 0;
+let short = 0;
+let extra = 0;
+
+
+data.forEach(row=>{
+
+
+    if(row.status=="Tally"){
+
+        tally++;
+
+    }
+
+
+    if(row.status=="Short"){
+
+        short++;
+
+    }
+
+
+    if(row.status=="Extra"){
+
+        extra++;
+
+    }
+
+
+});
+
+
+
+let html = `
+
+<div class="summary">
+
+
+<div class="card total">
+
+<h3>${totalSKU}</h3>
+<p>Total SKU</p>
+
+</div>
+
+
+
+<div class="card tally">
+
+<h3>${tally}</h3>
+<p>Tally</p>
+
+</div>
+
+
+
+<div class="card short">
+
+<h3>${short}</h3>
+<p>Short</p>
+
+</div>
+
+
+
+<div class="card extra">
+
+<h3>${extra}</h3>
+<p>Extra</p>
+
+</div>
+
+
+</div>
+
+`;
+
+
+
+document.getElementById("summary")
+.innerHTML = html;
 
 
 }
