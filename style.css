@@ -77,7 +77,7 @@
 
 }
 
-.menuCard *{
+.menuCard{
 
     background:#fff;
     border:2px solid #FFD400;
@@ -86,20 +86,24 @@
     width:190px;
     height:140px;
 
-    padding:15px;
-
-    cursor:pointer;
-
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+
+    cursor:pointer;
 
     transition:.25s;
 
     text-align:center;
 
     box-shadow:0 4px 12px rgba(0,0,0,.12);
+
+}
+.menuCard,
+.menuCard *{
+
+    cursor:pointer;
 
 }
 
