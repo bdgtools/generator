@@ -16,19 +16,20 @@
   <h1>Stock Balance Check Generator</h1>
 
   <div class="box">
-    </div>
 
     <h3>Login</h3>
 
     <label>Store Code</label><br>
-    <input 
-      type="text" 
+
+    <input
+      type="text"
       id="storeCode"
       placeholder="Contoh: JW2001"
       style="width:100%;padding:10px;margin-bottom:10px;">
 
     <label>Password</label><br>
-    <input 
+
+    <input
       type="password"
       id="password"
       placeholder="Password"
@@ -41,130 +42,222 @@
     <p id="loginMsg" style="color:red;"></p>
 
   </div>
+
 </div>
+
+
+<!-- DASHBOARD -->
+
 <div id="dashboardPage" class="container" style="display:none">
-  
+
     <div class="header">
+
         <img src="logo mrdiy.png" class="logo">
 
         <h1>MR.DIY Store Assistant</h1>
 
         <p id="storeInfo"></p>
+
     </div>
-  <button onclick="logout()" style="float:right;margin-top:-45px;">
-  Logout
-  </button>
+
+
+    <button onclick="logout()" style="float:right;margin-top:-45px;">
+      Logout
+    </button>
+
 
     <div class="menuGrid">
 
+
         <div class="menuCard" onclick="openModule('stock')">
+
             <div class="icon">📦</div>
+
             <h3>Stock Balance</h3>
+
             <p>Compare Physical vs System</p>
-    </div>
+
+        </div>
+
 
         <div class="menuCard" onclick="openModule('sales')">
+
             <div class="icon">💰</div>
+
             <h3>Sales Checker</h3>
+
             <p>Analyze Daily Sales</p>
-     </div>
+
+        </div>
+
 
         <div class="menuCard" onclick="openModule('itemize')">
+
             <div class="icon">🛒</div>
+
             <h3>Itemize Checker</h3>
+
             <p>Analyze Itemize File</p>
-      </div>
+
+        </div>
+
 
         <div class="menuCard" onclick="openModule('report')">
+
             <div class="icon">📊</div>
+
             <h3>Reports</h3>
+
             <p>Dashboard & History</p>
 
         </div>
-      </div>
-  </div>
-  <div id="stockModule" class="container" style="display:none">
+
+
     </div>
+
+
+</div>
+
+
+
+<!-- STOCK MODULE -->
+
+<div id="stockModule" class="container" style="display:none">
+
     <button onclick="backDashboard()">⬅ Back</button>
+
+
     <div class="box">
-      </div>
-    <h1>Stock Balance Check Generator</h1>
-    
-<!-- isi Stock Balance -->
-  <div id="salesModule" class="container" style="display:none">
-    <button onclick="backDashboard()">⬅ Back</button>
-  Coming Soon
-  </div>
-  
-  <div id="itemizeModule" class="container" style="display:none">
-    <button onclick="backDashboard()">⬅ Back</button>
-  Coming Soon
-  </div>
 
-  <div id="reportModule" class="container" style="display:none">
+        <h1>Stock Balance Check Generator</h1>
+
+
+        <h3>1. Upload Scan Fisik</h3>
+
+        <input type="file" id="fisikFile" multiple>
+
+
+    </div>
+
+
+
+    <div class="box">
+
+        <h3>2. Upload File Export Shelf</h3>
+
+        <input type="file" id="sistemFile">
+
+
+    </div>
+
+
+
+    <button class="actionBtn generateBtn" onclick="generateData()">
+
+        Generate
+
+    </button>
+
+
+
+    <button class="actionBtn downloadBtn" onclick="downloadExcel()">
+
+        ⬇ Download Variance (.xlsx)
+
+    </button>
+
+
+
+    <div id="summary"></div>
+
+
+
+    <div style="margin-top:20px">
+
+
+        <input
+
+        type="text"
+
+        id="search"
+
+        placeholder="Cari SKU atau Deskripsi..."
+
+        onkeyup="filterTabel()"
+
+        style="padding:10px;width:250px;">
+
+
+
+        <select id="filter" onchange="filterTabel()" style="padding:10px">
+
+            <option value="all">Semua</option>
+
+            <option value="plus">extra (+)</option>
+
+            <option value="minus">short (-)</option>
+
+            <option value="sama">tally (0)</option>
+
+
+        </select>
+
+
+    </div>
+
+
+
+    <div id="hasilContainer">
+
+        <div id="hasil"></div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- SALES MODULE -->
+
+<div id="salesModule" class="container" style="display:none">
+
     <button onclick="backDashboard()">⬅ Back</button>
+
+    <h2>Sales Checker</h2>
+
+    Coming Soon
+
+</div>
+
+
+
+
+<!-- ITEMIZE MODULE -->
+
+<div id="itemizeModule" class="container" style="display:none">
+
+    <button onclick="backDashboard()">⬅ Back</button>
+
+    <h2>Itemize Checker</h2>
+
+    Coming Soon
+
+</div>
+
+
+
+
+<!-- REPORT MODULE -->
+
+<div id="reportModule" class="container" style="display:none">
+
+    <button onclick="backDashboard()">⬅ Back</button>
+
     <h2>Reports</h2>
-  Coming Soon
-  </div>
 
-
-<div style="clear:both;"></div>
-
-  <div class="box">
-    </div>
-  
-    <h3>1. Upload Scan Fisik</h3>
-
-    <input type="file" id="fisikFile" multiple>
-
-  </div>
-  
-  <div class="box">
-    </div>
-
-    <h3>2. Upload File Export Shelf</h3>
-
-    <input type="file" id="sistemFile">
-
-  </div>
-
- <button class="actionBtn generateBtn" onclick="generateData()">
-  Generate
-</button>
-
-<button class="actionBtn downloadBtn" onclick="downloadExcel()">
-  ⬇ Download Variance (.xlsx)
-</button>
-
-
-  <div id="summary"></div>
-
-
-  <div style="margin-top:20px">
-
-    <input 
-      type="text"
-      id="search"
-      placeholder="Cari SKU atau Deskripsi..."
-      onkeyup="filterTabel()"
-      style="padding:10px;width:250px;">
-
-
-    <select id="filter" onchange="filterTabel()" style="padding:10px">
-
-      <option value="all">Semua</option>
-      <option value="plus">extra (+)</option>
-      <option value="minus">short (-)</option>
-      <option value="sama">tally (0)</option>
-
-    </select>
-
-  </div>
-
-  <div id="hasilContainer">
-
-    <div id="hasil"></div>
-  </div>
+    Coming Soon
 
 </div>
 
@@ -175,10 +268,3 @@
 </body>
 </html>
 
-
-
-</script>
-
-
-</body>
-</html>
