@@ -13,35 +13,47 @@
 
 <div id="loginPage" class="container">
 
-  <h1>MR DIY Store Tools</h1>
+    <div class="header">
 
-  <div class="box">
+        <img src="logo mrdiy.png" class="logo">
 
-    <h3>Login</h3>
+        <h1>MR DIY Store Tools</h1>
 
-    <label>Store Code</label><br>
+        <p>Store Utility & Inventory Management</p>
 
-    <input
-      type="text"
-      id="storeCode"
-      placeholder="Contoh: JW2001"
-      style="width:100%;padding:10px;margin-bottom:10px;">
+    </div>
 
-    <label>Password</label><br>
+    <div class="box">
 
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-      style="width:100%;padding:10px;">
+        <h3 style="text-align:center;margin-top:0;">Login</h3>
 
-    <button onclick="login()" style="margin-top:20px;">
-      LOGIN
-    </button>
+        <label>Store Code</label>
 
-    <p id="loginMsg" style="color:red;"></p>
+        <input
+            type="text"
+            id="storeCode"
+            placeholder="Contoh : JW2001"
+            style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0 15px;">
 
-  </div>
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
+
+        <button
+            class="loginBtn"
+            onclick="login()">
+
+            LOGIN
+
+        </button>
+
+        <p id="loginMsg" style="color:#dc3545;text-align:center;margin-top:15px;"></p>
+
+    </div>
 
 </div>
 
