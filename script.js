@@ -228,31 +228,346 @@ function backDashboard(){
 
 function generateData(){
 
-    const fisikFile = document.getElementById("fisikFile").files[0];
-    const sistemFile = document.getElementById("sistemFile").files[0];
+    const fisikFile =
+    document.getElementById("fisikFile").files[0];
+
+    const sistemFile =
+    document.getElementById("sistemFile").files[0];
 
 
-    if(!fisikFile){
+    if(!fisikFile || !sistemFile){
 
-        alert("Silahkan upload file Scan Fisik terlebih dahulu");
+        alert("Upload kedua file terlebih dahulu");
         return;
 
     }
 
 
-    if(!sistemFile){
+    Promise.all([
+        readTXT(fisikFile),
+        readTXT(sistemFile)
+    ])
 
-        alert("Silahkan upload file Export Shelf terlebih dahulu");
-        return;
+    .then(files=>{
+
+
+        const fisik =
+        parseFisik(files[0]);
+
+
+        const sistem =
+        parseSistem(files[1]);
+
+
+        const hasil =
+        prosesStock(fisik,sistem);
+
+
+        tampilkanHasil(hasil);
+
+
+    });
+
+
+}
+function readTXT(file){
+
+return new Promise((resolve,reject)=>{
+
+
+    let reader=new FileReader();
+
+
+    reader.onload=e=>{
+
+        resolve(e.target.result);
+
+    };
+
+
+    reader.onerror=reject;
+
+
+    reader.readAsText(file);
+
+
+});
+
+}
+function parseFisik(text){
+
+
+let data={};
+
+
+let rows=text.split(/\r?\n/);
+
+
+rows.forEach(row=>{
+
+
+    let col=row.split(",");
+
+
+    if(col.length>=3){
+
+
+        let sku=col[1].trim();
+
+
+        let qty=
+        Number(col[2]) || 0;
+
+
+
+        if(sku){
+
+
+            if(data[sku]){
+
+                data[sku]+=qty;
+
+            }else{
+
+                data[sku]=qty;
+
+            }
+
+
+        }
+
 
     }
 
 
-    alert(
-        "File siap diproses\n\n" +
-        "Scan Fisik : " + fisikFile.name +
-        "\nExport Shelf : " + sistemFile.name
-    );
+});
+
+
+return data;
+
+
+}
+function parseSistem(text){
+
+
+let data={};
+
+
+let rows=text.split(/\r?\n/);
+
+
+rows.forEach(row=>{
+
+
+let col=row.split(",");
+
+
+
+if(col.length>=9){
+
+
+let sku=col[0].trim();
+
+
+
+data[sku]={
+
+
+rack:col[1],
+
+price:col[2],
+
+system:Number(col[3]) || 0,
+
+desc:col[8]
+
+
+};
+
+
+
+}
+
+
+});
+
+
+return data;
+
+
+}
+function prosesStock(fisik,sistem){
+
+
+let hasil=[];
+
+
+Object.keys(sistem).forEach(sku=>{
+
+
+let qtyFisik=fisik[sku] || 0;
+
+
+let qtySystem=sistem[sku].system;
+
+
+
+let selisih=
+qtySystem-qtyFisik;
+
+
+
+let status="Tally";
+
+
+if(selisih<0){
+
+status="Short";
+
+}
+
+
+if(selisih>0){
+
+status="Extra";
+
+}
+
+
+
+hasil.push({
+
+
+sku:sku,
+
+rack:sistem[sku].rack,
+
+desc:sistem[sku].desc,
+
+system:qtySystem,
+
+fisik:qtyFisik,
+
+selisih:selisih,
+
+status:status
+
+
+});
+
+
+});
+
+
+
+return hasil;
+
+
+}
+function tampilkanHasil(data){
+
+
+let html=`
+
+
+<div style="
+max-height:500px;
+overflow:auto;
+">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>SKU</th>
+<th>Rack</th>
+<th>Description</th>
+<th>System</th>
+<th>Fisik</th>
+<th>Selisih</th>
+<th>Status</th>
+
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+`;
+
+
+
+data.forEach(row=>{
+
+
+let cls="sama";
+
+
+if(row.status=="Short"){
+
+cls="minus";
+
+}
+
+
+if(row.status=="Extra"){
+
+cls="plus";
+
+}
+
+
+
+html+=`
+
+<tr class="${cls}">
+
+<td>${row.sku}</td>
+
+<td>${row.rack}</td>
+
+<td>${row.desc}</td>
+
+<td>${row.system}</td>
+
+<td>${row.fisik}</td>
+
+<td>${row.selisih}</td>
+
+<td>${row.status}</td>
+
+
+</tr>
+
+
+`;
+
+
+});
+
+
+
+html+=`
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+
+
+document.getElementById("hasil")
+.innerHTML=html;
 
 
 }
