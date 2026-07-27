@@ -7,19 +7,31 @@
 
     display:flex;
 
+    flex-direction:column;
+
     justify-content:center;
 
     align-items:center;
 
-    gap:18px;
+    padding:30px 20px;
+    
+    text-align:center;
 
-    padding:25px;
 
 }
+#loginPage{
 
-.loginLogo{
+    width:100%;
 
-    width:85px;
+    max-width:650px;
+
+    margin:50px auto;
+
+}.loginLogo{
+
+    width:110px;
+
+    margin-bottom:15px;
 
 }
 
@@ -33,8 +45,9 @@
 
     justify-content:center;
 
-}
+    text-align:center;
 
+}
 .loginTitle h1{
 
     margin:0;
@@ -55,34 +68,20 @@
 
     text-align:center;
 
-}.loginHeader img{
-
-    width:90px;
-
 }
-.loginHeader h2{
 
-    margin-top:10px;
+#loginPage .box{
 
-    color:#111;
+    margin-top:0;
 
-}
-.loginBox{
-
-    width:100%;
-    max-width:550px;
-
-    margin:60px auto;
-
-    background:#fff;
+    padding:35px;
 
     border-radius:18px;
 
-    overflow:hidden;
+    background:#fff;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    border:2px solid #FFD400;
 
-}
 }
 .loginBtn{
 
@@ -114,11 +113,11 @@
 
     display:grid;
 
-    grid-template-columns:repeat(2,200px);
+    grid-template-columns:repeat(2,220px);
 
     justify-content:center;
 
-    gap:20px;
+    gap:24px;
 
     margin:25px auto;
 
@@ -205,7 +204,7 @@ body{
     margin:0;
     padding:20px;
     font-family:Arial,sans-serif;
-    background:#111;
+    background:#FFD400;
 }
 .container{
 
@@ -225,17 +224,27 @@ h1{
 }
 .header{
 
+    position:relative;
+
+    justify-content:center;
+    
+    display:flex;
+
+    align-items:center;
+
     background:#FFD400;
 
     border-radius:12px;
 
     padding:18px 25px;
 
-    display:flex;
+}
 
-    justify-content:space-between;
+.header button{
 
-    align-items:center;
+    position:absolute;
+
+    right:20px;
 
 }
 .headerLeft{
@@ -244,9 +253,9 @@ h1{
 
     align-items:center;
 
-    gap:18px;
+    justify-content:center;
 
-    margin:auto;
+    gap:18px;
 
 }
 .headerText h1{
@@ -262,7 +271,7 @@ h1{
 }
 
 .logo{
-  width:90px;
+  width:70px;
   height:auto;
   display:block;
   margin:0 auto 5px auto;
@@ -291,12 +300,26 @@ label{
 }
 
 
-input, select{
-  border:1px solid #ccc;
-  border-radius:8px;
+input[type=text],
+input[type=password],
+input[type=file],
+select{
+
+    width:100%;
+
+    padding:12px;
+
+    box-sizing:border-box;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+}#search{
+
+    width:260px;
+
 }
-
-
 button{
 
     background:#111;
@@ -352,12 +375,17 @@ button:hover{
     transform:translateY(-3px);
 
 }
-tbody tr:nth-child(even){
+tbody tr{
 
-    background:#fafafa;
+    transition:.2s;
 
 }
 
+tbody tr:hover{
+
+    background:#FFF6BF;
+
+}
 .total{
 
     background:linear-gradient(135deg,#222,#000);
@@ -395,10 +423,13 @@ table{
 
 th{
 
- background:#111;
- color:white;
- padding:10px;
+    letter-spacing:.3px;
 
+    font-weight:600;
+
+    background:#111;
+
+    color:#FFD400;
 }
 
 td{
@@ -445,7 +476,7 @@ td{
   position:sticky;
   top:0;
   background:#111;
-  color:white;
+  color:#FFD400;
   z-index:5;
   padding:10px;
 
@@ -465,6 +496,8 @@ td{
   display:inline-flex;
   align-items:center;
   justify-content:center;
+    margin-top:15px;
+    margin-right:8px;
 }
 
 
@@ -480,14 +513,9 @@ td{
 @media(max-width:768px){
 
 .menuGrid{
-
     grid-template-columns:1fr;
-
-}
-
-.summary{
-
-    flex-direction:column;
+    
+    justify-items:center;
 
 }
 
@@ -583,7 +611,7 @@ button{
     background:white;
 
     opacity:.3;
-
+}
 }
   
 </style>
