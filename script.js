@@ -1,3 +1,4 @@
+let hasilGlobal = [];
 // URL Google Apps Script
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
 
@@ -262,7 +263,10 @@ function generateData(){
         const hasil =
         prosesStock(fisik,sistem);
         
+        hasilGlobal = hasil;
+        
         tampilkanSummary(hasil);
+        
         tampilkanHasil(hasil);
 
 
