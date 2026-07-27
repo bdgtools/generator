@@ -402,34 +402,34 @@ function prosesStock(fisik,sistem){
 let hasil=[];
 
 
+// ======================
+// 1. SKU DARI SYSTEM
+// ======================
+
 Object.keys(sistem).forEach(sku=>{
 
 
-let qtyFisik=fisik[sku] || 0;
+let qtyFisik = fisik[sku] || 0;
+
+let qtySystem = sistem[sku].system;
 
 
-let qtySystem=sistem[sku].system;
-
-
-
-let selisih=
-qtySystem-qtyFisik;
-
+let selisih = qtySystem - qtyFisik;
 
 
 let status="Tally";
 
 
-if(selisih<0){
+if(selisih < 0){
 
-status="Short";
+    status="Short";
 
 }
 
 
-if(selisih>0){
+if(selisih > 0){
 
-status="Extra";
+    status="Extra";
 
 }
 
@@ -456,17 +456,73 @@ status:status
 });
 
 
+
 });
 
-// SORT BERDASARKAN RACK NUMBER
+
+
+
+
+// ======================
+// 2. SKU FISIK TAPI TIDAK ADA SYSTEM
+// ======================
+
+
+Object.keys(fisik).forEach(sku=>{
+
+
+if(!sistem[sku]){
+
+
+hasil.push({
+
+
+sku:sku,
+
+rack:"-",
+
+desc:"SKU Tidak Ada Di Export Shelf",
+
+system:0,
+
+fisik:fisik[sku],
+
+selisih:0 - fisik[sku],
+
+status:"Not In System"
+
+
+});
+
+
+}
+
+
+
+});
+
+
+
+
+// ======================
+// SORT BY RACK NUMBER
+// ======================
+
 hasil.sort((a,b)=>{
 
-    return a.rack.localeCompare(b.rack, undefined, {
+
+return a.rack.localeCompare(
+    b.rack,
+    undefined,
+    {
         numeric:true,
         sensitivity:"base"
-    });
+    }
+);
+
 
 });
+
 
 
 return hasil;
@@ -608,19 +664,32 @@ data.forEach(row=>{
 let cls="sama";
 
 
+if(row.status=="Not In System"){
+
+    cls="notSystem";
+
+}
+
+
 if(row.status=="Short"){
 
-cls="minus";
+    cls="minus";
 
 }
 
 
 if(row.status=="Extra"){
 
-cls="plus";
+    cls="plus";
 
 }
 
+
+if(row.status=="Not In System"){
+
+    cls="notSystem";
+
+}
 
 
 html+=`
