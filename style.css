@@ -334,9 +334,29 @@ button:hover{
 
 
 .card{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+
+    height:90px;
+    padding:15px;
+    box-sizing:border-box;
 
     transition:.25s;
+}
+.card h3{
+    margin:0;
+    font-size:36px;
+    font-weight:bold;
+    line-height:1;
+}
 
+.card p{
+    margin:8px 0 0;
+    font-size:18px;
+    text-align:center;
 }
 
 .card:hover{
@@ -542,7 +562,25 @@ td{
     justify-items:center;
 
 }
+.summary > .card{
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    text-align:center !important;
+}
 
+.summary > .card > h3{
+    margin:0 !important;
+    width:auto !important;
+    text-align:center !important;
+}
+
+.summary > .card > p{
+    margin:6px 0 0 !important;
+    width:auto !important;
+    text-align:center !important;
+}
 .container{
 
     padding:15px;
