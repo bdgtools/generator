@@ -27,12 +27,13 @@
 
     margin:50px auto;
 
-}.loginLogo{
-
+}
+.loginLogo{
+    display:block;
     width:110px;
-
-    margin-bottom:15px;
-
+    height:auto;
+    margin:0 auto 15px auto;
+    object-fit:contain;
 }
 
 .loginTitle{
