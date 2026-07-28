@@ -739,3 +739,15 @@ function downloadExcel(){
 
 }
 
+///////// ITEMIZE CHECK/////////
+function generateItemize(){
+
+    alert("Itemize Checker - Coming Soon");
+
+}
+
+function downloadItemizeExcel(){
+
+    alert("Download Excel - Coming Soon");
+
+}
