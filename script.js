@@ -859,20 +859,31 @@ function prosesItemize(master, scan){
         let rackArea = "-";
         let display = "-";
         let remark = "Unscan";
+if(scan[sku]){
 
-        if(scan[sku]){
+    remark = "Scanned";
 
-            rackArea = scan[sku].join(", ");
+    rackArea = scan[sku].join(", ");
 
-            remark = "Scanned";
+    if(scan[sku].length > 1){
 
-            if(scan[sku].length > 1){
-                display = "Double Display";
-            }else{
-                display = "Single Display";
-            }
+        display = "Double Display";
+
+    }else{
+
+        if(scan[sku][0] === row.rack){
+
+            display = "Single Display";
+
+        }else{
+
+            display = "Wrong Area";
 
         }
+
+    }
+
+}
 
         hasil.push({
 
@@ -896,6 +907,7 @@ function tampilkanItemizeSummary(data){
     let scanned = 0;
     let unscan = 0;
     let doubleDisplay = 0;
+    let wrongArea = 0;
 
     data.forEach(row=>{
 
@@ -909,6 +921,9 @@ function tampilkanItemizeSummary(data){
 
         if(row.display === "Double Display"){
             doubleDisplay++;
+        }
+        if(row.display === "Wrong Area"){
+            wrongArea++;
         }
 
     });
@@ -935,6 +950,11 @@ function tampilkanItemizeSummary(data){
         <div class="card extra">
             <h3>${doubleDisplay}</h3>
             <p>Double Display</p>
+        </div>
+        
+        <div class="card plus">
+            <h3>${wrongArea}</h3>
+            <p>Wrong Area</p>
         </div>
 
     </div>
@@ -973,14 +993,16 @@ function tampilkanItemizeResult(data){
 
     data.forEach(row=>{
 
-        let cls = "";
-
+       let cls = "sama";
+        
         if(row.remark === "Unscan"){
             cls = "minus";
         }
-
-        if(row.display === "Double Display"){
+        else if(row.display === "Double Display"){
             cls = "plus";
+        }
+        else if(row.display === "Wrong Area"){
+            cls = "wrongArea";
         }
 
         html += `
