@@ -745,8 +745,8 @@ function generateItemize(){
     const masterFile =
     document.getElementById("itemizeMasterFile").files[0];
 
-    const scanFile =
-    document.getElementById("itemizeScanFile").files[0];
+    const scanFiles =
+    document.getElementById("itemizeScanFile").files;
 
     if(!masterFile || !scanFile){
 
@@ -755,12 +755,46 @@ function generateItemize(){
 
     }
 
-    Promise.all([
+    let promises = [];
 
-        readTXT(masterFile),
-        readTXT(scanFile)
+promises.push(readTXT(masterFile));
 
-    ])
+for(let i=0;i<scanFiles.length;i++){
+    promises.push(readTXT(scanFiles[i]));
+}
+
+Promise.all(promises).then(files=>{
+
+    const master =
+    parseItemizeMaster(files[0]);
+
+    let scan = {};
+
+    for(let i=1;i<files.length;i++){
+
+        let hasilScan =
+        parseItemizeScan(files[i]);
+
+        Object.keys(hasilScan).forEach(sku=>{
+
+            if(!scan[sku]){
+                scan[sku]=[];
+            }
+
+            hasilScan[sku].forEach(rack=>{
+
+                if(!scan[sku].includes(rack)){
+                    scan[sku].push(rack);
+                }
+
+            });
+
+        });
+
+    }
+
+    ...
+});
 
     .then(files=>{
 
@@ -773,6 +807,10 @@ function generateItemize(){
        let hasil = prosesItemize(master, scan);
         
         itemizeGlobal = hasil;
+        localStorage.setItem(
+            "itemizeData",
+            JSON.stringify(itemizeGlobal)
+        );
         
         tampilkanItemizeSummary(hasil);
         
@@ -780,11 +818,67 @@ function generateItemize(){
 
     });
 
-}
-
 function downloadItemizeExcel(){
 
-    alert("Download Excel - Coming Soon");
+    if(itemizeGlobal.length === 0){
+
+        alert("Belum ada data.");
+        return;
+
+    }
+
+    let exportData = itemizeGlobal.map(row=>{
+
+        return{
+
+            SKU: row.sku,
+            "Rack Number": row.rack,
+            Description: row.desc,
+            "Rack Number Area": row.rackArea,
+            Display: row.display,
+            Remark: row.remark
+
+        };
+
+    });
+
+    let ws = XLSX.utils.json_to_sheet(exportData);
+    ws['!autofilter'] = {
+    ref:"A1:F1"
+    };
+
+    ws['!cols'] = [
+
+        {wch:15},
+        {wch:15},
+        {wch:40},
+        {wch:30},
+        {wch:18},
+        {wch:15}
+
+    ];
+    ws["!freeze"] = {
+    xSplit:0,
+    ySplit:1
+    };
+
+    let wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "Itemize Checker"
+    );
+
+    XLSX.writeFile(wb,fileName);
+    
+    let today = new Date();
+    let fileName =
+        "Itemize_" +
+        today.getFullYear() +
+        ("-"+String(today.getMonth()+1).padStart(2,"0")) +
+        ("-"+String(today.getDate()).padStart(2,"0")) +
+        ".xlsx";
 
 }
 function parseItemizeMaster(text){
@@ -1038,5 +1132,35 @@ function tampilkanItemizeResult(data){
     `;
 
     document.getElementById("itemizeResult").innerHTML = html;
+
+}
+    function deleteItemizeData(){
+
+    if(!confirm("Hapus semua data Itemize?")){
+        return;
+    }
+
+    itemizeGlobal=[];
+
+    localStorage.removeItem("itemizeData");
+
+    document.getElementById("itemizeSummary").innerHTML="";
+
+    document.getElementById("itemizeResult").innerHTML="";
+
+}
+    window.onload = function(){
+
+    const saved = localStorage.getItem("itemizeData");
+
+    if(saved){
+
+        itemizeGlobal = JSON.parse(saved);
+
+        tampilkanItemizeSummary(itemizeGlobal);
+
+        tampilkanItemizeResult(itemizeGlobal);
+
+    }
 
 }
