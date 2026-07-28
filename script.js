@@ -770,10 +770,13 @@ function generateItemize(){
         const scan =
         parseItemizeScan(files[1]);
 
-        console.log(master);
-        console.log(scan);
-
-        alert("Parser berhasil.");
+       let hasil = prosesItemize(master, scan);
+        
+        itemizeGlobal = hasil;
+        
+        tampilkanItemizeSummary(hasil);
+        
+        tampilkanItemizeResult(hasil);
 
     });
 
@@ -843,5 +846,175 @@ function parseItemizeScan(text){
     });
 
     return scan;
+
+}
+function prosesItemize(master, scan){
+
+    let hasil = [];
+
+    Object.keys(master).forEach(sku=>{
+
+        let row = master[sku];
+
+        let rackArea = "-";
+        let display = "-";
+        let remark = "Unscan";
+
+        if(scan[sku]){
+
+            rackArea = scan[sku].join(", ");
+
+            remark = "Scanned";
+
+            if(scan[sku].length > 1){
+                display = "Double Display";
+            }else{
+                display = "Single Display";
+            }
+
+        }
+
+        hasil.push({
+
+            sku: row.sku,
+            rack: row.rack,
+            desc: row.desc,
+            rackArea: rackArea,
+            display: display,
+            remark: remark
+
+        });
+
+    });
+
+    return hasil;
+
+}
+function tampilkanItemizeSummary(data){
+
+    let total = data.length;
+    let scanned = 0;
+    let unscan = 0;
+    let doubleDisplay = 0;
+
+    data.forEach(row=>{
+
+        if(row.remark === "Scanned"){
+            scanned++;
+        }
+
+        if(row.remark === "Unscan"){
+            unscan++;
+        }
+
+        if(row.display === "Double Display"){
+            doubleDisplay++;
+        }
+
+    });
+
+    let html = `
+
+    <div class="summary">
+
+        <div class="card total">
+            <h3>${total}</h3>
+            <p>Total SKU</p>
+        </div>
+
+        <div class="card tally">
+            <h3>${scanned}</h3>
+            <p>Scanned</p>
+        </div>
+
+        <div class="card short">
+            <h3>${unscan}</h3>
+            <p>Unscan</p>
+        </div>
+
+        <div class="card extra">
+            <h3>${doubleDisplay}</h3>
+            <p>Double Display</p>
+        </div>
+
+    </div>
+
+    `;
+
+    document.getElementById("itemizeSummary").innerHTML = html;
+
+}
+function tampilkanItemizeResult(data){
+
+    let html = `
+
+    <div style="max-height:500px;overflow:auto;">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>SKU</th>
+                <th>Rack Number</th>
+                <th>Description</th>
+                <th>Rack Number Area</th>
+                <th>Display</th>
+                <th>Remark</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+    `;
+
+    data.forEach(row=>{
+
+        let cls = "";
+
+        if(row.remark === "Unscan"){
+            cls = "minus";
+        }
+
+        if(row.display === "Double Display"){
+            cls = "plus";
+        }
+
+        html += `
+
+        <tr class="${cls}">
+
+            <td>${row.sku}</td>
+
+            <td>${row.rack}</td>
+
+            <td>${row.desc}</td>
+
+            <td>${row.rackArea}</td>
+
+            <td>${row.display}</td>
+
+            <td>${row.remark}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+    html += `
+
+        </tbody>
+
+    </table>
+
+    </div>
+
+    `;
+
+    document.getElementById("itemizeResult").innerHTML = html;
 
 }
