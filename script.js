@@ -1,7 +1,7 @@
 let hasilGlobal = [];
 // URL Google Apps Script
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
-
+let itemizeGlobal = [];
 
 // ======================
 // LOGIN
@@ -742,12 +742,106 @@ function downloadExcel(){
 ///////// ITEMIZE CHECK/////////
 function generateItemize(){
 
-    alert("Itemize Checker - Coming Soon");
+    const masterFile =
+    document.getElementById("itemizeMasterFile").files[0];
+
+    const scanFile =
+    document.getElementById("itemizeScanFile").files[0];
+
+    if(!masterFile || !scanFile){
+
+        alert("Upload kedua file terlebih dahulu.");
+        return;
+
+    }
+
+    Promise.all([
+
+        readTXT(masterFile),
+        readTXT(scanFile)
+
+    ])
+
+    .then(files=>{
+
+        const master =
+        parseItemizeMaster(files[0]);
+
+        const scan =
+        parseItemizeScan(files[1]);
+
+        console.log(master);
+        console.log(scan);
+
+        alert("Parser berhasil.");
+
+    });
 
 }
 
 function downloadItemizeExcel(){
 
     alert("Download Excel - Coming Soon");
+
+}
+function parseItemizeMaster(text){
+
+    let master = {};
+
+    let rows = text.split(/\r?\n/);
+
+    rows.forEach(row=>{
+
+        let col = row.split(",");
+
+        if(col.length >= 9){
+
+            let sku = col[0].trim();
+
+            if(!sku) return;
+
+            master[sku] = {
+
+                sku: sku,
+                rack: col[1].trim(),
+                desc: col[8].trim()
+
+            };
+
+        }
+
+    });
+
+    return master;
+
+}
+function parseItemizeScan(text){
+
+    let scan = {};
+
+    let rows = text.split(/\r?\n/);
+
+    rows.forEach(row=>{
+
+        let col = row.split(",");
+
+        if(col.length < 3) return;
+
+        let rack = col[1].trim();
+        let sku  = col[2].trim();
+
+        if(!sku) return;
+
+        if(!scan[sku]){
+            scan[sku] = [];
+        }
+
+        if(!scan[sku].includes(rack)){
+            scan[sku].push(rack);
+        }
+
+    });
+
+    return scan;
 
 }
