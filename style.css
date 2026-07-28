@@ -454,7 +454,11 @@ td{
     background:#ECECEC;
     color:#111;
 
-}  
+}
+.wrongArea{
+    background:#FFE5B4;
+    color:#111;
+}
 #hasilContainer table{
   width:100%;
 }
