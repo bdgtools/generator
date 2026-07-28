@@ -515,28 +515,19 @@ button{
 
 
 .summary .card{
-
     height:95px;
-
     border-radius:14px;
-
     display:flex;
-
     flex-direction:column;
-
     justify-content:center;
-
     align-items:center;
-
+    text-align:center;   /* Tambahkan ini */
     box-shadow:0 6px 18px rgba(0,0,0,.10);
-
     transition:.25s;
-    
     overflow:hidden;
-
     position:relative;
-
-
+    padding:15px;
+    box-sizing:border-box;
 }
     
 .summary .card:hover{
@@ -549,19 +540,17 @@ button{
     
 
 .summary h3{
-
     margin:0;
-
     font-size:32px;
-
     font-weight:700;
-
+    width:100%;
+    text-align:center;
 }
 
 .summary p{
-
-    margin:5px 0 0;
-
+    margin:6px 0 0;
+    width:100%;
+    text-align:center;
 }
 .summary .card::before{
 
