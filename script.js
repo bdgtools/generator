@@ -38,17 +38,8 @@ function login(){
     .then(data => {
 
 
-        if(data.success === true){
-
-
-            // sembunyikan login
-
-            document.getElementById("loginPage")
-            .style.display="none";
-
-
-            // tampilkan dashboard
-
+        if(data.success){
+            // simpan store dulu
             localStorage.setItem(
                 "storeCode",
                 data.storeCode
@@ -57,9 +48,12 @@ function login(){
             
             document.getElementById("dashboardPage").style.display="block";
             
-            document.getElementById("storeInfo").innerHTML =
+            document.getElementById("storeInfo").innerHTML=
                 `Hello, ${data.storeCode} - ${data.storeName}`;
+            // baru load database
             loadItemize();
+
+}
         }else{
 
 
@@ -90,20 +84,18 @@ function login(){
 
 function logout(){
 
+    localStorage.removeItem("storeCode");
 
-   localStorage.removeItem("storeCode");
+    itemizeGlobal = [];
 
+    document.getElementById("itemizeSummary").innerHTML = "";
+    document.getElementById("itemizeResult").innerHTML = "";
 
     document.getElementById("dashboardPage").style.display="none";
-
-
     document.getElementById("loginPage").style.display="block";
 
-
     document.getElementById("storeCode").value="";
-
     document.getElementById("password").value="";
-
 
 }
 
@@ -713,36 +705,36 @@ function generateItemize(){
     const masterFile = document.getElementById("itemizeMasterFile").files[0];
     const scanFiles = document.getElementById("itemizeScanFile").files;
 
-    if(!masterFile || scanFiles.length===0){
-        alert("Upload kedua file terlebih dahulu.");
+    if(!masterFile || scanFiles.length === 0){
+        alert("Upload Master dan minimal satu file Scan.");
         return;
     }
 
     let promises = [];
     promises.push(readTXT(masterFile));
 
-    for(let i=0;i<scanFiles.length;i++){
+    for(let i = 0; i < scanFiles.length; i++){
         promises.push(readTXT(scanFiles[i]));
     }
 
     Promise.all(promises)
-    .then(files=>{
+    .then(files => {
 
         const master = parseItemizeMaster(files[0]);
 
         let scan = {};
 
-        for(let i=1;i<files.length;i++){
+        for(let i = 1; i < files.length; i++){
 
             const hasilScan = parseItemizeScan(files[i]);
 
-            Object.keys(hasilScan).forEach(sku=>{
+            Object.keys(hasilScan).forEach(sku => {
 
                 if(!scan[sku]){
-                    scan[sku]=[];
+                    scan[sku] = [];
                 }
 
-                hasilScan[sku].forEach(rack=>{
+                hasilScan[sku].forEach(rack => {
 
                     if(!scan[sku].includes(rack)){
                         scan[sku].push(rack);
@@ -754,14 +746,21 @@ function generateItemize(){
 
         }
 
-        const hasil = prosesItemize(master,scan);
+        const hasil = prosesItemize(master, scan);
 
         itemizeGlobal = hasil;
 
-        tampilkanItemizeSummary(hasil);
-        tampilkanItemizeResult(hasil);
+        tampilkanItemizeSummary(itemizeGlobal);
+        tampilkanItemizeResult(itemizeGlobal);
 
+        // Simpan ke Google Sheet
         saveItemize();
+
+    })
+    .catch(err => {
+
+        console.error(err);
+        alert("Gagal memproses file.");
 
     });
 
@@ -1128,19 +1127,38 @@ function saveItemize(){
     if(!confirm("Hapus semua data Itemize?")){
         return;
     }
-    POST
-    action:"deleteItemize"
-    storeCode:"JW2001"
 
-    itemizeGlobal=[];
+    fetch(GAS_URL,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            action:"deleteItemize",
+            storeCode:localStorage.getItem("storeCode")
+        })
+    })
+    .then(r=>r.json())
+    .then(res=>{
 
-    document.getElementById("itemizeSummary").innerHTML="";
+        if(res.success){
 
-    document.getElementById("itemizeResult").innerHTML="";
+            itemizeGlobal=[];
+
+            tampilkanItemizeSummary([]);
+            tampilkanItemizeResult([]);
+
+        }else{
+
+            alert(res.message);
+
+        }
+
+    })
+    .catch(console.error);
 
 }
 
-}
     function loadItemize(){
 
     const storeCode = localStorage.getItem("storeCode");
@@ -1157,15 +1175,25 @@ function saveItemize(){
 
     .then(res=>{
 
-        if(!res.success) return;
+    if(!res.success){
+        return;
+    }
+        .catch(console.error);
 
-        itemizeGlobal = res.data;
+    itemizeGlobal = res.data;
 
-        if(itemizeGlobal.length>0){
+    if(itemizeGlobal.length === 0){
+        console.log("Belum ada data Itemize.");
+        return;
+    }
 
-            tampilkanItemizeSummary(itemizeGlobal);
-            tampilkanItemizeResult(itemizeGlobal);
+    tampilkanItemizeSummary(itemizeGlobal);
+    tampilkanItemizeResult(itemizeGlobal);
 
+})
+        if (!Array.isArray(res.data)) {
+            console.error("Data Itemize tidak valid");
+            return;
         }
 
     })
