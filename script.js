@@ -51,6 +51,7 @@ function login(){
 
             document.getElementById("dashboardPage")
             .style.display="block";
+            loadItemize();
 
 
             document.getElementById("storeInfo").innerHTML =
@@ -95,7 +96,7 @@ function login(){
 function logout(){
 
 
-    localStorage.removeItem("loginStore");
+   localStorage.removeItem("storeCode");
 
 
     document.getElementById("dashboardPage").style.display="none";
@@ -731,11 +732,6 @@ function downloadExcel(){
 
 
 
-    XLSX.writeFile(
-        wb,
-        "Stock_Balance_Result.xlsx"
-    );
-
 
 }
 
@@ -748,7 +744,7 @@ function generateItemize(){
     const scanFiles =
     document.getElementById("itemizeScanFile").files;
 
-    if(!masterFile || !scanFile){
+    if(!masterFile || scanFiles.length===0){
 
         alert("Upload kedua file terlebih dahulu.");
         return;
@@ -806,11 +802,23 @@ Promise.all(promises).then(files=>{
 
        let hasil = prosesItemize(master, scan);
         
-        itemizeGlobal = hasil;
-        localStorage.setItem(
-            "itemizeData",
-            JSON.stringify(itemizeGlobal)
-        );
+        const storeCode = localStorage.getItem("storeCode");
+        fetch(GAS_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                action:"saveItemizeBatch",
+                storeCode:storeCode,
+                data:hasil
+            })
+        })
+            
+        .then(r=>r.json())
+        .then(res=>{
+            
+            if(res.success){
+                alert("Data berhasil disimpan");
+            }
+        });
         
         tampilkanItemizeSummary(hasil);
         
@@ -879,6 +887,10 @@ function downloadItemizeExcel(){
         ("-"+String(today.getMonth()+1).padStart(2,"0")) +
         ("-"+String(today.getDate()).padStart(2,"0")) +
         ".xlsx";
+    XLSX.writeFile(
+        wb,
+        "Stock_Balance_Result.xlsx"
+    );
 
 }
 function parseItemizeMaster(text){
@@ -1149,9 +1161,6 @@ function tampilkanItemizeResult(data){
     document.getElementById("itemizeResult").innerHTML="";
 
 }
-    window.onload = function(){
-
-    const saved = localStorage.getItem("itemizeData");
 
     if(saved){
 
@@ -1162,5 +1171,32 @@ function tampilkanItemizeResult(data){
         tampilkanItemizeResult(itemizeGlobal);
 
     }
+
+}
+    function loadItemize(){
+
+    const storeCode =
+        localStorage.getItem("storeCode");
+
+    fetch(
+        GAS_URL +
+        "?action=loadItemize&storeCode="+storeCode
+    )
+
+    .then(r=>r.json())
+
+    .then(res=>{
+
+        if(res.success){
+
+            itemizeGlobal=res.data;
+
+            tampilkanItemizeSummary(itemizeGlobal);
+
+            tampilkanItemizeResult(itemizeGlobal);
+
+        }
+
+    });
 
 }
