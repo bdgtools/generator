@@ -26,10 +26,11 @@ function login(){
 
 
     fetch(
-      GAS_URL +
-      "?storeCode=" + encodeURIComponent(storeCode) +
-      "&password=" + encodeURIComponent(password)
-    )
+    GAS_URL +
+    "?action=login" +
+    "&storeCode=" + encodeURIComponent(storeCode) +
+    "&password=" + encodeURIComponent(password)
+)
 
 
     .then(response => response.json())
@@ -1163,41 +1164,40 @@ function saveItemize(){
 
     const storeCode = localStorage.getItem("storeCode");
 
-    if(!storeCode) return;
+    if(!storeCode){
+        return;
+    }
 
     fetch(
         GAS_URL +
         "?action=loadItemize&storeCode=" +
         encodeURIComponent(storeCode)
     )
+    .then(r => r.json())
+    .then(res => {
 
-    .then(r=>r.json())
-
-    .then(res=>{
-
-    if(!res.success){
-        return;
-    }
-        .catch(console.error);
-
-    itemizeGlobal = res.data;
-
-    if(itemizeGlobal.length === 0){
-        console.log("Belum ada data Itemize.");
-        return;
-    }
-
-    tampilkanItemizeSummary(itemizeGlobal);
-    tampilkanItemizeResult(itemizeGlobal);
-
-})
-        if (!Array.isArray(res.data)) {
-            console.error("Data Itemize tidak valid");
+        if(!res.success){
             return;
         }
 
-    })
+        if(!Array.isArray(res.data)){
+            console.error("Data Itemize tidak valid.");
+            return;
+        }
 
-    .catch(console.error);
+        itemizeGlobal = res.data;
+
+        if(itemizeGlobal.length === 0){
+            console.log("Belum ada data Itemize.");
+            return;
+        }
+
+        tampilkanItemizeSummary(itemizeGlobal);
+        tampilkanItemizeResult(itemizeGlobal);
+
+    })
+    .catch(err => {
+        console.error(err);
+    });
 
 }
