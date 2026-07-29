@@ -49,10 +49,14 @@ function login(){
 
             // tampilkan dashboard
 
-            document.getElementById("dashboardPage")
-            .style.display="block";
+            localStorage.setItem(
+                "storeCode",
+                data.storeCode
+            );
+            
+            document.getElementById("dashboardPage").style.display="block";
+            
             loadItemize();
-
 
             document.getElementById("storeInfo").innerHTML =
             `Hello, ${data.storeCode} - ${data.storeName}`;
@@ -247,29 +251,6 @@ function generateData(){
         readTXT(fisikFile),
         readTXT(sistemFile)
     ])
-
-    .then(files=>{
-
-
-        const fisik =
-        parseFisik(files[0]);
-
-
-        const sistem =
-        parseSistem(files[1]);
-
-
-        const hasil =
-        prosesStock(fisik,sistem);
-        
-        hasilGlobal = hasil;
-        
-        tampilkanSummary(hasil);
-        
-        tampilkanHasil(hasil);
-
-
-    });
 
 
 }
@@ -877,20 +858,16 @@ function downloadItemizeExcel(){
         ws,
         "Itemize Checker"
     );
-
-    XLSX.writeFile(wb,fileName);
     
-    let today = new Date();
+    let today=new Date();
+    
     let fileName =
         "Itemize_" +
         today.getFullYear() +
         ("-"+String(today.getMonth()+1).padStart(2,"0")) +
         ("-"+String(today.getDate()).padStart(2,"0")) +
         ".xlsx";
-    XLSX.writeFile(
-        wb,
-        "Stock_Balance_Result.xlsx"
-    );
+    XLSX.writeFile(wb,fileName);
 
 }
 function parseItemizeMaster(text){
