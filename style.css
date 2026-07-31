@@ -1,10 +1,41 @@
-/* LOGIN HEADER */
+/* =====================================================
+   MR DIY STORE TOOLS v2.0
+   GLOBAL STYLE
+===================================================== */
 
-.loginHeader{
-    background:#FFD400;
-    text-align:center;
-    padding:30px 20px;
+
+*{
+    box-sizing:border-box;
 }
+
+
+
+body{
+
+    margin:0;
+
+    padding:20px;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#FFD400;
+
+    color:#111;
+
+}
+
+
+
+
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+
+
 #loginPage{
 
     width:100%;
@@ -14,283 +45,112 @@
     margin:50px auto;
 
 }
-.loginLogo{
-    width:110px;
-    height:auto;
-}
-.loginTitle{
 
-    display:flex;
 
-    flex-direction:column;
 
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-}
-.loginTitle h1{
-    margin:10px 0 5px;
-}
-
-.loginTitle p{
-    margin:0;
-}
-#loginPage .box{
-
-    margin-top:0;
-
-    padding:35px;
-
-    border-radius:18px;
-
-    background:#fff;
-
-    border:2px solid #FFD400;
-
-}
-.loginBtn{
-
-    width:100%;
-
-    height:45px;
-
-    font-size:16px;
-
-    border-radius:10px;
-
-    background:#111;
-
-    transition:.25s;
-    
-    position: relative;
-    z-index: 9999;
-}
 .loginBox{
-    position: relative;
-    z-index: 100;
-}
-
-
-.loginBtn:hover{
-
-    background:#FFD400;
-
-    color:#111;
-
-    transform:translateY(-2px);
-
-}
-
-.menuGrid{
-
-    display:grid;
-
-    grid-template-columns:repeat(2,220px);
-
-    justify-content:center;
-
-    gap:24px;
-
-    margin:25px auto;
-
-}
-
-.menuCard{
-
-    background:#fff;
-    border:2px solid #FFD400;
-    border-radius:14px;
-
-    width:190px;
-    height:140px;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    text-align:center;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.12);
-
-}
-.menuCard,
-.menuCard *{
-
-    cursor:pointer;
-
-}
-
-.menuCard:hover{
-
-    background:#FFD400;
-
-    transform:translateY(-5px) scale(1.03);
-
-    box-shadow:0 15px 30px rgba(0,0,0,.25);
-
-}
-.menuCard:hover .icon{
-
-    transform:scale(1.15) rotate(-5deg);
-
-    transition:.3s;
-
-}
-.menuCard h3{
-
-    margin:5px 0;
-    font-size:18px;
-    font-weight:700;
-
-}
-.menuCard:hover h3{
-
-    color:#000;
-
-}
-.menuCard:hover p{
-
-    color:#222;
-
-}
-.menuCard p{
-
-    margin:0;
-    font-size:13px;
-    color:#666;
-    line-height:1.3;
-
-}
-.icon{
-
-    font-size:38px;
-    margin-bottom:8px;
-
-}  
-body{
-    margin:0;
-    padding:20px;
-    font-family:Arial,sans-serif;
-    background:#FFD400;
-}
-.container{
-
-    max-width:1200px;
-    margin:auto;
-    background:#fff;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 8px 25px rgba(0,0,0,.25);
-
-}
-
-h1{
-  text-align:center;
-  color:#111;
-  font-size:28px;
-}
-.header{
 
     position:relative;
 
-    justify-content:center;
-    
-    display:flex;
+}
 
-    align-items:center;
+
+
+
+
+.loginHeader{
 
     background:#FFD400;
 
-    border-radius:12px;
+    padding:35px 20px;
 
-    padding:18px 25px;
+    text-align:center;
 
-}
-.userInfo{
-
-position:absolute;
-left:20px;
-top:18px;
-
-background:#111;
-color:#FFD400;
-
-padding:8px 14px;
-
-border-radius:25px;
-
-font-size:14px;
-
-font-weight:bold;
+    border-radius:18px 18px 0 0;
 
 }
 
-.header button{
 
-    position:absolute;
 
-    right:20px;
+.loginLogo{
 
-}
-.headerLeft{
+    width:110px;
 
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:18px;
+    height:auto;
 
 }
-.headerText h1{
+
+
+
+.loginTitle h1{
+
+    margin:15px 0 5px;
+
+    font-size:28px;
+
+}
+
+
+
+.loginTitle p{
 
     margin:0;
 
-}
-
-.headerText p{
-
-    margin:5px 0 0;
+    color:#333;
 
 }
 
-.logo{
-  width:70px;
-  height:auto;
-  display:block;
-  margin:0 auto 5px auto;
+
+
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+
+.container{
+
+    max-width:1200px;
+
+    margin:20px auto;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.25);
+
 }
 
-.header h1{
 
-  margin:0;
-  font-size:20px;
-  color:#111;
 
-}
-  
+
+
 .box{
-  margin-top:20px;
-  padding:20px;
-  border-radius:12px;
-  border:2px solid #FFD400;
-  background:#fff;
+
+    margin-top:20px;
+
+    padding:20px;
+
+    background:#fff;
+
+    border-radius:15px;
+
+    border:2px solid #FFD400;
+
 }
 
 
-label{
-  font-weight:bold;
-  color:#111;
-}
+
+
+
+/* =====================================================
+   INPUT
+===================================================== */
 
 
 input[type=text],
@@ -298,22 +158,45 @@ input[type=password],
 input[type=file],
 select{
 
+
     width:100%;
 
     padding:12px;
 
-    box-sizing:border-box;
+    border-radius:10px;
 
     border:1px solid #ccc;
 
-    border-radius:8px;
+    margin-top:8px;
 
-}#search{
-
-    width:260px;
 
 }
+
+
+
+
+
+label{
+
+    font-weight:bold;
+
+    display:block;
+
+    margin-bottom:5px;
+
+}
+
+
+
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+
 button{
+
 
     background:#111;
 
@@ -321,20 +204,24 @@ button{
 
     border:none;
 
-    border-radius:8px;
+    border-radius:10px;
 
     padding:12px 25px;
+
+    font-weight:bold;
 
     cursor:pointer;
 
     transition:.25s;
 
-    font-weight:bold;
 
 }
 
 
+
+
 button:hover{
+
 
     background:#FFD400;
 
@@ -342,324 +229,151 @@ button:hover{
 
     transform:translateY(-2px);
 
+
 }
 
-.summary{
 
-    display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+
+
+.loginBtn{
+
+
+    width:100%;
+
+    margin-top:20px;
+
+    height:45px;
+
+    font-size:16px;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   HEADER MODULE
+===================================================== */
+
+
+.header{
+
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#FFD400;
+
+    padding:18px 25px;
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+
+.header button{
+
+
+    position:absolute;
+
+    right:20px;
+
+
+}
+
+
+
+
+
+.headerLeft{
+
+
+    display:flex;
+
+    align-items:center;
 
     gap:15px;
 
-    margin:25px 0;
 
 }
 
 
-.card{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
 
-    height:90px;
-    padding:15px;
-    box-sizing:border-box;
 
-    transition:.25s;
+
+.logo{
+
+
+    width:70px;
+
 }
-.card h3{
+
+
+
+.headerText h1{
+
+
     margin:0;
-    font-size:36px;
-    font-weight:bold;
-    line-height:1;
-}
 
-.card p{
-    margin:8px 0 0;
-    font-size:18px;
-    text-align:center;
-}
+    font-size:22px;
 
-.card:hover{
-
-    transform:translateY(-3px);
-
-}
-tbody tr{
-
-    transition:.2s;
 
 }
 
-tbody tr:hover{
 
-    background:#FFF6BF;
 
-}
-.total{
+.headerText p{
 
-    background:linear-gradient(135deg,#222,#000);
-    color:white;
 
-}
+    margin:5px 0 0;
 
-.tally{
+    font-size:14px;
 
-    background:linear-gradient(135deg,#FFD400,#FFC107);
-    color:#111;
 
 }
 
-.short{
 
-    background:linear-gradient(135deg,#ff5b5b,#dc3545);
-    color:white;
 
-}
 
-.extra{
+/* =====================================================
+   USER INFO
+===================================================== */
 
-    background:linear-gradient(135deg,#FFE082,#FFC107);
-    color:#222;
 
-}
-table{
+.userInfo{
 
- width:100%;
- border-collapse:collapse;
- margin-top:20px;
 
-}
+    position:absolute;
 
-th{
+    left:20px;
 
-    letter-spacing:.3px;
+    top:20px;
 
-    font-weight:600;
 
     background:#111;
 
     color:#FFD400;
-}
 
-td{
+    padding:8px 15px;
 
- padding:8px;
- border:1px solid #ddd;
+    border-radius:25px;
 
-}
+    font-size:14px;
 
-.plus{
-
-    background:#FFF8D6;
-    color:#111;
-
-}
-
-.minus{
-
-    background:#FFD6D6;
-    color:#111;
-
-}
-
-.sama{
-
-    background:#DFF5E4;
-    color:#111;
-
-}
-
-.notSystem{
-
-    background:#ECECEC;
-    color:#111;
-
-}
-.wrongArea{
-    background:#FFE5B4;
-    color:#111;
-}
-#hasilContainer{
-
-    margin-top:20px;
-
-    max-height:600px;
-
-    overflow:auto;
-
-}
-#hasilContainer table{
-  width:100%;
-}
-
-
-#hasilContainer thead th{
-
-  position:sticky;
-  top:0;
-  background:#111;
-  color:#FFD400;
-  z-index:5;
-  padding:10px;
-
-}
-
-#hasilContainer thead{
-  position:sticky;
-  top:0;
-}
-.actionBtn{
-  height:42px;
-  padding:0 20px;
-  border-radius:8px;
-  font-weight:bold;
-  border:none;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-    margin-top:15px;
-    margin-right:8px;
-}
-
-
-.generateBtn{
-  background:#111;
-  color:white;
-}
-
-.downloadBtn{
-  background:#111;
-  color:white;
-}
-.summary .card{
-    height:95px;
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;   /* Tambahkan ini */
-    box-shadow:0 6px 18px rgba(0,0,0,.10);
-    transition:.25s;
-    overflow:hidden;
-    position:relative;
-    padding:15px;
-    box-sizing:border-box;
-}
-    
-.summary .card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:0 12px 25px rgba(0,0,0,.18);
-
-}
-    
-.summary h3{
-    margin:0;
-    font-size:32px;
-    font-weight:700;
-    width:100%;
-    text-align:center;
-}
-
-.summary p{
-    margin:6px 0 0;
-    width:100%;
-    text-align:center;
-}
-.summary .card::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-
-    left:0;
-
-    width:5px;
-
-    height:100%;
-
-    background:white;
-
-    opacity:.3;
-}
-@media(max-width:768px){
-
-.menuGrid{
-    grid-template-columns:1fr;
-    
-    justify-items:center;
-
-}
-.summary > .card{
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-    align-items:center !important;
-    text-align:center !important;
-}
-
-.summary > .card > h3{
-    margin:0 !important;
-    width:auto !important;
-    text-align:center !important;
-}
-
-.summary > .card > p{
-    margin:6px 0 0 !important;
-    width:auto !important;
-    text-align:center !important;
-}
-.container{
-
-    padding:15px;
-
-}
-
-button{
-
-    width:100%;
-
-    margin-top:10px;
-
-}
-.summary{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-
-    gap:15px;
-
-    margin:25px 0;
-
-}
-.uploadRow{
-    display:flex;
-    gap:20px;
-    margin-top:20px;
-    flex-wrap:wrap;
-}
-
-.uploadCard{
-    flex:1;
-    min-width:280px;
-    border:2px solid #FFD400;
-    border-radius:12px;
-    padding:18px;
-    background:#fff;
-}
-
-.uploadCard label{
-    display:block;
-    margin-bottom:10px;
     font-weight:bold;
+
+
 }
