@@ -625,13 +625,24 @@ button{
 
 }
     .userInfo{
-    margin-top:12px;
-    padding:10px 15px;
-    background:#fff6cc;
-    border-left:5px solid #FFD400;
-    border-radius:8px;
+
+    position:absolute;
+    left:20px;
+    top:18px;
+
+    background:#111;
+    color:#FFD400;
+
+    padding:8px 14px;
+
+    border-radius:25px;
+
+    font-size:14px;
+
     font-weight:bold;
-    color:#222;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.15);
+
 }
 .uploadRow{
     display:flex;
