@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>MR DIY Store Tools</title>
 
 <link rel="stylesheet" href="style.css">
@@ -10,467 +13,964 @@
 </head>
 
 <body>
+
+<!-- ======================================================
+LOGIN
+====================================================== -->
+
 <div id="loginPage" class="loginBox">
-    
-   <div class="loginHeader">
-    <img src="logo mrdiy.png" class="loginLogo" alt="MR DIY">
 
-    <div class="loginTitle">
-        <h1>MR DIY Store Tools</h1>
-        <p>Store Utility & Inventory Management</p>
-    </div>
-   </div>
+    <div class="loginHeader">
 
-    <div class="box">
+        <img src="logo mrdiy.png"
+             class="loginLogo"
+             alt="MR DIY">
 
-        <h3 style="text-align:center;margin-top:0;">Login</h3>
+        <div class="loginTitle">
 
-        <label>Store Code</label>
-
-        <input
-            type="text"
-            id="storeCode"
-            placeholder="Contoh : JW2001"
-            style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0 15px;">
-
-        <label>Password</label>
-
-        <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            style="width:100%;padding:12px;box-sizing:border-box;margin:8px 0;">
-
-        <button id="loginBtn" class="loginBtn">
-            LOGIN
-        </button>
-
-        <p id="loginMsg" style="color:#dc3545;text-align:center;margin-top:15px;"></p>
-
-    </div>
-
-</div>
-
-
-<!-- DASHBOARD -->
-
-<div id="dashboardPage" class="container" style="display:none">
-    
-    <div class="header">
-
-    <div class="userInfo">
-        👤 <span class="storeInfo"></span>
-    </div>
-
-    <div class="headerLeft">
-        <img src="logo mrdiy.png" class="logo">
-
-        <div class="headerText">
             <h1>MR DIY Store Tools</h1>
-        </div>
-    </div>
 
-    <button onclick="logout()">Logout</button>
-
-</div>
-
-    <div class="menuGrid">
-
-
-        <div class="menuCard" onclick="openModule('stock')">
-
-            <div class="icon">📦</div>
-
-            <h3>Stock Balance</h3>
-
-            <p>Compare Physical vs System</p>
+            <p>
+                Store Utility & Inventory Management
+            </p>
 
         </div>
-
-
-        <div class="menuCard" onclick="openModule('sales')">
-
-            <div class="icon">💰</div>
-
-            <h3>Sales Checker</h3>
-
-            <p>Analyze Daily Sales</p>
-
-        </div>
-
-
-        <div class="menuCard" onclick="openModule('itemize')">
-
-            <div class="icon">🛒</div>
-
-            <h3>Itemize Checker</h3>
-
-            <p>Analyze Itemize File</p>
-
-        </div>
-
-
-        <div class="menuCard" onclick="openModule('report')">
-
-            <div class="icon">📊</div>
-
-            <h3>Reports</h3>
-
-            <p>Dashboard & History</p>
-
-        </div>
-
-
-    </div>
-
-
-</div>
-
-
-
-<!-- STOCK MODULE -->
-
-<div id="stockModule" class="container" style="display:none">
-
-    <div class="header">
-
-        <div class="userInfo">
-            👤 <span class="storeInfo"></span>
-        </div>
-
-        <div class="headerLeft">
-
-            <img src="logo mrdiy.png" class="logo">
-
-            <div class="headerText">
-                <h1>Stock Balance Checker</h1>
-            </div>
-
-        </div>
-
-        <button onclick="backDashboard()">⬅ Dashboard</button>
-    </div>
-    
-    <h1>Stock Balance Check Generator</h1>
-
-    <div class="uploadRow">
-        
-        <div class="uploadCard">
-            <label>Export Shelf</label>
-            <input type="file" id="sistemFile">
-        </div>
-        
-        <div class="uploadCard">
-            <label>Scan Fisik</label>
-            <input type="file" id="fisikFile" multiple>
-        </div>
-    </div>
-
-    <div class="actionGroup">
-        <button class="actionBtn generateBtn"
-            onclick="generateData()">
-            Generate
-        </button>
-        
-        <button class="actionBtn downloadBtn"
-            onclick="downloadExcel()">
-            Download Excel
-        </button>
-    </div>
-
-    <div id="summary"></div>
-
-    <div style="margin-top:20px">
-
-
-        <input
-
-        type="text"
-
-        id="search"
-
-        placeholder="Cari SKU atau Deskripsi..."
-
-        onkeyup="filterTabel()"
-
-        style="padding:10px;width:250px;">
-
-        <select id="filter" onchange="filterTabel()" style="padding:10px">
-
-            <option value="all">Semua</option>
-
-            <option value="plus">extra (+)</option>
-
-            <option value="minus">short (-)</option>
-
-            <option value="sama">tally (0)</option>
-
-
-        </select>
-
-    </div>
-
-    <div id="hasilContainer">
-
-        <div id="hasil"></div>
-
-    </div>
-
-
-</div>
-
-<!-- SALES MODULE -->
-
-<div id="salesModule" class="container" style="display:none">
-
-    <div class="header">
-
-        <div class="userInfo">
-            👤 <span class="storeInfo"></span>
-        </div>
-
-        <div class="headerLeft">
-            <img src="logo mrdiy.png" class="logo">
-
-            <div class="headerText">
-                <h1>Sales Checker</h1>
-            </div>
-        </div>
-
-        <button onclick="backDashboard()">⬅ Dashboard</button>
-
-    </div>
-
-    <div class="box">
-
-        <h2>Sales Checker</h2>
-
-        <p>Coming Soon...</p>
-
-    </div>
-
-</div>
-
-
-
-<!-- ITEMIZE MODULE -->
-
-<div id="itemizeModule" class="container" style="display:none">
-
-    <div class="header">
-
-        <div class="userInfo">
-            👤 <span class="storeInfo"></span>
-        </div>
-
-        <div class="headerLeft">
-
-            <img src="logo mrdiy.png" class="logo">
-
-            <div class="headerText">
-                <h1>Itemize Checker</h1>
-            </div>
-
-        </div>
-
-        <button onclick="backDashboard()">⬅ Dashboard</button>
 
     </div>
 
 
     <div class="box">
 
-        <label>Upload Export Shelf (Master)</label>
+        <h2 class="center">
+            Login
+        </h2>
+
+        <label>
+            Store Code
+        </label>
 
         <input
-            type="file"
-            id="itemizeMasterFile"
-            accept=".txt,.csv">
+            id="storeCode"
+            type="text"
+            placeholder="Contoh : JW2001"
+            autocomplete="username">
 
-        <br><br>
 
-        <label>Upload Scan TXT</label>
+        <label>
+            Password
+        </label>
 
         <input
-            type="file"
-            id="itemizeScanFile"
-            accept=".txt"
-            multiple>
+            id="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password">
 
-        <br><br>
+
+        <button
+            id="loginBtn"
+            class="loginBtn">
+
+            LOGIN
+
+        </button>
+
+        <p id="loginMsg" class="loginMsg"></p>
+
+    </div>
+
+</div>
+
+
+
+<!-- ======================================================
+DASHBOARD
+====================================================== -->
+
+<div
+    id="dashboardPage"
+    class="container"
+    style="display:none;">
+
+    <header class="header">
+
+        <div class="userInfo">
+
+            👤
+
+            <span class="storeInfo">
+                -
+            </span>
+
+        </div>
+
+
+        <div class="headerLeft">
+
+            <img
+                src="logo mrdiy.png"
+                class="logo"
+                alt="MR DIY">
+
+            <div class="headerText">
+
+                <h1>
+                    MR DIY Store Tools
+                </h1>
+
+                <p>
+                    Internal Utility Application
+                </p>
+
+            </div>
+
+        </div>
+
+        <button onclick="logout()">
+            Logout
+        </button>
+
+    </header>
+
+
+
+    <section class="dashboardWelcome">
+
+        <h2>
+            Welcome
+        </h2>
+
+        <p class="storeInfo">
+            Loading...
+        </p>
+
+    </section>
+
+
+
+    <section class="menuGrid">
+
+        <div
+            class="menuCard"
+            onclick="openModule('stock')">
+
+            <div class="icon">
+
+                📦
+
+            </div>
+
+            <h3>
+                Stock Balance
+            </h3>
+
+            <p>
+
+                Compare Physical vs System
+
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="menuCard"
+            onclick="openModule('itemize')">
+
+            <div class="icon">
+
+                🛒
+
+            </div>
+
+            <h3>
+
+                Itemize Checker
+
+            </h3>
+
+            <p>
+
+                Check Item Display
+
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="menuCard"
+            onclick="openModule('sales')">
+
+            <div class="icon">
+
+                💰
+
+            </div>
+
+            <h3>
+
+                Sales Checker
+
+            </h3>
+
+            <p>
+
+                Analyze Sales
+
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="menuCard"
+            onclick="openModule('report')">
+
+            <div class="icon">
+
+                📊
+
+            </div>
+
+            <h3>
+
+                Reports
+
+            </h3>
+
+            <p>
+
+                Dashboard & History
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="dashboardInfo">
+
+        <div class="card total">
+
+            <h3>
+
+                Version
+
+            </h3>
+
+            <p>
+
+                2.0
+
+            </p>
+
+        </div>
+
+        <div class="card tally">
+
+            <h3>
+
+                Status
+
+            </h3>
+
+            <p>
+
+                Ready
+
+            </p>
+
+        </div>
+
+        <div class="card extra">
+
+            <h3>
+
+                Module
+
+            </h3>
+
+            <p>
+
+                4 Active
+
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- ======================================================
+STOCK MODULE
+====================================================== -->
+
+
+<div id="stockModule" class="container modulePage" style="display:none">
+
+
+    <header class="header">
+
+        <div class="userInfo">
+
+            👤 <span class="storeInfo"></span>
+
+        </div>
+
+
+        <div class="headerLeft">
+
+            <img
+                src="logo mrdiy.png"
+                class="logo"
+                alt="MR DIY">
+
+
+            <div class="headerText">
+
+                <h1>
+                    Stock Balance Checker
+                </h1>
+
+                <p>
+                    Physical vs System Comparison
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <button onclick="backDashboard()">
+
+            ⬅ Dashboard
+
+        </button>
+
+
+    </header>
+
+
+
+    <!-- UPLOAD AREA -->
+
+    <section class="box">
+
+
+        <h2>
+            Upload Data
+        </h2>
+
+
+        <div class="uploadRow">
+
+
+            <div class="uploadCard">
+
+
+                <label>
+
+                    Export Shelf
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="sistemFile"
+                    accept=".txt,.csv">
+
+
+                <small>
+
+                    File sistem stock
+
+                </small>
+
+
+            </div>
+
+
+
+            <div class="uploadCard">
+
+
+                <label>
+
+                    Scan Fisik
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="fisikFile"
+                    accept=".txt,.csv"
+                    multiple>
+
+
+                <small>
+
+                    Bisa upload beberapa file scan
+
+                </small>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+    <!-- ACTION -->
+
+    <section class="actionArea">
+
 
         <button
             class="actionBtn generateBtn"
-            onclick="generateItemize()">
+            onclick="generateData()">
 
-            Generate
+
+            ⚙ Generate
+
 
         </button>
+
+
 
         <button
             class="actionBtn downloadBtn"
-            onclick="downloadItemizeExcel()">
+            onclick="downloadExcel()">
 
-            Download Excel
+
+            ⬇ Download Excel
+
 
         </button>
 
-        <button
-            class="actionBtn"
-            onclick="deleteItemizeData()">
 
-            Delete Data
+    </section>
+
+
+
+
+
+    <!-- SUMMARY -->
+
+    <div id="summary"></div>
+
+
+
+
+
+    <!-- FILTER -->
+
+    <section class="box">
+
+
+        <div class="filterBar">
+
+
+            <input
+
+                type="text"
+
+                id="search"
+
+                placeholder="Cari SKU atau Deskripsi..."
+
+                onkeyup="filterTabel()">
+
+
+            <select
+
+                id="filter"
+
+                onchange="filterTabel()">
+
+
+
+                <option value="all">
+
+                    Semua
+
+                </option>
+
+
+
+                <option value="plus">
+
+                    Extra (+)
+
+                </option>
+
+
+
+                <option value="minus">
+
+                    Short (-)
+
+                </option>
+
+
+
+                <option value="sama">
+
+                    Tally (0)
+
+                </option>
+
+
+
+            </select>
+
+
+
+        </div>
+
+
+
+    </section>
+
+
+
+
+
+    <!-- RESULT TABLE -->
+
+    <section class="box">
+
+
+        <div id="hasilContainer">
+
+
+            <div id="hasil"></div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+</div>
+
+
+<!-- ======================================================
+SALES MODULE
+====================================================== -->
+
+<div id="salesModule" class="container modulePage" style="display:none">
+
+
+    <header class="header">
+
+        <div class="userInfo">
+
+            👤 <span class="storeInfo"></span>
+
+        </div>
+
+
+        <div class="headerLeft">
+
+            <img
+                src="logo mrdiy.png"
+                class="logo">
+
+
+            <div class="headerText">
+
+                <h1>
+                    Sales Checker
+                </h1>
+
+                <p>
+                    Daily Sales Analysis
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <button onclick="backDashboard()">
+
+            ⬅ Dashboard
 
         </button>
 
-    </div>
 
-    <div id="itemizeSummary"></div>
+    </header>
 
-    <div class="box">
 
-        <div id="itemizeResult"></div>
 
-    </div>
+
+    <section class="box">
+
+
+        <h2>
+
+            Sales Checker
+
+        </h2>
+
+
+        <p>
+
+            Module masih dalam pengembangan.
+
+        </p>
+
+
+    </section>
+
+
 
 </div>
 
 
+<!-- ======================================================
+ITEMIZE MODULE
+====================================================== -->
 
-<!-- REPORT MODULE -->
+<div id="itemizeModule" class="container modulePage" style="display:none">
 
-<div id="reportModule" class="container" style="display:none">
 
-    <div class="header">
+    <header class="header">
+
 
         <div class="userInfo">
+
             👤 <span class="storeInfo"></span>
+
         </div>
+
+
 
         <div class="headerLeft">
 
-            <img src="logo mrdiy.png" class="logo">
+
+            <img
+                src="logo mrdiy.png"
+                class="logo">
+
+
 
             <div class="headerText">
-                <h1>Reports</h1>
+
+
+                <h1>
+
+                    Itemize Checker
+
+                </h1>
+
+
+                <p>
+
+                    Item Display Verification
+
+                </p>
+
+
             </div>
 
+
         </div>
 
-        <button onclick="backDashboard()">⬅ Dashboard</button>
 
-    </div>
 
-    <div class="box">
+        <button onclick="backDashboard()">
 
-        <h2>Reports</h2>
+            ⬅ Dashboard
 
-        <p>Coming Soon...</p>
+        </button>
 
-    </div>
 
-</div>
-<!-- ITEMIZE MODULE -->
 
-<div id="itemizeModule" class="container" style="display:none;">
+    </header>
 
-    <div class="header">
-        <div class="userInfo">
-            👤 <span class="storeInfo"></span>
-        </div>
-        
-        <div class="headerLeft">
-            <img src="logo mrdiy.png" class="logo">
-            <div class="headerText">
-                <h1>Itemize Checker</h1>
-            </div>
-        </div>
 
-    <button onclick="backDashboard()">⬅ Dashboard</button>
 
-</div>
 
-    <div class="box">
 
-        <label>Upload Export Shelf (Master)</label>
-        <input type="file" id="itemizeMasterFile" accept=".txt,.csv">
+    <section class="box">
+
+
+        <h2>
+
+            Upload Data
+
+        </h2>
+
+
+
+        <label>
+
+            Export Shelf Master
+
+        </label>
+
+
+
+        <input
+
+            type="file"
+
+            id="itemizeMasterFile"
+
+            accept=".txt,.csv">
+
+
+
+
 
         <br><br>
 
-        <label>Upload Scan TXT</label>
-        <input type="file" id="itemizeScanFile" accept=".txt">
 
-        <br>
 
-      <button
-          class="actionBtn generateBtn"
-          onclick="generateItemize()">
-          Generate
-      </button>
+
+
+        <label>
+
+            Scan TXT
+
+        </label>
+
+
+
+        <input
+
+            type="file"
+
+            id="itemizeScanFile"
+
+            accept=".txt,.csv"
+
+            multiple>
+
+
+
+
+
+    </section>
+
+
+
+
+
+
+
+    <section class="actionArea">
+
 
         <button
+
+            class="actionBtn generateBtn"
+
+            onclick="generateItemize()">
+
+
+            ⚙ Generate
+
+
+        </button>
+
+
+
+
+
+        <button
+
             class="actionBtn downloadBtn"
+
             onclick="downloadItemizeExcel()">
-            Download Excel
-        </button>
-        <button
-            class="actionBtn"
-            onclick="deleteItemizeData()">
-            Delete Data
+
+
+            ⬇ Download Excel
+
+
         </button>
 
-    </div>
+
+
+
+
+        <button
+
+            class="actionBtn"
+
+            onclick="deleteItemizeData()">
+
+
+            🗑 Delete Data
+
+
+        </button>
+
+
+
+    </section>
+
+
+
+
+
 
     <div id="itemizeSummary"></div>
 
-    <div class="box">
+
+
+
+
+
+    <section class="box">
+
 
         <div id="itemizeResult"></div>
 
-    </div>
+
+    </section>
+
+
+
+
 
 </div>
 
+<!-- ======================================================
+REPORT MODULE
+====================================================== -->
 
-<!-- REPORT MODULE -->
+<div id="reportModule" class="container modulePage" style="display:none">
 
-<!-- REPORT MODULE -->
 
-<div id="reportModule" class="container" style="display:none">
+    <header class="header">
 
-    <div class="header">
 
         <div class="userInfo">
+
             👤 <span class="storeInfo"></span>
+
         </div>
+
+
+
 
         <div class="headerLeft">
 
-            <img src="logo mrdiy.png" class="logo">
+
+            <img
+                src="logo mrdiy.png"
+                class="logo">
+
+
 
             <div class="headerText">
-                <h1>Reports</h1>
+
+
+                <h1>
+
+                    Reports
+
+                </h1>
+
+
+                <p>
+
+                    Store Performance Dashboard
+
+                </p>
+
+
             </div>
+
 
         </div>
 
-        <button onclick="backDashboard()">⬅ Dashboard</button>
 
-    </div>
 
-    <div class="box">
 
-        <h3>Reports</h3>
+        <button onclick="backDashboard()">
 
-        <p>Module masih dalam pengembangan.</p>
+            ⬅ Dashboard
 
-    </div>
+        </button>
+
+
+
+
+    </header>
+
+
+
+
+
+    <section class="box">
+
+
+        <h2>
+
+            Reports
+
+        </h2>
+
+
+
+        <p>
+
+            Module masih dalam pengembangan.
+
+        </p>
+
+
+
+    </section>
+
+
+
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- ======================================================
+LIBRARY
+====================================================== -->
+
+
+<script src="
+https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+</script>
+
+
+
+<!-- MAIN SCRIPT -->
 
 <script src="script.js"></script>
 
+
+
 </body>
+
 </html>
