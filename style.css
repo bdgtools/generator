@@ -465,6 +465,15 @@ td{
     background:#FFE5B4;
     color:#111;
 }
+#hasilContainer{
+
+    margin-top:20px;
+
+    max-height:600px;
+
+    overflow:auto;
+
+}
 #hasilContainer table{
   width:100%;
 }
