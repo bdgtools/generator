@@ -2349,6 +2349,8 @@ function tampilkanItemizeResult(data){
 
 <th>Rack Number</th>
 
+<th>Qty System</th>
+
 <th>Description</th>
 
 <th>Rack Area</th>
