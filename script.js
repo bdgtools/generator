@@ -2672,29 +2672,22 @@ filename
 
 
 
-function saveItemize(data){
-
+function saveItemize(){
 
 
 const storeCode =
-
-localStorage
-.getItem("storeCode");
+localStorage.getItem("storeCode");
 
 
+const data = itemizeGlobal;
 
 
 
 if(!storeCode){
 
-
-alert(
-"Session login hilang"
-);
-
+alert("Session login hilang");
 
 return;
-
 
 }
 
@@ -2930,144 +2923,75 @@ err
 
 function deleteItemizeData(){
 
+    if(!confirm("Hapus semua data Itemize?")){
+        return;
+    }
 
 
-if(
-!confirm(
-"Hapus semua data Itemize?"
-)
-)
-return;
+    fetch(GAS_URL,{
 
+        method:"POST",
 
+        headers:{
+            "Content-Type":"application/json"
+        },
 
+        body:JSON.stringify({
 
+            action:"deleteItemize",
 
+            storeCode:localStorage.getItem("storeCode")
 
-fetch(
+        })
 
-GAS_URL,
+    })
 
-{
 
+    .then(res=>res.json())
 
-method:"POST",
 
+    .then(result=>{
 
-headers:{
 
+        console.log(result);
 
-"Content-Type":
-"application/json"
 
+        if(result.success){
 
-},
 
+            itemizeGlobal=[];
 
-body:JSON.stringify({
 
+            document.getElementById("itemizeSummary").innerHTML="";
 
+            document.getElementById("itemizeResult").innerHTML="";
 
-action:
-"deleteItemize",
 
+            alert("Data Itemize berhasil dihapus");
 
 
-storeCode:
-localStorage.getItem("storeCode")
+        }
+        else{
 
 
+            alert(result.message);
 
-})
 
+        }
 
-}
 
-)
+    })
 
 
+    .catch(err=>{
 
 
+        console.error(err);
 
+        alert("Gagal hapus data");
 
-.then(res=>res.json())
 
-
-
-.then(result=>{
-
-
-
-console.log(
-result
-);
-
-
-
-
-
-
-if(result.success){
-
-
-
-itemizeGlobal=[];
-
-
-
-
-document
-.getElementById("itemizeSummary")
-.innerHTML="";
-
-
-
-
-document
-.getElementById("itemizeResult")
-.innerHTML="";
-
-
-
-
-alert(
-"Data Itemize berhasil dihapus"
-);
-
-
-
-}
-
-else{
-
-
-alert(
-result.message
-);
-
-
-}
-
-
-
-
-})
-
-
-
-.catch(err=>{
-
-
-console.error(err);
-
-
-alert(
-"Gagal hapus data"
-);
-
-
-});
-
+    });
 
 
 }
