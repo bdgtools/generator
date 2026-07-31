@@ -214,6 +214,24 @@ h1{
     padding:18px 25px;
 
 }
+.userInfo{
+
+position:absolute;
+left:20px;
+top:18px;
+
+background:#111;
+color:#FFD400;
+
+padding:8px 14px;
+
+border-radius:25px;
+
+font-size:14px;
+
+font-weight:bold;
+
+}
 
 .header button{
 
@@ -622,26 +640,6 @@ button{
     gap:15px;
 
     margin:25px 0;
-
-}
-    .userInfo{
-
-    position:absolute;
-    left:20px;
-    top:18px;
-
-    background:#111;
-    color:#FFD400;
-
-    padding:8px 14px;
-
-    border-radius:25px;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    box-shadow:0 3px 10px rgba(0,0,0,.15);
 
 }
 .uploadRow{
