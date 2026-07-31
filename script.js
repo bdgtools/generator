@@ -1878,16 +1878,12 @@ function parseItemizeMaster(text){
     let master={};
 
 
-
     let rows =
     text.split(/\r?\n/);
 
 
 
-
-
     rows.forEach(row=>{
-
 
 
         let col =
@@ -1895,42 +1891,55 @@ function parseItemizeMaster(text){
 
 
 
-
-
         if(col.length>=9){
 
 
-
             let sku =
-            col[0]
-            .trim();
+            col[0].trim();
 
 
 
+            let qtySystem =
+            Number(col[3]) || 0;
 
 
-            if(sku){
+
+            // skip qty system 0
+            if(
+                !sku ||
+                qtySystem<=0
+            ){
+                return;
+            }
 
 
 
-                let qtySystem =
-                   Number(col[3]) || 0;
-               
-               // SKIP SKU SYSTEM 0
-               if(qtySystem <= 0){
-                  
-                  return;}
-               
-               master[sku]={
-                  
-                  sku: sku,
-                  
-                  rack: col[1].trim(),
-                 
-                  system: Number(col[3]) || 0,
-                  
-                  desc: col[8].trim()
-               };
+            master[sku]={
+
+
+                sku:sku,
+
+
+                rack:
+                col[1].trim(),
+
+
+                system:
+                qtySystem,
+
+
+                desc:
+                col[8].trim()
+
+
+            };
+
+
+        }
+
+
+    });
+
 
 
     return master;
@@ -2142,18 +2151,18 @@ function prosesItemize(master,scan){
 
         hasil.push({
            
-           sku: row.sku,
-           
-           rack: row.rack,
-           
-           system: row.system,
-           
-           desc: row.desc,
-           
+           sku: item.sku,
+
+           rack: item.rack,
+   
+           system: item.system,
+   
+           desc: item.desc,
+   
            rackArea: rackArea,
-           
+   
            display: display,
-           
+   
            remark: remark
         });
 
@@ -2517,45 +2526,21 @@ let exportData =
 
 itemizeGlobal.map(row=>({
 
+    SKU:row.sku,
 
+    Rack_Number:row.rack,
 
-    SKU:
-    row.sku,
+    Qty_System:row.system,
 
+    Description:row.desc,
 
+    Rack_Area:row.rackArea,
 
-    Rack_Number:
-    row.rack,
+    Display:row.display,
 
-
-
-    Description:
-    row.desc,
-
-
-
-    Rack_Area:
-    row.rackArea,
-
-
-
-    Display:
-    row.display,
-
-
-
-    Remark:
-    row.remark
-
-
+    Remark:row.remark
 
 }));
-
-
-
-
-
-
 
 let ws =
 
