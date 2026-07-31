@@ -125,20 +125,17 @@ function openModule(module){
 
     // sembunyikan semua module
 
-    document.getElementById("stockModule")
-    .style.display="none";
-
-
-    document.getElementById("salesModule")
-    .style.display="none";
-
-
-    document.getElementById("itemizeModule")
-    .style.display="none";
-
-
-    document.getElementById("reportModule")
-    .style.display="none";
+    const modules = [
+    "stockModule",
+    "salesModule",
+    "itemizeModule",
+    "reportModule"
+    ];
+    
+    modules.forEach(id=>{
+        document.getElementById(id).style.display="none";
+    });
+    document.getElementById(module+"Module").style.display="block";
 
 
 
@@ -196,26 +193,11 @@ function openModule(module){
 
 function backDashboard(){
 
+    document.querySelectorAll(".containerModule").forEach(el=>{
+        el.style.display="none";
+    });
 
-    document.getElementById("stockModule")
-    .style.display="none";
-
-
-    document.getElementById("salesModule")
-    .style.display="none";
-
-
-    document.getElementById("itemizeModule")
-    .style.display="none";
-
-
-    document.getElementById("reportModule")
-    .style.display="none";
-
-
-    document.getElementById("dashboardPage")
-    .style.display="block";
-
+    document.getElementById("dashboardPage").style.display="block";
 
 }
 // ======================
@@ -224,8 +206,8 @@ function backDashboard(){
 
 function generateData(){
 
-    const fisikFile =
-    document.getElementById("fisikFile").files[0];
+    const fisikFiles =
+        document.getElementById("fisikFile").files;
 
     const sistemFile =
     document.getElementById("sistemFile").files[0];
