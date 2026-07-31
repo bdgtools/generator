@@ -166,15 +166,6 @@
         </div>
     </div>
 
-    <div class="box">
-
-        <h3>2. Upload File Export Shelf</h3>
-
-        <input type="file" id="sistemFile">
-
-
-    </div>
-
     <div class="actionGroup">
         <button class="actionBtn generateBtn"
             onclick="generateData()">
@@ -186,18 +177,6 @@
             Download Excel
         </button>
     </div>
-
-    <button class="actionBtn generateBtn" onclick="generateData()">
-
-        Generate
-
-    </button>
-
-    <button class="actionBtn downloadBtn" onclick="downloadExcel()">
-
-        ⬇ Download Variance (.xlsx)
-
-    </button>
 
     <div id="summary"></div>
 
@@ -243,23 +222,33 @@
 <!-- SALES MODULE -->
 
 <div id="salesModule" class="container" style="display:none">
-    
+
     <div class="header">
         <div class="userInfo">
             👤 <span class="storeInfo"></span>
         </div>
+
         <div class="headerLeft">
             <img src="logo mrdiy.png" class="logo">
+
             <div class="headerText">
-                <h1>Reports</h1>
+                <h1>Sales Checker</h1>
             </div>
         </div>
+
         <button onclick="backDashboard()">⬅ Dashboard</button>
     </div>
 
+    <div class="box">
+        <h3>Sales Checker</h3>
+        <p>Module masih dalam pengembangan.</p>
+    </div>
+
+</div>
+
 <!-- ITEMIZE MODULE -->
 
-<div id="itemizeModule" style="display:none;">
+<div id="itemizeModule" class="container" style="display:none;">
 
     <div class="header">
         <div class="userInfo">
@@ -321,20 +310,39 @@
 
 <!-- REPORT MODULE -->
 
+<!-- REPORT MODULE -->
+
 <div id="reportModule" class="container" style="display:none">
-    
+
     <div class="header">
+
         <div class="userInfo">
             👤 <span class="storeInfo"></span>
         </div>
+
         <div class="headerLeft">
+
             <img src="logo mrdiy.png" class="logo">
+
             <div class="headerText">
                 <h1>Reports</h1>
             </div>
+
         </div>
+
         <button onclick="backDashboard()">⬅ Dashboard</button>
+
     </div>
+
+    <div class="box">
+
+        <h3>Reports</h3>
+
+        <p>Module masih dalam pengembangan.</p>
+
+    </div>
+
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
