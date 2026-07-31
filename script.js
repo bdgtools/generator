@@ -9,10 +9,11 @@ let itemizeGlobal = [];
 
 function login(){
 
+    console.log("Login diklik");
+
     const storeCode = document.getElementById("storeCode").value.trim();
     const password = document.getElementById("password").value.trim();
     const msg = document.getElementById("loginMsg");
-
 
     if(storeCode === "" || password === ""){
 
