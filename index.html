@@ -155,7 +155,18 @@
 
     </div>
 
-
+    <div class="uploadRow">
+        
+        <div class="uploadCard">
+            <label>Export Shelf</label>
+            <input type="file" id="sistemFile">
+        </div>
+        
+        <div class="uploadCard">
+            <label>Scan Fisik</label>
+            <input type="file" id="fisikFile" multiple>
+        </div>
+    </div>
 
     <div class="box">
 
@@ -166,7 +177,17 @@
 
     </div>
 
-
+    <div class="actionGroup">
+        <button class="actionBtn generateBtn"
+            onclick="generateData()">
+            Generate
+        </button>
+        
+        <button class="actionBtn downloadBtn"
+            onclick="downloadExcel()">
+            Download Excel
+        </button>
+    </div>
 
     <button class="actionBtn generateBtn" onclick="generateData()">
 
