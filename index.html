@@ -136,8 +136,24 @@
 
 <div id="stockModule" class="container" style="display:none">
 
-    <button onclick="backDashboard()">⬅ Back</button>
+    <div class="header">
 
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+
+        <div class="headerLeft">
+
+            <img src="logo mrdiy.png" class="logo">
+
+            <div class="headerText">
+                <h1>Stock Balance Checker</h1>
+            </div>
+
+        </div>
+
+        <button onclick="backDashboard()">⬅ Dashboard</button>
+    </div>
 
     <div class="box">
 
@@ -191,19 +207,13 @@
 
     </button>
 
-
-
     <button class="actionBtn downloadBtn" onclick="downloadExcel()">
 
         ⬇ Download Variance (.xlsx)
 
     </button>
 
-
-
     <div id="summary"></div>
-
-
 
     <div style="margin-top:20px">
 
@@ -220,8 +230,6 @@
 
         style="padding:10px;width:250px;">
 
-
-
         <select id="filter" onchange="filterTabel()" style="padding:10px">
 
             <option value="all">Semua</option>
@@ -235,10 +243,7 @@
 
         </select>
 
-
     </div>
-
-
 
     <div id="hasilContainer">
 
@@ -249,39 +254,42 @@
 
 </div>
 
-
-
-
 <!-- SALES MODULE -->
 
 <div id="salesModule" class="container" style="display:none">
-
-    <button onclick="backDashboard()">⬅ Back</button>
-
-    <h2>Sales Checker</h2>
-
-    Coming Soon
-
-</div>
-
-
-
+    
+    <div class="header">
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+        <div class="headerLeft">
+            <img src="logo mrdiy.png" class="logo">
+            <div class="headerText">
+                <h1>Reports</h1>
+            </div>
+        </div>
+        <button onclick="backDashboard()">⬅ Dashboard</button>
+    </div>
 
 <!-- ITEMIZE MODULE -->
 
 <div id="itemizeModule" style="display:none;">
 
     <div class="header">
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+        
         <div class="headerLeft">
             <img src="logo mrdiy.png" class="logo">
             <div class="headerText">
                 <h1>Itemize Checker</h1>
-                <p>Check Display & Scanned Items</p>
             </div>
         </div>
 
-        <button onclick="backDashboard()">⬅ Back</button>
-    </div>
+    <button onclick="backDashboard()">⬅ Dashboard</button>
+
+</div>
 
     <div class="box">
 
@@ -325,18 +333,22 @@
 </div>
 
 
-
 <!-- REPORT MODULE -->
 
 <div id="reportModule" class="container" style="display:none">
-
-    <button onclick="backDashboard()">⬅ Back</button>
-
-    <h2>Reports</h2>
-
-    Coming Soon
-
-</div>
+    
+    <div class="header">
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+        <div class="headerLeft">
+            <img src="logo mrdiy.png" class="logo">
+            <div class="headerText">
+                <h1>Reports</h1>
+            </div>
+        </div>
+        <button onclick="backDashboard()">⬅ Dashboard</button>
+    </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
