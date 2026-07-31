@@ -1922,28 +1922,20 @@ function parseItemizeMaster(text){
                
                master[sku]={
                   
-                  sku:sku,
-                  rack:
-                     col[1]
-                     .trim(),
-                  desc:
-                     col[8]
-                     .trim(),
-                  system:
-                     qtySystem
+                  sku: sku,
+                  
+                  rack: col[1].trim(),
+                 
+                  system: Number(col[3]) || 0,
+                  
+                  desc: col[8].trim()
                };
-            }
-        }
-    });
 
 
     return master;
 
 
 }
-
-
-
 
 function parseItemizeScan(text){
 
@@ -2148,31 +2140,21 @@ function prosesItemize(master,scan){
 
 
         hasil.push({
-
-
-            sku:item.sku,
-
-
-            rack:item.rack,
-
-
-            desc:item.desc,
-
-
-            rackArea:rackArea,
-
-
-            display:display,
-
-
-            remark:remark
-
-
-
+           
+           sku: row.sku,
+           
+           rack: row.rack,
+           
+           system: row.system,
+           
+           desc: row.desc,
+           
+           rackArea: rackArea,
+           
+           display: display,
+           
+           remark: remark
         });
-
-
-
 
 
 
@@ -2440,6 +2422,7 @@ html += `
 
 <td>${row.rack}</td>
 
+<td>${row.system}</td>
 
 <td>${row.desc}</td>
 
