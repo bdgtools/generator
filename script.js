@@ -7,7 +7,7 @@ let itemizeGlobal = [];
 // LOGIN
 // ======================
 
-function login(){
+function login() {
 
     console.log("Login diklik");
 
@@ -15,78 +15,71 @@ function login(){
     const password = document.getElementById("password").value.trim();
     const msg = document.getElementById("loginMsg");
 
-    if(storeCode === "" || password === ""){
+    if (!storeCode || !password) {
 
         msg.innerHTML = "Store Code dan Password wajib diisi";
         return;
 
     }
 
-
     msg.innerHTML = "Checking...";
 
+    const url =
+        GAS_URL +
+        "?action=login" +
+        "&storeCode=" + encodeURIComponent(storeCode) +
+        "&password=" + encodeURIComponent(password);
 
-    fetch(
-    GAS_URL +
-    "?action=login" +
-    "&storeCode=" + encodeURIComponent(storeCode) +
-    "&password=" + encodeURIComponent(password)
-)
+    console.log(url);
 
+    fetch(url)
 
-    .then(response => {
+        .then(res => {
 
-    if(!response.ok){
-        throw new Error("HTTP " + response.status);
-    }
+            console.log(res.status);
 
-    return response.json();
+            if (!res.ok) {
+                throw new Error("HTTP " + res.status);
+            }
 
-})
+            return res.json();
 
+        })
 
-    .then(data => {
+        .then(data => {
 
+            console.log(data);
 
-        if(data.success){
-            // simpan store dulu
-            localStorage.setItem(
-                "storeCode",
-                data.storeCode
-            );
-            document.getElementById("loginPage").style.display="none";
-            
-            document.getElementById("dashboardPage").style.display="block";
-            
-            document.getElementById("storeInfo").innerHTML=
-                `Hello, ${data.storeCode} - ${data.storeName}`;
-            // baru load database
-            loadItemize();
+            if (data.success) {
 
-}
-        }else{
+                localStorage.setItem("storeCode", data.storeCode);
 
+                document.getElementById("loginPage").style.display = "none";
 
-            msg.innerHTML="Store Code / Password salah atau tidak aktif";
+                document.getElementById("dashboardPage").style.display = "block";
 
+                document.getElementById("storeInfo").innerHTML =
+                    "Hello, " + data.storeCode + " - " + data.storeName;
 
-        }
+                loadItemize();
 
+            } else {
 
-    })
+                msg.innerHTML = "Store Code / Password salah";
 
+            }
 
-    .catch(error=>{
+        })
 
-        console.log(error);
+        .catch(err => {
 
-        msg.innerHTML="Gagal koneksi server";
+            console.error(err);
 
-    });
+            msg.innerHTML = err.message;
 
+        });
 
 }
-
 
 // ======================
 // LOGOUT
@@ -1252,3 +1245,20 @@ function loadItemize(){
     });
 
 }
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btn = document.getElementById("loginBtn");
+
+    if (btn) {
+
+        btn.addEventListener("click", login);
+
+        console.log("Login Button Ready");
+
+    } else {
+
+        console.error("Button login tidak ditemukan");
+
+    }
+
+});
