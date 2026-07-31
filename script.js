@@ -33,7 +33,15 @@ function login(){
 )
 
 
-    .then(response => response.json())
+    .then(response => {
+
+    if(!response.ok){
+        throw new Error("HTTP " + response.status);
+    }
+
+    return response.json();
+
+})
 
 
     .then(data => {
@@ -235,6 +243,18 @@ function generateData(){
         readTXT(fisikFile),
         readTXT(sistemFile)
     ])
+    .then(files=>{
+
+    const fisik = parseFisik(files[0]);
+    const sistem = parseSistem(files[1]);
+
+    hasilGlobal = prosesStock(fisik,sistem);
+
+    tampilkanSummary(hasilGlobal);
+    tampilkanHasil(hasilGlobal);
+
+})
+.catch(console.error);
 
 
 }
@@ -694,9 +714,18 @@ function downloadExcel(){
         ws,
         "Stock Balance"
     );
-
-
-
+    
+    let today = new Date();
+    let fileName =
+    "StockBalance_" +
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth()+1).padStart(2,"0") +
+    "-" +
+    String(today.getDate()).padStart(2,"0") +
+    ".xlsx";
+    
+    XLSX.writeFile(wb,fileName);
 
 }
 
@@ -928,16 +957,15 @@ if(scan[sku]){
 }
 
         hasil.push({
-
+            
             sku: row.sku,
             rack: row.rack,
             desc: row.desc,
             rackArea: rackArea,
             display: display,
             remark: remark
-
+        
         });
-
     });
 
     return hasil;
@@ -1085,6 +1113,11 @@ function tampilkanItemizeResult(data){
 function saveItemize(){
 
     const storeCode = localStorage.getItem("storeCode");
+    if(!storeCode){
+
+    alert("Session login tidak ditemukan.");
+    return;
+    }
 
     fetch(GAS_URL,{
         method:"POST",
@@ -1100,7 +1133,15 @@ function saveItemize(){
         })
 
     })
-    .then(r=>r.json())
+    .then(r=>{
+
+    if(!r.ok){
+        throw new Error("HTTP " + r.status);
+    }
+
+    return r.json();
+
+})
     .then(res=>{
 
         if(res.success){
@@ -1139,7 +1180,15 @@ function saveItemize(){
             storeCode:localStorage.getItem("storeCode")
         })
     })
-    .then(r=>r.json())
+    .then(r=>{
+
+    if(!r.ok){
+        throw new Error("HTTP " + r.status);
+    }
+
+    return r.json();
+
+})
     .then(res=>{
 
         if(res.success){
@@ -1160,7 +1209,7 @@ function saveItemize(){
 
 }
 
-    function loadItemize(){
+function loadItemize(){
 
     const storeCode = localStorage.getItem("storeCode");
 
@@ -1173,31 +1222,33 @@ function saveItemize(){
         "?action=loadItemize&storeCode=" +
         encodeURIComponent(storeCode)
     )
-    .then(r => r.json())
-    .then(res => {
+    .then(r=>{
+
+        if(!r.ok){
+            throw new Error("HTTP " + r.status);
+        }
+
+        return r.json();
+
+    })
+    .then(res=>{
 
         if(!res.success){
             return;
         }
 
-        if(!Array.isArray(res.data)){
-            console.error("Data Itemize tidak valid.");
-            return;
-        }
-
-        itemizeGlobal = res.data;
-
-        if(itemizeGlobal.length === 0){
-            console.log("Belum ada data Itemize.");
-            return;
-        }
+        itemizeGlobal = res.data || [];
 
         tampilkanItemizeSummary(itemizeGlobal);
         tampilkanItemizeResult(itemizeGlobal);
 
     })
-    .catch(err => {
-        console.error(err);
+    .catch(err=>{
+
+    console.error(err);
+
+    alert("Gagal mengambil data Itemize.");
+    
     });
 
 }
