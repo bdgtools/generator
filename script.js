@@ -2,6 +2,13 @@ let hasilGlobal = [];
 // URL Google Apps Script
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
 let itemizeGlobal = [];
+function updateStoreInfo(storeCode, storeName){
+
+    document.querySelectorAll(".storeInfo").forEach(el=>{
+        el.innerHTML = `Hello, ${storeCode} - ${storeName}`;
+    });
+
+}
 
 // ======================
 // LOGIN
@@ -57,18 +64,17 @@ function login() {
                 document.getElementById("loginPage").style.display = "none";
 
                 document.getElementById("dashboardPage").style.display = "block";
-
-                document.getElementById("storeInfo").innerHTML =
-                    "Hello, " + data.storeCode + " - " + data.storeName;
+                
+                updateStoreInfo(
+                    data.storeCode,
+                    data.storeName
+                );
 
                 loadItemize();
-
-            } else {
-
-                msg.innerHTML = "Store Code / Password salah";
-
             }
-
+            else {
+                msg.innerHTML = "Store Code / Password salah";
+            }
         })
 
         .catch(err => {
