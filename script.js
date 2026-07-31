@@ -1512,41 +1512,30 @@ function downloadExcel(){
 
 
     let exportData =
+itemizeGlobal.map(row=>({
 
-    hasilGlobal.map(row=>({
+    SKU:
+    row.sku,
 
+    Rack_Number:
+    row.rack,
 
-        SKU:
-        row.sku,
+    Qty_System:
+    row.system,
 
+    Description:
+    row.desc,
 
-        Rack:
-        row.rack,
+    Rack_Area:
+    row.rackArea,
 
+    Display:
+    row.display,
 
-        Description:
-        row.desc,
+    Remark:
+    row.remark
 
-
-        Qty_System:
-        row.system,
-
-
-        Qty_Fisik:
-        row.fisik,
-
-
-        Selisih:
-        row.selisih,
-
-
-        Status:
-        row.status
-
-
-
-    }));
-
+}));
 
 
 
