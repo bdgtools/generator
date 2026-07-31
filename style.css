@@ -615,4 +615,33 @@ button{
     margin:25px 0;
 
 }
+    .userInfo{
+    margin-top:12px;
+    padding:10px 15px;
+    background:#fff6cc;
+    border-left:5px solid #FFD400;
+    border-radius:8px;
+    font-weight:bold;
+    color:#222;
+}
+.uploadRow{
+    display:flex;
+    gap:20px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
 
+.uploadCard{
+    flex:1;
+    min-width:280px;
+    border:2px solid #FFD400;
+    border-radius:12px;
+    padding:18px;
+    background:#fff;
+}
+
+.uploadCard label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+}
