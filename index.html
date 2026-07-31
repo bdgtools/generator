@@ -224,6 +224,7 @@
 <div id="salesModule" class="container" style="display:none">
 
     <div class="header">
+
         <div class="userInfo">
             👤 <span class="storeInfo"></span>
         </div>
@@ -237,15 +238,138 @@
         </div>
 
         <button onclick="backDashboard()">⬅ Dashboard</button>
+
     </div>
 
     <div class="box">
-        <h3>Sales Checker</h3>
-        <p>Module masih dalam pengembangan.</p>
+
+        <h2>Sales Checker</h2>
+
+        <p>Coming Soon...</p>
+
     </div>
 
 </div>
 
+
+
+<!-- ITEMIZE MODULE -->
+
+<div id="itemizeModule" class="container" style="display:none">
+
+    <div class="header">
+
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+
+        <div class="headerLeft">
+
+            <img src="logo mrdiy.png" class="logo">
+
+            <div class="headerText">
+                <h1>Itemize Checker</h1>
+            </div>
+
+        </div>
+
+        <button onclick="backDashboard()">⬅ Dashboard</button>
+
+    </div>
+
+
+    <div class="box">
+
+        <label>Upload Export Shelf (Master)</label>
+
+        <input
+            type="file"
+            id="itemizeMasterFile"
+            accept=".txt,.csv">
+
+        <br><br>
+
+        <label>Upload Scan TXT</label>
+
+        <input
+            type="file"
+            id="itemizeScanFile"
+            accept=".txt"
+            multiple>
+
+        <br><br>
+
+        <button
+            class="actionBtn generateBtn"
+            onclick="generateItemize()">
+
+            Generate
+
+        </button>
+
+        <button
+            class="actionBtn downloadBtn"
+            onclick="downloadItemizeExcel()">
+
+            Download Excel
+
+        </button>
+
+        <button
+            class="actionBtn"
+            onclick="deleteItemizeData()">
+
+            Delete Data
+
+        </button>
+
+    </div>
+
+    <div id="itemizeSummary"></div>
+
+    <div class="box">
+
+        <div id="itemizeResult"></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- REPORT MODULE -->
+
+<div id="reportModule" class="container" style="display:none">
+
+    <div class="header">
+
+        <div class="userInfo">
+            👤 <span class="storeInfo"></span>
+        </div>
+
+        <div class="headerLeft">
+
+            <img src="logo mrdiy.png" class="logo">
+
+            <div class="headerText">
+                <h1>Reports</h1>
+            </div>
+
+        </div>
+
+        <button onclick="backDashboard()">⬅ Dashboard</button>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Reports</h2>
+
+        <p>Coming Soon...</p>
+
+    </div>
+
+</div>
 <!-- ITEMIZE MODULE -->
 
 <div id="itemizeModule" class="container" style="display:none;">
