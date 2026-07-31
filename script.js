@@ -1,185 +1,438 @@
-let hasilGlobal = [];
-// URL Google Apps Script
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
-let itemizeGlobal = [];
-function updateStoreInfo(storeCode, storeName){
+/* =====================================================
+   MR DIY STORE TOOLS v2.0
+   MAIN SCRIPT
+===================================================== */
 
-    document.querySelectorAll(".storeInfo").forEach(el=>{
-        el.innerHTML = `Hello, ${storeCode} - ${storeName}`;
+
+let hasilGlobal = [];
+
+let itemizeGlobal = [];
+
+
+// GOOGLE APPS SCRIPT URL
+
+const GAS_URL =
+"https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
+
+
+
+
+
+/* =====================================================
+   STORE INFO
+===================================================== */
+
+
+function updateStoreInfo(storeCode,storeName){
+
+
+    document
+    .querySelectorAll(".storeInfo")
+    .forEach(el=>{
+
+
+        el.innerHTML =
+        `${storeCode} - ${storeName || ""}`;
+
+
     });
+
 
 }
 
-// ======================
-// LOGIN
-// ======================
 
-function login() {
 
-    console.log("Login diklik");
 
-    const storeCode = document.getElementById("storeCode").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const msg = document.getElementById("loginMsg");
 
-    if (!storeCode || !password) {
 
-        msg.innerHTML = "Store Code dan Password wajib diisi";
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+
+function login(){
+
+
+    const storeCode =
+    document
+    .getElementById("storeCode")
+    .value
+    .trim();
+
+
+
+    const password =
+    document
+    .getElementById("password")
+    .value
+    .trim();
+
+
+
+    const msg =
+    document
+    .getElementById("loginMsg");
+
+
+
+
+
+    if(!storeCode || !password){
+
+
+        msg.innerHTML =
+        "Store Code dan Password wajib diisi";
+
+
         return;
 
     }
 
-    msg.innerHTML = "Checking...";
+
+
+
+
+    msg.innerHTML =
+    "Checking...";
+
+
+
+
 
     const url =
-        GAS_URL +
-        "?action=login" +
-        "&storeCode=" + encodeURIComponent(storeCode) +
-        "&password=" + encodeURIComponent(password);
 
-    console.log(url);
+    GAS_URL +
+
+    "?action=login" +
+
+    "&storeCode=" +
+    encodeURIComponent(storeCode) +
+
+    "&password=" +
+    encodeURIComponent(password);
+
+
+
+
+
+
 
     fetch(url)
 
-        .then(res => {
 
-            console.log(res.status);
+    .then(res=>res.json())
 
-            if (!res.ok) {
-                throw new Error("HTTP " + res.status);
-            }
 
-            return res.json();
+    .then(data=>{
 
-        })
 
-        .then(data => {
 
-            console.log(data);
+        console.log(data);
 
-            if (data.success) {
 
-                localStorage.setItem("storeCode", data.storeCode);
 
-                document.getElementById("loginPage").style.display = "none";
 
-                document.getElementById("dashboardPage").style.display = "block";
-                
-                updateStoreInfo(
-                    data.storeCode,
-                    data.storeName
-                );
 
-                loadItemize();
-            }
-            else {
-                msg.innerHTML = "Store Code / Password salah";
-            }
-        })
+        if(data.success){
 
-        .catch(err => {
 
-            console.error(err);
 
-            msg.innerHTML = err.message;
+            localStorage.setItem(
+                "storeCode",
+                data.storeCode
+            );
 
-        });
+
+
+            localStorage.setItem(
+                "storeName",
+                data.storeName
+            );
+
+
+
+
+
+            document
+            .getElementById("loginPage")
+            .style.display="none";
+
+
+
+
+
+            document
+            .getElementById("dashboardPage")
+            .style.display="block";
+
+
+
+
+
+            updateStoreInfo(
+                data.storeCode,
+                data.storeName
+            );
+
+
+
+
+
+            loadItemize();
+
+
+
+
+
+        }else{
+
+
+            msg.innerHTML =
+            "Store Code / Password salah";
+
+
+        }
+
+
+
+
+    })
+
+
+    .catch(err=>{
+
+
+        console.error(err);
+
+
+        msg.innerHTML =
+        "Connection Error";
+
+
+    });
+
+
 
 }
 
-// ======================
-// LOGOUT
-// ======================
+
+
+
+
+
+
+
+/* =====================================================
+   AUTO LOGIN SESSION
+===================================================== */
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+    const storeCode =
+    localStorage.getItem("storeCode");
+
+
+
+    const storeName =
+    localStorage.getItem("storeName");
+
+
+
+
+
+    if(storeCode){
+
+
+
+        document
+        .getElementById("loginPage")
+        .style.display="none";
+
+
+
+        document
+        .getElementById("dashboardPage")
+        .style.display="block";
+
+
+
+        updateStoreInfo(
+            storeCode,
+            storeName
+        );
+
+
+
+        loadItemize();
+
+
+    }
+
+
+
+
+    const btn =
+    document.getElementById("loginBtn");
+
+
+
+    if(btn){
+
+
+        btn.addEventListener(
+            "click",
+            login
+        );
+
+
+    }
+
+
+
+});
+
+
+
+
+
+
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
 
 function logout(){
 
-    localStorage.removeItem("storeCode");
 
-    itemizeGlobal = [];
 
-    document.getElementById("itemizeSummary").innerHTML = "";
-    document.getElementById("itemizeResult").innerHTML = "";
+    localStorage.removeItem(
+        "storeCode"
+    );
 
-    document.getElementById("dashboardPage").style.display="none";
-    document.getElementById("loginPage").style.display="block";
 
-    document.getElementById("storeCode").value="";
-    document.getElementById("password").value="";
+    localStorage.removeItem(
+        "storeName"
+    );
+
+
+
+    hasilGlobal=[];
+
+
+    itemizeGlobal=[];
+
+
+
+
+
+    document
+    .querySelectorAll(".modulePage")
+    .forEach(el=>{
+
+
+        el.style.display="none";
+
+
+    });
+
+
+
+
+
+    document
+    .getElementById("dashboardPage")
+    .style.display="none";
+
+
+
+
+
+    document
+    .getElementById("loginPage")
+    .style.display="block";
+
+
+
+
+
+    document
+    .getElementById("storeCode")
+    .value="";
+
+
+
+    document
+    .getElementById("password")
+    .value="";
+
+
 
 }
 
 
 
-// ======================
-// OPEN MODULE
-// ======================
+
+
+
+
+
+
+/* =====================================================
+   MODULE CONTROL
+===================================================== */
+
 
 function openModule(module){
 
 
-    // sembunyikan dashboard
 
-    document.getElementById("dashboardPage")
+    document
+    .getElementById("dashboardPage")
     .style.display="none";
 
 
-    // sembunyikan semua module
 
-    const modules = [
-    "stockModule",
-    "salesModule",
-    "itemizeModule",
-    "reportModule"
-    ];
-    
-    modules.forEach(id=>{
-        document.getElementById(id).style.display="none";
+
+
+    document
+    .querySelectorAll(".modulePage")
+    .forEach(el=>{
+
+
+        el.style.display="none";
+
+
     });
-    document.getElementById(module+"Module").style.display="block";
 
 
 
-    // tampilkan module pilihan
 
 
-    if(module==="stock"){
+    const target =
+    document.getElementById(
+        module+"Module"
+    );
 
 
-        document.getElementById("stockModule")
-        .style.display="block";
 
 
-    }
+
+    if(target){
 
 
-    if(module==="sales"){
-
-
-        document.getElementById("salesModule")
-        .style.display="block";
+        target.style.display="block";
 
 
     }
 
-
-    if(module==="itemize"){
-
-
-        document.getElementById("itemizeModule")
-        .style.display="block";
-
-
-    }
-
-
-    if(module==="report"){
-
-
-        document.getElementById("reportModule")
-        .style.display="block";
-
-
-    }
 
 
 }
@@ -187,1066 +440,1219 @@ function openModule(module){
 
 
 
-// ======================
-// BACK DASHBOARD
-// ======================
+
+
+
+
 
 function backDashboard(){
 
-    document.querySelectorAll(".containerModule").forEach(el=>{
+
+
+    document
+    .querySelectorAll(".modulePage")
+    .forEach(el=>{
+
+
         el.style.display="none";
+
+
     });
 
-    document.getElementById("dashboardPage").style.display="block";
+
+
+
+
+    document
+    .getElementById("dashboardPage")
+    .style.display="block";
+
+
 
 }
-// ======================
-// GENERATE STOCK BALANCE
-// ======================
+/* =====================================================
+   STOCK BALANCE MODULE
+===================================================== */
+
+
 
 function generateData(){
 
-    const fisikFiles =
-        document.getElementById("fisikFile").files;
 
     const sistemFile =
-    document.getElementById("sistemFile").files[0];
+    document
+    .getElementById("sistemFile")
+    .files[0];
 
 
-    if(!fisikFile || !sistemFile){
 
-        alert("Upload kedua file terlebih dahulu");
+    const fisikFiles =
+    document
+    .getElementById("fisikFile")
+    .files;
+
+
+
+
+
+    if(!sistemFile || fisikFiles.length===0){
+
+
+        alert(
+        "Upload Export Shelf dan Scan Fisik terlebih dahulu"
+        );
+
+
         return;
 
     }
 
 
-    Promise.all([
-    readTXT(fisikFile),
-    readTXT(sistemFile)
-])
-.then(files=>{
-
-    const fisik = parseFisik(files[0]);
-    const sistem = parseSistem(files[1]);
-
-    hasilGlobal = prosesStock(fisik, sistem);
-
-    tampilkanSummary(hasilGlobal);
-    tampilkanHasil(hasilGlobal);
-
-})
-.catch(console.error);
-
-}
-function readTXT(file){
-
-return new Promise((resolve,reject)=>{
-
-
-    let reader=new FileReader();
-
-
-    reader.onload=e=>{
-
-        resolve(e.target.result);
-
-    };
-
-
-    reader.onerror=reject;
-
-
-    reader.readAsText(file);
-
-
-});
-
-}
-function parseFisik(text){
-
-
-let data={};
-
-
-let rows=text.split(/\r?\n/);
-
-
-rows.forEach(row=>{
-
-
-    let col=row.split(",");
-
-
-    if(col.length>=3){
-
-
-        let sku=col[1].trim();
-
-
-        let qty=
-        Number(col[2]) || 0;
 
 
 
-        if(sku){
 
 
-            if(data[sku]){
-
-                data[sku]+=qty;
-
-            }else{
-
-                data[sku]=qty;
-
-            }
+    let proses=[];
 
 
-        }
+
+    proses.push(
+        readTXT(sistemFile)
+    );
+
+
+
+
+
+    for(let i=0;i<fisikFiles.length;i++){
+
+
+        proses.push(
+            readTXT(fisikFiles[i])
+        );
 
 
     }
 
 
-});
-
-
-return data;
-
-
-}
-function parseSistem(text){
-
-
-let data={};
-
-
-let rows=text.split(/\r?\n/);
-
-
-rows.forEach(row=>{
-
-
-let col=row.split(",");
 
 
 
-if(col.length>=9){
+    Promise.all(proses)
 
-
-let sku=col[0].trim();
-
-
-
-data[sku]={
-
-
-rack:col[1],
-
-price:col[2],
-
-system:Number(col[3]) || 0,
-
-desc:col[8]
-
-
-};
+    .then(files=>{
 
 
 
-}
+        const sistem =
+        parseSistem(files[0]);
 
 
-});
+
+        let fisik={};
 
 
-return data;
 
 
-}
-function prosesStock(fisik, sistem){
 
-    let hasil = [];
+        for(let i=1;i<files.length;i++){
 
-    // Hanya loop SKU yang ada di scan fisik
-    Object.keys(fisik).forEach(sku=>{
 
-        if(sistem[sku]){
+            let scan =
+            parseFisik(files[i]);
 
-            let qtySystem = sistem[sku].system;
-            let qtyFisik = fisik[sku];
 
-            let selisih = qtySystem - qtyFisik;
 
-            let status = "Tally";
+            Object.keys(scan)
+            .forEach(sku=>{
 
-            if(selisih < 0){
-                status = "Short";
-            }else if(selisih > 0){
-                status = "Extra";
-            }
 
-            hasil.push({
+                if(!fisik[sku]){
 
-                sku: sku,
-                rack: sistem[sku].rack,
-                desc: sistem[sku].desc,
-                system: qtySystem,
-                fisik: qtyFisik,
-                selisih: selisih,
-                status: status
+
+                    fisik[sku]=0;
+
+
+                }
+
+
+
+                fisik[sku]+=scan[sku];
+
+
 
             });
 
-        }else{
 
-            // SKU scan tetapi tidak ada di Export Shelf
-            hasil.push({
-
-                sku: sku,
-                rack: "-",
-                desc: "SKU Tidak Ada Di Export Shelf",
-                system: 0,
-                fisik: fisik[sku],
-                selisih: -fisik[sku],
-                status: "Not In System"
-
-            });
 
         }
 
+
+
+
+
+
+        hasilGlobal =
+        prosesStock(
+            fisik,
+            sistem
+        );
+
+
+
+
+
+
+        tampilkanSummary(
+            hasilGlobal
+        );
+
+
+
+        tampilkanHasil(
+            hasilGlobal
+        );
+
+
+
+
+
+    })
+
+    .catch(err=>{
+
+
+        console.error(err);
+
+
+        alert(
+        "Gagal membaca file"
+        );
+
+
     });
 
-    // Urutkan berdasarkan rack
-    hasil.sort((a,b)=>{
 
-        if(a.rack === "-") return 1;
-        if(b.rack === "-") return -1;
+
+}
+
+
+
+
+
+
+
+
+function readTXT(file){
+
+
+
+    return new Promise(
+    (resolve,reject)=>{
+
+
+
+        let reader =
+        new FileReader();
+
+
+
+
+        reader.onload =
+        e=>{
+
+
+            resolve(
+                e.target.result
+            );
+
+
+        };
+
+
+
+
+        reader.onerror =
+        reject;
+
+
+
+        reader.readAsText(file);
+
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function parseFisik(text){
+
+
+
+    let data={};
+
+
+
+    let rows =
+    text.split(/\r?\n/);
+
+
+
+
+
+    rows.forEach(row=>{
+
+
+
+        let col =
+        row.split(",");
+
+
+
+
+        if(col.length>=3){
+
+
+
+            let sku =
+            col[1]
+            .trim();
+
+
+
+            let qty =
+            Number(
+            col[2]
+            ) || 0;
+
+
+
+
+
+            if(sku){
+
+
+
+                if(!data[sku]){
+
+
+                    data[sku]=0;
+
+
+                }
+
+
+
+                data[sku]+=qty;
+
+
+
+            }
+
+
+        }
+
+
+
+    });
+
+
+
+
+    return data;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function parseSistem(text){
+
+
+
+    let data={};
+
+
+
+    let rows =
+    text.split(/\r?\n/);
+
+
+
+
+
+    rows.forEach(row=>{
+
+
+
+        let col =
+        row.split(",");
+
+
+
+
+
+        if(col.length>=9){
+
+
+
+            let sku =
+            col[0]
+            .trim();
+
+
+
+
+            if(sku){
+
+
+
+                data[sku]={
+
+
+
+                    rack:
+                    col[1]
+                    .trim(),
+
+
+
+                    price:
+                    col[2]
+                    .trim(),
+
+
+
+                    system:
+                    Number(col[3])
+                    ||0,
+
+
+
+                    desc:
+                    col[8]
+                    .trim()
+
+
+
+                };
+
+
+
+            }
+
+
+
+
+        }
+
+
+
+
+    });
+
+
+
+
+    return data;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function prosesStock(fisik,sistem){
+
+
+
+    let hasil=[];
+
+
+
+
+
+    Object.keys(fisik)
+
+    .forEach(sku=>{
+
+
+
+        let row={};
+
+
+
+        if(sistem[sku]){
+
+
+
+            let sys =
+            sistem[sku]
+            .system;
+
+
+
+            let fis =
+            fisik[sku];
+
+
+
+            let sel =
+            sys-fis;
+
+
+
+
+
+            let status =
+            "Tally";
+
+
+
+            if(sel<0){
+
+                status="Short";
+
+            }
+
+            else if(sel>0){
+
+                status="Extra";
+
+            }
+
+
+
+
+
+
+
+            row={
+
+
+                sku:sku,
+
+                rack:
+                sistem[sku].rack,
+
+                desc:
+                sistem[sku].desc,
+
+                system:sys,
+
+                fisik:fis,
+
+                selisih:sel,
+
+                status:status
+
+
+            };
+
+
+
+        }
+
+        else{
+
+
+
+            row={
+
+
+                sku:sku,
+
+                rack:"-",
+
+
+                desc:
+                "SKU Tidak Ada Di Export Shelf",
+
+
+                system:0,
+
+
+                fisik:fisik[sku],
+
+
+                selisih:
+                -fisik[sku],
+
+
+                status:
+                "Not In System"
+
+
+
+            };
+
+
+        }
+
+
+
+
+
+
+        hasil.push(row);
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+    hasil.sort(
+    (a,b)=>{
+
+
+
+        if(a.rack==="-")
+
+
+        return 1;
+
+
+
+
+        if(b.rack==="-")
+
+
+        return -1;
+
+
+
+
 
         return a.rack.localeCompare(
             b.rack,
             undefined,
             {
-                numeric:true,
-                sensitivity:"base"
+                numeric:true
             }
         );
 
+
+
     });
+
+
 
     return hasil;
 
+
+
 }
+/* =====================================================
+   STOCK RESULT DISPLAY
+===================================================== */
+
+
+
 function tampilkanSummary(data){
 
 
-let totalSKU = data.length;
+    let total =
+    data.length;
 
-let tally = 0;
-let short = 0;
-let extra = 0;
 
+    let tally=0;
+    let short=0;
+    let extra=0;
 
-data.forEach(row=>{
 
-
-    if(row.status=="Tally"){
-
-        tally++;
-
-    }
-
-
-    if(row.status=="Short"){
-
-        short++;
-
-    }
-
-
-    if(row.status=="Extra"){
-
-        extra++;
-
-    }
-
-
-});
-
-
-
-let html = `
-
-<div class="summary">
-
-
-<div class="card total">
-
-<h3>${totalSKU}</h3>
-<p>Total SKU</p>
-
-</div>
-
-
-
-<div class="card tally">
-
-<h3>${tally}</h3>
-<p>Tally</p>
-
-</div>
-
-
-
-<div class="card short">
-
-<h3>${short}</h3>
-<p>Short</p>
-
-</div>
-
-
-
-<div class="card extra">
-
-<h3>${extra}</h3>
-<p>Extra</p>
-
-</div>
-
-
-</div>
-
-`;
-
-
-
-document.getElementById("summary")
-.innerHTML = html;
-
-
-}
-function tampilkanHasil(data){
-
-
-let html=`
-
-
-<div style="
-max-height:500px;
-overflow:auto;
-">
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>SKU</th>
-<th>Rack</th>
-<th>Description</th>
-<th>System</th>
-<th>Fisik</th>
-<th>Selisih</th>
-<th>Status</th>
-
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-
-`;
-
-
-
-data.forEach(row=>{
-
-
-const status = row.status.trim();
-
-let cls = "sama";
-
-if(status==="Short"){
-
-    cls="minus";
-
-}
-else if(status==="Extra"){
-
-    cls="plus";
-
-}
-else if(status==="Not In System"){
-
-    cls="notSystem";
-
-}
-
-html+=`
-
-<tr class="${cls}">
-
-<td>${row.sku}</td>
-
-<td>${row.rack}</td>
-
-<td>${row.desc}</td>
-
-<td>${row.system}</td>
-
-<td>${row.fisik}</td>
-
-<td>${row.selisih}</td>
-
-<td>${row.status}</td>
-
-
-</tr>
-
-
-`;
-
-
-});
-
-html+=`
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-
-
-document.getElementById("hasil")
-.innerHTML=html;
-
-
-}
-function downloadExcel(){
-
-
-    if(hasilGlobal.length === 0){
-
-        alert("Belum ada data hasil generate");
-        return;
-
-    }
-
-
-
-    let exportData = hasilGlobal.map(row=>{
-
-
-        return {
-
-            SKU: row.sku,
-
-            Rack: row.rack,
-
-            Description: row.desc,
-
-            "Qty System": row.system,
-
-            "Qty Fisik": row.fisik,
-
-            "Selisih": row.selisih,
-
-            Status: row.status
-
-        };
-
-
-    });
-
-
-
-    let ws = XLSX.utils.json_to_sheet(exportData);
-    ws['!cols'] = [
-
-    {wch:15}, // SKU
-    {wch:15}, // Rack
-    {wch:35}, // Description
-    {wch:12},
-    {wch:12},
-    {wch:12},
-    {wch:15}
-
-];
-
-
-
-    let wb = XLSX.utils.book_new();
-
-
-    XLSX.utils.book_append_sheet(
-        wb,
-        ws,
-        "Stock Balance"
-    );
-    
-    let today = new Date();
-    let fileName =
-    "StockBalance_" +
-    today.getFullYear() +
-    "-" +
-    String(today.getMonth()+1).padStart(2,"0") +
-    "-" +
-    String(today.getDate()).padStart(2,"0") +
-    ".xlsx";
-    
-    XLSX.writeFile(wb,fileName);
-
-}
-
-///////// ITEMIZE CHECK/////////
-function generateItemize(){
-
-    const masterFile = document.getElementById("itemizeMasterFile").files[0];
-    const scanFiles = document.getElementById("itemizeScanFile").files;
-
-    if(!masterFile || scanFiles.length === 0){
-        alert("Upload Master dan minimal satu file Scan.");
-        return;
-    }
-
-    let promises = [];
-    promises.push(readTXT(masterFile));
-
-    for(let i = 0; i < scanFiles.length; i++){
-        promises.push(readTXT(scanFiles[i]));
-    }
-
-    Promise.all(promises)
-    .then(files => {
-
-        const master = parseItemizeMaster(files[0]);
-
-        let scan = {};
-
-        for(let i = 1; i < files.length; i++){
-
-            const hasilScan = parseItemizeScan(files[i]);
-
-            Object.keys(hasilScan).forEach(sku => {
-
-                if(!scan[sku]){
-                    scan[sku] = [];
-                }
-
-                hasilScan[sku].forEach(rack => {
-
-                    if(!scan[sku].includes(rack)){
-                        scan[sku].push(rack);
-                    }
-
-                });
-
-            });
-
-        }
-
-        const hasil = prosesItemize(master, scan);
-
-        itemizeGlobal = hasil;
-
-        tampilkanItemizeSummary(itemizeGlobal);
-        tampilkanItemizeResult(itemizeGlobal);
-
-        // Simpan ke Google Sheet
-        saveItemize();
-
-    })
-    .catch(err => {
-
-        console.error(err);
-        alert("Gagal memproses file.");
-
-    });
-
-}
-function downloadItemizeExcel(){
-
-    if(itemizeGlobal.length === 0){
-
-        alert("Belum ada data.");
-        return;
-
-    }
-
-    let exportData = itemizeGlobal.map(row=>{
-
-        return{
-
-            SKU: row.sku,
-            "Rack Number": row.rack,
-            Description: row.desc,
-            "Rack Number Area": row.rackArea,
-            Display: row.display,
-            Remark: row.remark
-
-        };
-
-    });
-
-    let ws = XLSX.utils.json_to_sheet(exportData);
-    ws['!autofilter'] = {
-    ref:"A1:F1"
-    };
-
-    ws['!cols'] = [
-
-        {wch:15},
-        {wch:15},
-        {wch:40},
-        {wch:30},
-        {wch:18},
-        {wch:15}
-
-    ];
-    ws["!freeze"] = {
-    xSplit:0,
-    ySplit:1
-    };
-
-    let wb = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(
-        wb,
-        ws,
-        "Itemize Checker"
-    );
-    
-    let today=new Date();
-    
-    let fileName =
-        "Itemize_" +
-        today.getFullYear() +
-        ("-"+String(today.getMonth()+1).padStart(2,"0")) +
-        ("-"+String(today.getDate()).padStart(2,"0")) +
-        ".xlsx";
-    XLSX.writeFile(wb,fileName);
-
-}
-function parseItemizeMaster(text){
-
-    let master = {};
-
-    let rows = text.split(/\r?\n/);
-
-    rows.forEach(row=>{
-
-        let col = row.split(",");
-
-        if(col.length >= 9){
-
-            let sku = col[0].trim();
-
-            if(!sku) return;
-
-            master[sku] = {
-
-                sku: sku,
-                rack: col[1].trim(),
-                desc: col[8].trim()
-
-            };
-
-        }
-
-    });
-
-    return master;
-
-}
-function parseItemizeScan(text){
-
-    let scan = {};
-
-    let rows = text.split(/\r?\n/);
-
-    rows.forEach(row=>{
-
-        let col = row.split(",");
-
-        if(col.length < 3) return;
-
-        let rack = col[1].trim();
-        let sku  = col[2].trim();
-
-        if(!sku) return;
-
-        if(!scan[sku]){
-            scan[sku] = [];
-        }
-
-        if(!scan[sku].includes(rack)){
-            scan[sku].push(rack);
-        }
-
-    });
-
-    return scan;
-
-}
-function prosesItemize(master, scan){
-
-    let hasil = [];
-
-    Object.keys(master).forEach(sku=>{
-
-        let row = master[sku];
-
-        let rackArea = "-";
-        let display = "-";
-        let remark = "Unscan";
-if(scan[sku]){
-
-    remark = "Scanned";
-
-    rackArea = scan[sku].join(", ");
-
-    if(scan[sku].length > 1){
-
-        display = "Double Display";
-
-    }else{
-
-        if(scan[sku][0] === row.rack){
-
-            display = "Single Display";
-
-        }else{
-
-            display = "Wrong Area";
-
-        }
-
-    }
-
-}
-
-        hasil.push({
-            
-            sku: row.sku,
-            rack: row.rack,
-            desc: row.desc,
-            rackArea: rackArea,
-            display: display,
-            remark: remark
-        
-        });
-    });
-
-    return hasil;
-
-}
-function tampilkanItemizeSummary(data){
-
-    let total = data.length;
-    let scanned = 0;
-    let unscan = 0;
-    let doubleDisplay = 0;
-    let wrongArea = 0;
 
     data.forEach(row=>{
 
-        if(row.remark === "Scanned"){
-            scanned++;
+
+        if(row.status==="Tally"){
+
+            tally++;
+
         }
 
-        if(row.remark === "Unscan"){
-            unscan++;
+
+        if(row.status==="Short"){
+
+            short++;
+
         }
 
-        if(row.display === "Double Display"){
-            doubleDisplay++;
+
+        if(row.status==="Extra"){
+
+            extra++;
+
         }
-        if(row.display === "Wrong Area"){
-            wrongArea++;
-        }
+
+
 
     });
 
-    let html = `
+
+
+
+
+    let html=`
+
 
     <div class="summary">
 
+
         <div class="card total">
+
             <h3>${total}</h3>
+
             <p>Total SKU</p>
+
         </div>
+
+
+
 
         <div class="card tally">
-            <h3>${scanned}</h3>
-            <p>Scanned</p>
+
+            <h3>${tally}</h3>
+
+            <p>Tally</p>
+
         </div>
+
+
+
+
 
         <div class="card short">
-            <h3>${unscan}</h3>
-            <p>Unscan</p>
+
+            <h3>${short}</h3>
+
+            <p>Short</p>
+
         </div>
 
+
+
+
+
         <div class="card extra">
-            <h3>${doubleDisplay}</h3>
-            <p>Double Display</p>
+
+            <h3>${extra}</h3>
+
+            <p>Extra</p>
+
         </div>
-        
-        <div class="card plus">
-            <h3>${wrongArea}</h3>
-            <p>Wrong Area</p>
-        </div>
+
+
 
     </div>
 
+
+
     `;
 
-    document.getElementById("itemizeSummary").innerHTML = html;
+
+
+    document
+    .getElementById("summary")
+    .innerHTML=html;
+
+
 
 }
-function tampilkanItemizeResult(data){
 
-    let html = `
 
-    <div style="max-height:500px;overflow:auto;">
+
+
+
+
+
+
+
+function tampilkanHasil(data){
+
+
+    let html=`
+
 
     <table>
 
-        <thead>
 
-            <tr>
+    <thead>
 
-                <th>SKU</th>
-                <th>Rack Number</th>
-                <th>Description</th>
-                <th>Rack Number Area</th>
-                <th>Display</th>
-                <th>Remark</th>
+    <tr>
 
-            </tr>
+        <th>SKU</th>
 
-        </thead>
+        <th>Rack</th>
 
-        <tbody>
+        <th>Description</th>
+
+        <th>System</th>
+
+        <th>Fisik</th>
+
+        <th>Selisih</th>
+
+        <th>Status</th>
+
+
+    </tr>
+
+
+    </thead>
+
+
+
+    <tbody>
+
 
     `;
+
+
+
+
+
 
     data.forEach(row=>{
 
-       let cls = "sama";
-        
-        if(row.remark === "Unscan"){
-            cls = "minus";
-        }
-        else if(row.display === "Double Display"){
-            cls = "plus";
-        }
-        else if(row.display === "Wrong Area"){
-            cls = "wrongArea";
+
+
+        let cls="sama";
+
+
+
+        if(row.status==="Short"){
+
+
+            cls="minus";
+
+
         }
 
-        html += `
+
+        else if(row.status==="Extra"){
+
+
+            cls="plus";
+
+
+        }
+
+
+        else if(row.status==="Not In System"){
+
+
+            cls="notSystem";
+
+
+        }
+
+
+
+
+
+        html+=`
+
 
         <tr class="${cls}">
 
+
             <td>${row.sku}</td>
+
 
             <td>${row.rack}</td>
 
+
             <td>${row.desc}</td>
 
-            <td>${row.rackArea}</td>
 
-            <td>${row.display}</td>
+            <td>${row.system}</td>
 
-            <td>${row.remark}</td>
+
+            <td>${row.fisik}</td>
+
+
+            <td>${row.selisih}</td>
+
+
+            <td>${row.status}</td>
+
+
 
         </tr>
 
+
         `;
+
+
 
     });
 
-    html += `
 
-        </tbody>
+
+
+
+    html+=`
+
+
+    </tbody>
+
 
     </table>
 
-    </div>
 
     `;
 
-    document.getElementById("itemizeResult").innerHTML = html;
+
+
+
+    document
+    .getElementById("hasil")
+    .innerHTML=html;
+
+
 
 }
-function saveItemize(){
 
-    const storeCode = localStorage.getItem("storeCode");
-    if(!storeCode){
 
-    alert("Session login tidak ditemukan.");
-    return;
-    }
 
-    fetch(GAS_URL,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
 
-            action:"saveItemizeBatch",
-            storeCode:storeCode,
-            data:itemizeGlobal
 
-        })
 
-    })
-    .then(r=>{
 
-    if(!r.ok){
-        throw new Error("HTTP " + r.status);
-    }
 
-    return r.json();
 
-})
-    .then(res=>{
+/* =====================================================
+   SEARCH & FILTER
+===================================================== */
 
-        if(res.success){
 
-            console.log("Itemize berhasil disimpan.");
+function filterTabel(){
 
-        }else{
 
-            alert(res.message);
+
+    const keyword =
+
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+
+
+
+    const filter =
+
+    document
+    .getElementById("filter")
+    .value;
+
+
+
+
+
+    let data =
+    hasilGlobal.filter(row=>{
+
+
+
+
+
+        let cocokSearch =
+
+
+
+        row.sku
+        .toLowerCase()
+        .includes(keyword)
+
+
+
+        ||
+
+
+
+        row.desc
+        .toLowerCase()
+        .includes(keyword);
+
+
+
+
+
+
+
+        let cocokFilter=true;
+
+
+
+
+
+        if(filter==="plus"){
+
+
+            cocokFilter =
+            row.status==="Extra";
+
 
         }
 
-    })
-    .catch(err=>{
 
-        console.error(err);
 
-        alert("Gagal menyimpan database.");
+
+
+        if(filter==="minus"){
+
+
+            cocokFilter =
+            row.status==="Short";
+
+
+        }
+
+
+
+
+
+        if(filter==="sama"){
+
+
+            cocokFilter =
+            row.status==="Tally";
+
+
+        }
+
+
+
+
+
+        return cocokSearch && cocokFilter;
+
+
 
     });
 
-}
-    function deleteItemizeData(){
 
-    if(!confirm("Hapus semua data Itemize?")){
-        return;
-    }
 
-    fetch(GAS_URL,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            action:"deleteItemize",
-            storeCode:localStorage.getItem("storeCode")
-        })
-    })
-    .then(r=>{
 
-    if(!r.ok){
-        throw new Error("HTTP " + r.status);
-    }
 
-    return r.json();
 
-})
-    .then(res=>{
+    tampilkanHasil(data);
 
-        if(res.success){
 
-            itemizeGlobal=[];
-
-            tampilkanItemizeSummary([]);
-            tampilkanItemizeResult([]);
-
-        }else{
-
-            alert(res.message);
-
-        }
-
-    })
-    .catch(console.error);
 
 }
 
-function loadItemize(){
 
-    const storeCode = localStorage.getItem("storeCode");
 
-    if(!storeCode){
+
+
+
+
+
+
+/* =====================================================
+   DOWNLOAD EXCEL STOCK
+===================================================== */
+
+
+function downloadExcel(){
+
+
+
+    if(hasilGlobal.length===0){
+
+
+        alert(
+        "Belum ada data hasil"
+        );
+
+
         return;
+
+
     }
 
-    fetch(
-        GAS_URL +
-        "?action=loadItemize&storeCode=" +
-        encodeURIComponent(storeCode)
+
+
+
+
+
+
+    let exportData =
+
+    hasilGlobal.map(row=>({
+
+
+        SKU:
+        row.sku,
+
+
+        Rack:
+        row.rack,
+
+
+        Description:
+        row.desc,
+
+
+        Qty_System:
+        row.system,
+
+
+        Qty_Fisik:
+        row.fisik,
+
+
+        Selisih:
+        row.selisih,
+
+
+        Status:
+        row.status
+
+
+
+    }));
+
+
+
+
+
+
+    let ws =
+
+    XLSX.utils
+    .json_to_sheet(exportData);
+
+
+
+
+
+
+
+    ws["!cols"]=[
+
+
+        {wch:15},
+
+
+        {wch:15},
+
+
+        {wch:40},
+
+
+        {wch:12},
+
+
+        {wch:12},
+
+
+        {wch:12},
+
+
+        {wch:15}
+
+
+
+    ];
+
+
+
+
+
+
+    let wb =
+
+    XLSX.utils
+    .book_new();
+
+
+
+
+
+    XLSX.utils
+    .book_append_sheet(
+
+        wb,
+
+        ws,
+
+        "Stock Balance"
+
+    );
+
+
+
+
+
+
+    let date =
+    new Date();
+
+
+
+
+    let filename =
+
+    "StockBalance_" +
+
+    date.getFullYear()+"-"+
+
+    String(
+    date.getMonth()+1
     )
-    .then(r=>{
+    .padStart(2,"0")+"-"+
 
-        if(!r.ok){
-            throw new Error("HTTP " + r.status);
-        }
+    String(
+    date.getDate()
+    )
+    .padStart(2,"0")+
 
-        return r.json();
+    ".xlsx";
 
-    })
-    .then(res=>{
 
-        if(!res.success){
-            return;
-        }
 
-        itemizeGlobal = res.data || [];
 
-        tampilkanItemizeSummary(itemizeGlobal);
-        tampilkanItemizeResult(itemizeGlobal);
 
-    })
-    .catch(err=>{
 
-    console.error(err);
+    XLSX.writeFile(
+        wb,
+        filename
+    );
 
-    alert("Gagal mengambil data Itemize.");
-    
-    });
+
 
 }
-document.addEventListener("DOMContentLoaded", function () {
-
-    const btn = document.getElementById("loginBtn");
-
-    if (btn) {
-
-        btn.addEventListener("click", login);
-
-        console.log("Login Button Ready");
-
-    } else {
-
-        console.error("Button login tidak ditemukan");
-
-    }
-
-});
