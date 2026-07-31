@@ -1841,8 +1841,7 @@ function generateItemize(){
 
 
 
-        saveItemize();
-
+        saveItemize(itemizeGlobal);
 
 
     })
@@ -1913,54 +1912,35 @@ function parseItemizeMaster(text){
 
 
 
-                master[sku]={
-
-
-
-                    sku:sku,
-
-
-
-                    rack:
-                    col[1]
-                    .trim(),
-
-
-
-                    desc:
-                    col[8]
-                    .trim()
-
-
-
-                };
-
-
+                let qtySystem =
+                   Number(col[3]) || 0;
+               
+               // SKIP SKU SYSTEM 0
+               if(qtySystem <= 0){
+                  
+                  return;}
+               
+               master[sku]={
+                  
+                  sku:sku,
+                  rack:
+                     col[1]
+                     .trim(),
+                  desc:
+                     col[8]
+                     .trim(),
+                  system:
+                     qtySystem
+               };
             }
-
-
-
-
         }
-
-
-
-
     });
-
-
-
 
 
     return master;
 
 
 }
-
-
-
-
-
 
 
 
@@ -2706,7 +2686,7 @@ filename
 
 
 
-function saveItemize(){
+function saveItemize(data){
 
 
 
@@ -2767,8 +2747,7 @@ storeCode,
 
 
 
-data:
-itemizeGlobal
+data:data
 
 
 
