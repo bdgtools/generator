@@ -240,22 +240,21 @@ function generateData(){
 
 
     Promise.all([
-        readTXT(fisikFile),
-        readTXT(sistemFile)
-    ])
-    .then(files=>{
+    readTXT(fisikFile),
+    readTXT(sistemFile)
+])
+.then(files=>{
 
     const fisik = parseFisik(files[0]);
     const sistem = parseSistem(files[1]);
 
-    hasilGlobal = prosesStock(fisik,sistem);
+    hasilGlobal = prosesStock(fisik, sistem);
 
     tampilkanSummary(hasilGlobal);
     tampilkanHasil(hasilGlobal);
 
 })
 .catch(console.error);
-
 
 }
 function readTXT(file){
