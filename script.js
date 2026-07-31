@@ -1656,3 +1656,1453 @@ function downloadExcel(){
 
 
 }
+/* =====================================================
+   ITEMIZE MODULE
+===================================================== */
+
+
+
+function generateItemize(){
+
+
+    const masterFile =
+
+    document
+    .getElementById("itemizeMasterFile")
+    .files[0];
+
+
+
+    const scanFiles =
+
+    document
+    .getElementById("itemizeScanFile")
+    .files;
+
+
+
+
+
+
+    if(!masterFile || scanFiles.length===0){
+
+
+        alert(
+        "Upload Master dan Scan TXT terlebih dahulu"
+        );
+
+
+        return;
+
+
+    }
+
+
+
+
+
+
+    let files=[];
+
+
+
+    files.push(
+        readTXT(masterFile)
+    );
+
+
+
+
+    for(let i=0;i<scanFiles.length;i++){
+
+
+        files.push(
+            readTXT(scanFiles[i])
+        );
+
+
+    }
+
+
+
+
+
+    Promise.all(files)
+
+    .then(data=>{
+
+
+
+        let master =
+
+        parseItemizeMaster(
+            data[0]
+        );
+
+
+
+
+        let scan={};
+
+
+
+
+
+        for(let i=1;i<data.length;i++){
+
+
+
+            let result =
+
+            parseItemizeScan(
+                data[i]
+            );
+
+
+
+
+            Object.keys(result)
+
+            .forEach(sku=>{
+
+
+                if(!scan[sku]){
+
+
+                    scan[sku]=[];
+
+
+                }
+
+
+
+
+
+                result[sku]
+                .forEach(rack=>{
+
+
+                    if(
+                    !scan[sku]
+                    .includes(rack)
+                    ){
+
+
+                        scan[sku]
+                        .push(rack);
+
+
+                    }
+
+
+
+                });
+
+
+
+
+            });
+
+
+
+
+        }
+
+
+
+
+
+
+
+        itemizeGlobal =
+
+        prosesItemize(
+            master,
+            scan
+        );
+
+
+
+
+
+
+        tampilkanItemizeSummary(
+            itemizeGlobal
+        );
+
+
+
+        tampilkanItemizeResult(
+            itemizeGlobal
+        );
+
+
+
+
+
+
+        saveItemize();
+
+
+
+    })
+
+    .catch(err=>{
+
+
+        console.error(err);
+
+
+        alert(
+        "Gagal proses Itemize"
+        );
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function parseItemizeMaster(text){
+
+
+    let master={};
+
+
+
+    let rows =
+    text.split(/\r?\n/);
+
+
+
+
+
+    rows.forEach(row=>{
+
+
+
+        let col =
+        row.split(",");
+
+
+
+
+
+        if(col.length>=9){
+
+
+
+            let sku =
+            col[0]
+            .trim();
+
+
+
+
+
+            if(sku){
+
+
+
+                master[sku]={
+
+
+
+                    sku:sku,
+
+
+
+                    rack:
+                    col[1]
+                    .trim(),
+
+
+
+                    desc:
+                    col[8]
+                    .trim()
+
+
+
+                };
+
+
+            }
+
+
+
+
+        }
+
+
+
+
+    });
+
+
+
+
+
+    return master;
+
+
+}
+
+
+
+
+
+
+
+
+
+function parseItemizeScan(text){
+
+
+
+    let scan={};
+
+
+
+    let rows =
+    text.split(/\r?\n/);
+
+
+
+
+
+    rows.forEach(row=>{
+
+
+
+        let col =
+        row.split(",");
+
+
+
+
+
+        if(col.length>=3){
+
+
+
+            let rack =
+            col[1]
+            .trim();
+
+
+
+            let sku =
+            col[2]
+            .trim();
+
+
+
+
+
+            if(!sku)
+            return;
+
+
+
+
+
+            if(!scan[sku]){
+
+
+                scan[sku]=[];
+
+
+            }
+
+
+
+
+            if(
+            !scan[sku]
+            .includes(rack)
+            ){
+
+
+                scan[sku]
+                .push(rack);
+
+
+            }
+
+
+
+
+        }
+
+
+
+    });
+
+
+
+
+
+    return scan;
+
+
+}
+
+
+
+
+
+
+
+
+
+function prosesItemize(master,scan){
+
+
+
+    let hasil=[];
+
+
+
+
+
+
+    Object.keys(master)
+
+    .forEach(sku=>{
+
+
+
+        let item =
+        master[sku];
+
+
+
+        let rackArea="-";
+
+        let display="-";
+
+        let remark="Unscan";
+
+
+
+
+
+
+        if(scan[sku]){
+
+
+
+            remark="Scanned";
+
+
+
+            rackArea =
+            scan[sku]
+            .join(", ");
+
+
+
+
+
+
+
+            if(scan[sku].length>1){
+
+
+
+                display =
+                "Double Display";
+
+
+
+            }
+
+            else{
+
+
+                if(
+                scan[sku][0]
+                ===
+                item.rack
+                ){
+
+
+                    display =
+                    "Single Display";
+
+
+                }
+
+                else{
+
+
+                    display =
+                    "Wrong Area";
+
+
+                }
+
+
+            }
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        hasil.push({
+
+
+            sku:item.sku,
+
+
+            rack:item.rack,
+
+
+            desc:item.desc,
+
+
+            rackArea:rackArea,
+
+
+            display:display,
+
+
+            remark:remark
+
+
+
+        });
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+    return hasil;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function tampilkanItemizeSummary(data){
+
+
+
+    let total=data.length;
+
+
+    let scanned=0;
+
+
+    let unscan=0;
+
+
+    let doubleDisplay=0;
+
+
+    let wrongArea=0;
+
+
+
+
+
+
+
+    data.forEach(row=>{
+
+
+
+        if(row.remark==="Scanned")
+
+        scanned++;
+
+
+
+
+        if(row.remark==="Unscan")
+
+        unscan++;
+
+
+
+
+
+        if(row.display==="Double Display")
+
+        doubleDisplay++;
+
+
+
+
+
+        if(row.display==="Wrong Area")
+
+        wrongArea++;
+
+
+
+
+    });
+
+
+
+
+
+
+
+    let html=`
+
+
+<div class="summary">
+
+
+
+<div class="card total">
+
+<h3>${total}</h3>
+
+<p>Total SKU</p>
+
+</div>
+
+
+
+
+<div class="card tally">
+
+<h3>${scanned}</h3>
+
+<p>Scanned</p>
+
+</div>
+
+
+
+
+
+<div class="card short">
+
+<h3>${unscan}</h3>
+
+<p>Unscan</p>
+
+</div>
+
+
+
+
+
+<div class="card extra">
+
+<h3>${doubleDisplay}</h3>
+
+<p>Double Display</p>
+
+</div>
+
+
+
+
+
+<div class="card wrongArea">
+
+<h3>${wrongArea}</h3>
+
+<p>Wrong Area</p>
+
+</div>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+
+
+document
+.getElementById("itemizeSummary")
+.innerHTML=html;
+
+
+
+}
+
+/* =====================================================
+   ITEMIZE RESULT TABLE
+===================================================== */
+
+
+function tampilkanItemizeResult(data){
+
+
+    let html = `
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>SKU</th>
+
+<th>Rack Number</th>
+
+<th>Description</th>
+
+<th>Rack Area</th>
+
+<th>Display</th>
+
+<th>Remark</th>
+
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+`;
+
+
+
+
+data.forEach(row=>{
+
+
+
+    let cls="sama";
+
+
+
+    if(row.remark==="Unscan"){
+
+
+        cls="minus";
+
+
+    }
+
+
+    else if(row.display==="Double Display"){
+
+
+        cls="plus";
+
+
+    }
+
+
+    else if(row.display==="Wrong Area"){
+
+
+        cls="wrongArea";
+
+
+    }
+
+
+
+
+
+
+html += `
+
+
+
+<tr class="${cls}">
+
+
+<td>${row.sku}</td>
+
+
+<td>${row.rack}</td>
+
+
+<td>${row.desc}</td>
+
+
+<td>${row.rackArea}</td>
+
+
+<td>${row.display}</td>
+
+
+<td>${row.remark}</td>
+
+
+
+</tr>
+
+
+
+`;
+
+
+
+});
+
+
+
+
+
+html+=`
+
+
+</tbody>
+
+
+</table>
+
+
+`;
+
+
+
+
+
+document
+.getElementById("itemizeResult")
+.innerHTML=html;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DOWNLOAD ITEMIZE EXCEL
+===================================================== */
+
+
+
+function downloadItemizeExcel(){
+
+
+
+    if(itemizeGlobal.length===0){
+
+
+        alert(
+        "Belum ada data Itemize"
+        );
+
+
+        return;
+
+
+    }
+
+
+
+
+
+
+let exportData =
+
+itemizeGlobal.map(row=>({
+
+
+
+    SKU:
+    row.sku,
+
+
+
+    Rack_Number:
+    row.rack,
+
+
+
+    Description:
+    row.desc,
+
+
+
+    Rack_Area:
+    row.rackArea,
+
+
+
+    Display:
+    row.display,
+
+
+
+    Remark:
+    row.remark
+
+
+
+}));
+
+
+
+
+
+
+
+let ws =
+
+XLSX.utils
+.json_to_sheet(exportData);
+
+
+
+
+
+
+ws["!cols"]=[
+
+
+{wch:15},
+
+{wch:15},
+
+{wch:40},
+
+{wch:25},
+
+{wch:20},
+
+{wch:15}
+
+
+
+];
+
+
+
+
+
+
+
+let wb =
+
+XLSX.utils
+.book_new();
+
+
+
+
+
+
+XLSX.utils
+.book_append_sheet(
+
+wb,
+
+ws,
+
+"Itemize"
+
+
+);
+
+
+
+
+
+
+
+let now=new Date();
+
+
+
+
+
+let filename =
+
+"Itemize_"+
+
+now.getFullYear()+"-"+
+
+String(now.getMonth()+1)
+.padStart(2,"0")+"-"+
+
+String(now.getDate())
+.padStart(2,"0")+
+
+".xlsx";
+
+
+
+
+
+
+
+XLSX.writeFile(
+
+wb,
+
+filename
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   SAVE ITEMIZE TO GOOGLE SHEET
+===================================================== */
+
+
+
+function saveItemize(){
+
+
+
+const storeCode =
+
+localStorage
+.getItem("storeCode");
+
+
+
+
+
+if(!storeCode){
+
+
+alert(
+"Session login hilang"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+fetch(
+GAS_URL,
+{
+
+method:"POST",
+
+headers:{
+
+
+"Content-Type":
+"application/json"
+
+
+},
+
+
+body:JSON.stringify({
+
+
+
+action:
+"saveItemizeBatch",
+
+
+
+storeCode:
+storeCode,
+
+
+
+data:
+itemizeGlobal
+
+
+
+})
+
+
+})
+
+
+
+
+.then(res=>res.json())
+
+
+
+.then(result=>{
+
+
+
+console.log(
+"SAVE ITEMIZE",
+result
+);
+
+
+
+if(!result.success){
+
+
+alert(
+result.message
+);
+
+
+}
+
+
+
+})
+
+
+
+.catch(err=>{
+
+
+console.error(err);
+
+
+alert(
+"Gagal simpan Itemize"
+);
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   LOAD ITEMIZE AFTER LOGIN
+===================================================== */
+
+
+
+function loadItemize(){
+
+
+
+const storeCode =
+
+localStorage
+.getItem("storeCode");
+
+
+
+
+
+if(!storeCode)
+return;
+
+
+
+
+
+
+fetch(
+
+GAS_URL+
+
+"?action=loadItemize&storeCode="+
+
+encodeURIComponent(storeCode)
+
+
+)
+
+
+
+.then(res=>res.json())
+
+
+
+.then(result=>{
+
+
+
+console.log(
+"LOAD ITEMIZE",
+result
+);
+
+
+
+
+
+
+if(result.success){
+
+
+
+itemizeGlobal =
+
+result.data || [];
+
+
+
+
+
+
+tampilkanItemizeSummary(
+
+itemizeGlobal
+
+);
+
+
+
+
+
+
+tampilkanItemizeResult(
+
+itemizeGlobal
+
+);
+
+
+
+
+}
+
+
+
+})
+
+
+
+.catch(err=>{
+
+
+console.error(
+err
+);
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DELETE ITEMIZE DATABASE
+===================================================== */
+
+
+
+function deleteItemizeData(){
+
+
+
+if(
+!confirm(
+"Hapus semua data Itemize?"
+)
+)
+return;
+
+
+
+
+
+
+fetch(
+
+GAS_URL,
+
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":
+"application/json"
+
+
+},
+
+
+body:JSON.stringify({
+
+
+
+action:
+"deleteItemize",
+
+
+
+storeCode:
+localStorage.getItem("storeCode")
+
+
+
+})
+
+
+}
+
+)
+
+
+
+
+
+
+.then(res=>res.json())
+
+
+
+.then(result=>{
+
+
+
+console.log(
+result
+);
+
+
+
+
+
+
+if(result.success){
+
+
+
+itemizeGlobal=[];
+
+
+
+
+document
+.getElementById("itemizeSummary")
+.innerHTML="";
+
+
+
+
+document
+.getElementById("itemizeResult")
+.innerHTML="";
+
+
+
+
+alert(
+"Data Itemize berhasil dihapus"
+);
+
+
+
+}
+
+else{
+
+
+alert(
+result.message
+);
+
+
+}
+
+
+
+
+})
+
+
+
+.catch(err=>{
+
+
+console.error(err);
+
+
+alert(
+"Gagal hapus data"
+);
+
+
+});
+
+
+
+}
