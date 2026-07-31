@@ -2738,16 +2738,22 @@ result
 
 
 
-if(!result.success){
+if(result.success){
 
+    console.log("ITEMIZE SAVED");
 
-alert(
-result.message
-);
-
+    alert(
+    "Itemize berhasil disimpan"
+    );
 
 }
+else{
 
+    alert(
+    result.message
+    );
+
+}
 
 
 })
