@@ -377,3 +377,985 @@ button:hover{
 
 
 }
+ /* =====================================================
+   DASHBOARD MENU
+===================================================== */
+
+
+.menuGrid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,220px);
+
+    justify-content:center;
+
+    gap:25px;
+
+    margin-top:35px;
+
+}
+
+
+
+
+
+.menuCard{
+
+
+    height:150px;
+
+    background:white;
+
+    border:2px solid #FFD400;
+
+    border-radius:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.15);
+
+
+}
+
+
+
+
+
+.menuCard:hover{
+
+
+    background:#FFD400;
+
+    transform:
+    translateY(-5px)
+    scale(1.03);
+
+    box-shadow:
+    0 15px 30px rgba(0,0,0,.25);
+
+
+}
+
+
+
+
+
+.menuCard .icon{
+
+
+    font-size:42px;
+
+    margin-bottom:10px;
+
+
+}
+
+
+
+
+
+.menuCard h3{
+
+
+    margin:5px 0;
+
+    font-size:18px;
+
+
+}
+
+
+
+
+
+.menuCard p{
+
+
+    margin:0;
+
+    font-size:13px;
+
+    color:#555;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   UPLOAD AREA
+===================================================== */
+
+
+.uploadRow{
+
+
+    display:flex;
+
+    gap:20px;
+
+    margin-top:20px;
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+.uploadCard{
+
+
+    flex:1;
+
+    min-width:280px;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    border:2px solid #FFD400;
+
+    background:#fff;
+
+
+}
+
+
+
+
+
+.uploadCard small{
+
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#666;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   ACTION BUTTON
+===================================================== */
+
+
+.actionArea{
+
+
+    margin-top:20px;
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+.actionBtn{
+
+
+    min-width:160px;
+
+}
+
+
+
+
+
+.generateBtn{
+
+
+    background:#111;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.downloadBtn{
+
+
+    background:#111;
+
+    color:white;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+
+.filterBar{
+
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+#search{
+
+
+    max-width:300px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   SUMMARY CARD
+===================================================== */
+
+
+.summary{
+
+
+    display:grid;
+
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(170px,1fr));
+
+
+    gap:15px;
+
+    margin:25px 0;
+
+
+}
+
+
+
+
+
+.summary .card{
+
+
+    height:100px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.15);
+
+
+    transition:.25s;
+
+
+}
+
+
+
+
+
+.summary .card:hover{
+
+
+    transform:
+    translateY(-5px);
+
+
+}
+
+
+
+
+
+.summary h3{
+
+
+    margin:0;
+
+    font-size:34px;
+
+
+}
+
+
+
+
+
+.summary p{
+
+
+    margin:8px 0 0;
+
+    font-size:16px;
+
+
+}
+
+
+
+
+
+.total{
+
+
+    background:#111;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.tally{
+
+
+    background:#FFD400;
+
+    color:#111;
+
+
+}
+
+
+
+
+
+.short{
+
+
+    background:#dc3545;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.extra{
+
+
+    background:#FFC107;
+
+    color:#111;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+
+table{
+
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+
+}
+
+
+
+
+
+th{
+
+
+    background:#111;
+
+    color:#FFD400;
+
+    padding:12px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:5;
+
+
+}
+
+
+
+
+
+td{
+
+
+    padding:10px;
+
+    border:1px solid #ddd;
+
+
+}
+
+
+
+
+
+tbody tr{
+
+
+    transition:.2s;
+
+
+}
+
+
+
+
+
+tbody tr:hover{
+
+
+    background:#FFF6BF;
+
+
+}
+
+
+
+
+
+/* STATUS COLOR */
+
+
+.sama{
+
+
+    background:#DFF5E4;
+
+
+}
+
+
+
+
+
+.plus{
+
+
+    background:#FFF8D6;
+
+
+}
+
+
+
+
+
+.minus{
+
+
+    background:#FFD6D6;
+
+
+}
+
+
+
+
+
+.notSystem{
+
+
+    background:#ECECEC;
+
+
+}
+
+
+
+
+
+.wrongArea{
+
+
+    background:#FFE5B4;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   RESULT SCROLL
+===================================================== */
+
+
+#hasilContainer,
+#itemizeResult{
+
+
+    max-height:600px;
+
+    overflow:auto;
+
+
+}
+
+
+
+
+
+#hasilContainer table,
+#itemizeResult table{
+
+
+    width:100%;
+
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+
+@media(max-width:900px){
+
+
+    body{
+
+        padding:10px;
+
+    }
+
+
+
+    .container{
+
+        padding:15px;
+
+    }
+
+
+
+
+    .header{
+
+
+        padding:20px;
+
+        flex-direction:column;
+
+        gap:15px;
+
+
+    }
+
+
+
+
+    .header button{
+
+
+        position:static;
+
+        width:100%;
+
+
+    }
+
+
+
+
+    .headerLeft{
+
+
+        flex-direction:column;
+
+        text-align:center;
+
+
+    }
+
+
+
+
+    .userInfo{
+
+
+        position:static;
+
+        margin-bottom:10px;
+
+
+    }
+
+
+
+
+
+    .menuGrid{
+
+
+        grid-template-columns:1fr;
+
+        justify-items:center;
+
+
+    }
+
+
+
+
+
+    .menuCard{
+
+
+        width:100%;
+
+        max-width:300px;
+
+
+    }
+
+
+
+
+
+    .actionArea{
+
+
+        flex-direction:column;
+
+
+    }
+
+
+
+
+    .actionBtn{
+
+
+        width:100%;
+
+
+    }
+
+
+
+
+}
+
+
+
+
+
+@media(max-width:600px){
+
+
+
+    body{
+
+
+        padding:5px;
+
+
+    }
+
+
+
+
+
+    .loginHeader{
+
+
+        padding:25px 15px;
+
+
+    }
+
+
+
+
+
+    .loginTitle h1{
+
+
+        font-size:22px;
+
+
+    }
+
+
+
+
+
+    .logo{
+
+
+        width:60px;
+
+
+    }
+
+
+
+
+
+    .headerText h1{
+
+
+        font-size:18px;
+
+
+    }
+
+
+
+
+
+    .uploadRow{
+
+
+        flex-direction:column;
+
+
+    }
+
+
+
+
+
+    .uploadCard{
+
+
+        width:100%;
+
+
+    }
+
+
+
+
+
+    .summary{
+
+
+        grid-template-columns:
+        1fr;
+
+
+    }
+
+
+
+
+
+    table{
+
+
+        font-size:13px;
+
+
+    }
+
+
+
+
+
+    th,
+    td{
+
+
+        padding:8px;
+
+
+        white-space:nowrap;
+
+
+    }
+
+
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   ANIMATION
+===================================================== */
+
+
+.modulePage{
+
+
+    animation:
+
+    fadeIn .25s ease;
+
+
+}
+
+
+
+
+
+@keyframes fadeIn{
+
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(10px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0);
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+
+#hasilContainer::-webkit-scrollbar,
+#itemizeResult::-webkit-scrollbar{
+
+
+    width:8px;
+
+
+}
+
+
+
+
+
+#hasilContainer::-webkit-scrollbar-thumb,
+#itemizeResult::-webkit-scrollbar-thumb{
+
+
+    background:#FFD400;
+
+    border-radius:10px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   CLEAN MODULE
+===================================================== */
+
+
+.modulePage h2{
+
+
+    margin-top:0;
+
+
+}
+
+
+
+
+
+small{
+
+
+    font-size:12px;
+
+
+}
