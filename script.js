@@ -54,6 +54,7 @@ function updateStoreInfo(storeCode,storeName){
 
 function login(){
 
+   console.log("FUNCTION LOGIN JALAN");
 
     const storeCode =
     document
