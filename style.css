@@ -65,8 +65,15 @@
     background:#111;
 
     transition:.25s;
-
+    
+    position: relative;
+    z-index: 9999;
 }
+.loginBox{
+    position: relative;
+    z-index: 100;
+}
+
 
 .loginBtn:hover{
 
