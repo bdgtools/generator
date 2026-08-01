@@ -727,112 +727,69 @@ ITEMIZE MODULE
 
 
         <label>
+    Export Shelf Master
+</label>
 
-            Export Shelf Master
+<input 
+    type="file"
+    id="itemizeMasterFile"
+    accept=".txt,.csv">
 
-        </label>
 
+<br><br>
 
 
-        <input 
-            
-            type="file"
-            
-            id="itemizeScanFile"
-            multiple
-            accept=".txt">
+<label>
+    Scan TXT
+</label>
 
+<input
+    type="file"
+    id="itemizeScanFile"
+    accept=".txt,.csv"
+    multiple>
 
 
+</section>
 
 
-        <br><br>
 
 
+<section class="actionArea">
 
 
+    <button
+        class="actionBtn generateBtn"
+        onclick="generateItemize()">
 
-        <label>
+        ⚙ Generate
 
-            Scan TXT
+    </button>
 
-        </label>
 
 
 
-        <input
+    <button
+        class="actionBtn downloadBtn"
+        onclick="downloadItemizeExcel()">
 
-            type="file"
+        ⬇ Download Excel
 
-            id="itemizeScanFile"
+    </button>
 
-            accept=".txt,.csv"
 
-            multiple>
 
 
+    <button
+        class="actionBtn"
+        onclick="deleteItemizeData()">
 
+        🗑 Delete Data
 
+    </button>
 
-    </section>
 
-
-
-
-
-
-
-    <section class="actionArea">
-
-
-        <button
-
-            class="actionBtn generateBtn"
-
-            onclick="generateItemize()">
-
-
-            ⚙ Generate
-
-
-        </button>
-
-
-
-
-
-        <button
-
-            class="actionBtn downloadBtn"
-
-            onclick="downloadItemizeExcel()">
-
-
-            ⬇ Download Excel
-
-
-        </button>
-
-
-
-
-
-        <button
-
-            class="actionBtn"
-
-            onclick="deleteItemizeData()">
-
-
-            🗑 Delete Data
-
-
-        </button>
-
-
-
-    </section>
-
+</section>
 
 
 
