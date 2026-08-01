@@ -2712,59 +2712,21 @@ data:data
 
 
 
-.then(res=>res.json())
-
-
-
 .then(result=>{
 
+    console.log(result);
 
+    if(result.success){
 
-console.log(
-"SAVE ITEMIZE",
-result
-);
+        alert(result.message);
 
+    }else{
 
+        alert(result.message);
 
-if(result.success){
-
-    console.log("ITEMIZE SAVED");
-
-    alert(
-    "Itemize berhasil disimpan"
-    );
-
-}
-else{
-
-    alert(
-    result.message
-    );
-
-}
-
+    }
 
 })
-
-
-
-.catch(err=>{
-
-
-console.error(err);
-
-
-alert(
-"Gagal simpan Itemize"
-);
-
-
-});
-
-
-
-}
 
 
 
