@@ -2670,51 +2670,23 @@ return;
 
 
 
-fetch(
-GAS_URL,
-{
-
-method:"POST",
-
-headers:{
-
-
-"Content-Type":
-"application/json"
-
-
-},
-
-
-body:JSON.stringify({
-
-
-
-action:
-"saveItemizeBatch",
-
-
-
-storeCode:
-storeCode,
-
-
-
-data:data
-
-
-
+fetch(GAS_URL,{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        action:"saveItemizeBatch",
+        storeCode:storeCode,
+        data:data
+    })
 })
+.then(res=>res.text())
+.then(text=>{
 
+    console.log(text);
 
-})
-
-
-
-
-.then(result=>{
-
-    console.log(result);
+    const result = JSON.parse(text);
 
     if(result.success){
 
@@ -2727,12 +2699,14 @@ data:data
     }
 
 })
+.catch(err=>{
 
+    console.error(err);
+    alert(err);
 
+});
 
-
-
-
+}   // <-- tambahkan ini
 
 
 
@@ -2760,101 +2734,75 @@ return;
 
 
 
+fetch(GAS_URL,{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        action:"saveItemizeBatch",
+        storeCode:storeCode,
+        data:data
+    })
+})
+.then(res=>res.text())
+.then(text=>{
 
+    console.log(text);
 
+    const result = JSON.parse(text);
 
-fetch(
+    if(result.success){
 
-GAS_URL+
+        alert(result.message);
 
-"?action=loadItemize&storeCode="+
+    }else{
 
-encodeURIComponent(storeCode)
+        alert(result.message);
 
-
-)
-
-
-
-.then(res=>res.json())
-
-
-
-.then(result=>{
-
-
-
-console.log(
-"LOAD ITEMIZE",
-result
-);
-
-
-
-
-
-
-if(result.success){
-
-
-
-itemizeGlobal =
-
-result.data || [];
-
-
-
-
-
-
-tampilkanItemizeSummary(
-
-itemizeGlobal
-
-);
-
-
-
-
-
-
-tampilkanItemizeResult(
-
-itemizeGlobal
-
-);
-
-
-
-
-}
-
-
+    }
 
 })
-
-
-
 .catch(err=>{
 
+    console.error(err);
 
-console.error(
-err
-);
-
+    alert(err);
 
 });
+function loadItemize(){
 
+    const storeCode = localStorage.getItem("storeCode");
 
+    if(!storeCode) return;
+
+    fetch(
+        GAS_URL +
+        "?action=loadItemize&storeCode=" +
+        encodeURIComponent(storeCode)
+    )
+    .then(res=>res.json())
+    .then(result=>{
+
+        console.log(result);
+
+        if(result.success){
+
+            itemizeGlobal = result.data || [];
+
+            tampilkanItemizeSummary(itemizeGlobal);
+            tampilkanItemizeResult(itemizeGlobal);
+
+        }
+
+    })
+    .catch(err=>{
+
+        console.error(err);
+
+    });
 
 }
-
-
-
-
-
-
-
 
 
 /* =====================================================
@@ -2865,75 +2813,46 @@ err
 
 function deleteItemizeData(){
 
-    if(!confirm("Hapus semua data Itemize?")){
-        return;
-    }
+    if(!confirm("Hapus semua data Itemize?")) return;
 
+    const storeCode = localStorage.getItem("storeCode");
 
     fetch(GAS_URL,{
-
         method:"POST",
-
         headers:{
             "Content-Type":"application/json"
         },
-
         body:JSON.stringify({
-
             action:"deleteItemize",
-
-            storeCode:localStorage.getItem("storeCode")
-
+            storeCode:storeCode
         })
-
     })
-
-
     .then(res=>res.json())
-
-
     .then(result=>{
-
-
-        console.log(result);
-
 
         if(result.success){
 
-
             itemizeGlobal=[];
 
-
             document.getElementById("itemizeSummary").innerHTML="";
-
             document.getElementById("itemizeResult").innerHTML="";
-
-
-            alert("Data Itemize berhasil dihapus");
-
-
-        }
-        else{
-
 
             alert(result.message);
 
+        }else{
+
+            alert(result.message);
 
         }
 
-
     })
-
-
     .catch(err=>{
-
 
         console.error(err);
 
-        alert("Gagal hapus data");
-
+        alert(err);
 
     });
 
-
 }
+
