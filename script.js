@@ -2656,58 +2656,66 @@ localStorage.getItem("storeCode");
 const data = itemizeGlobal;
 
 
-
 if(!storeCode){
 
 alert("Session login hilang");
-
 return;
 
 }
 
 
 
-
-
-
 fetch(GAS_URL,{
     method:"POST",
+
     headers:{
-        "Content-Type":"application/json"
+        "Content-Type":"text/plain;charset=utf-8"
     },
+
     body:JSON.stringify({
+
         action:"saveItemizeBatch",
+
         storeCode:storeCode,
+
         data:data
+
     })
+
 })
+
 .then(res=>res.text())
+
 .then(text=>{
 
-    console.log(text);
 
-    const result = JSON.parse(text);
+console.log("SERVER:",text);
 
-    if(result.success){
 
-        alert(result.message);
+const result =
+JSON.parse(text);
 
-    }else{
 
-        alert(result.message);
+alert(result.message);
 
-    }
+
 
 })
+
 .catch(err=>{
 
-    console.error(err);
-    alert(err);
+
+console.error("SAVE ERROR:",err);
+
+alert(
+"Gagal koneksi ke server"
+);
+
 
 });
 
-}   // <-- tambahkan ini
 
+}
 
 
 /* =====================================================
@@ -2762,44 +2770,81 @@ function deleteItemizeData(){
 
     if(!confirm("Hapus semua data Itemize?")) return;
 
-    const storeCode = localStorage.getItem("storeCode");
+
+    const storeCode =
+    localStorage.getItem("storeCode");
+
 
     fetch(GAS_URL,{
+
         method:"POST",
+
         headers:{
-            "Content-Type":"application/json"
+            "Content-Type":"text/plain;charset=utf-8"
         },
+
+
         body:JSON.stringify({
+
             action:"deleteItemize",
+
             storeCode:storeCode
+
         })
+
+
     })
-    .then(res=>res.json())
-    .then(result=>{
+
+    .then(res=>res.text())
+
+    .then(text=>{
+
+
+        console.log(text);
+
+
+        const result =
+        JSON.parse(text);
+
+
 
         if(result.success){
 
+
             itemizeGlobal=[];
 
-            document.getElementById("itemizeSummary").innerHTML="";
-            document.getElementById("itemizeResult").innerHTML="";
 
-            alert(result.message);
+            document
+            .getElementById("itemizeSummary")
+            .innerHTML="";
 
-        }else{
 
-            alert(result.message);
+            document
+            .getElementById("itemizeResult")
+            .innerHTML="";
+
 
         }
 
+
+        alert(result.message);
+
+
+
     })
+
     .catch(err=>{
+
 
         console.error(err);
 
-        alert(err);
+        alert(
+        "Delete gagal koneksi"
+        );
+
 
     });
+
 
 }
 
