@@ -1823,17 +1823,11 @@ function generateItemize(){
 
 
         tampilkanItemizeResult(
-            itemizeGlobal
+           itemizeGlobal
         );
-
-
-
-
-
-
-        saveItemize(itemizeGlobal);
-
-
+       
+       saveItemize();
+    
     })
 
     .catch(err=>{
