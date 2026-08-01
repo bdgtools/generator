@@ -2713,63 +2713,6 @@ fetch(GAS_URL,{
 /* =====================================================
    LOAD ITEMIZE AFTER LOGIN
 ===================================================== */
-
-
-
-function loadItemize(){
-
-
-
-const storeCode =
-
-localStorage
-.getItem("storeCode");
-
-
-
-
-
-if(!storeCode)
-return;
-
-
-
-fetch(GAS_URL,{
-    method:"POST",
-    headers:{
-        "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-        action:"saveItemizeBatch",
-        storeCode:storeCode,
-        data:data
-    })
-})
-.then(res=>res.text())
-.then(text=>{
-
-    console.log(text);
-
-    const result = JSON.parse(text);
-
-    if(result.success){
-
-        alert(result.message);
-
-    }else{
-
-        alert(result.message);
-
-    }
-
-})
-.catch(err=>{
-
-    console.error(err);
-
-    alert(err);
-
-});
 function loadItemize(){
 
     const storeCode = localStorage.getItem("storeCode");
@@ -2784,7 +2727,7 @@ function loadItemize(){
     .then(res=>res.json())
     .then(result=>{
 
-        console.log(result);
+        console.log("LOAD", result);
 
         if(result.success){
 
@@ -2792,6 +2735,10 @@ function loadItemize(){
 
             tampilkanItemizeSummary(itemizeGlobal);
             tampilkanItemizeResult(itemizeGlobal);
+
+        }else{
+
+            console.log(result.message);
 
         }
 
