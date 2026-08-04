@@ -1806,6 +1806,8 @@ function generateItemize(){
 
        isItemizeChanged = true;
        
+       document.getElementById("btnSave").disabled = false;
+       
        tampilkanItemizeSummary(itemizeGlobal);
        
        tampilkanItemizeResult(itemizeGlobal);
@@ -2744,6 +2746,8 @@ JSON.parse(text);
 if(result.success){
 
     isItemizeChanged = false;
+
+    document.getElementById("btnSave").disabled = true;
 
 }
 
