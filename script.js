@@ -2801,7 +2801,13 @@ function loadItemize(){
 
 function deleteItemizeData(){
 
-    if(!confirm("Hapus semua data Itemize?")) return;
+    async function deleteItemizeData(){
+
+    const ok = await showConfirm(
+        "Yakin ingin menghapus semua data Itemize?"
+    );
+
+    if(!ok) return;
 
 
     const storeCode =
@@ -2938,6 +2944,37 @@ popupTimer = setTimeout(()=>{
     overlay.classList.remove("show");
 
 },2000);
+
+}
+function showConfirm(message){
+
+    return new Promise(resolve=>{
+
+        const overlay =
+        document.getElementById("confirmOverlay");
+
+        document.getElementById("confirmText").innerHTML =
+        message;
+
+        overlay.classList.add("show");
+
+        document.getElementById("btnCancelConfirm").onclick=()=>{
+
+            overlay.classList.remove("show");
+
+            resolve(false);
+
+        };
+
+        document.getElementById("btnOkConfirm").onclick=()=>{
+
+            overlay.classList.remove("show");
+
+            resolve(true);
+
+        };
+
+    });
 
 }
 
