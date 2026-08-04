@@ -206,24 +206,17 @@ function login(){
 
     .catch(err=>{
 
+    console.error(err);
 
-        console.error(err);
+    msg.innerHTML="";
 
+    showPopup("Connection Error","❌");
 
-        msg.innerHTML =
-        "Connection Error";
-
-
-    });
+});
 
 
 
 }
-
-
-
-
-
 
 
 
@@ -375,8 +368,12 @@ function logout(){
     document
     .getElementById("password")
     .value="";
-
-
+   
+   isItemizeChanged = false;
+   
+   updateSaveStatus(false);
+   
+   document.getElementById("btnSave").disabled = true;
 
 }
 
@@ -501,9 +498,8 @@ function generateData(){
     if(!sistemFile || fisikFiles.length===0){
 
 
-        alert(
-        "Upload Export Shelf dan Scan Fisik terlebih dahulu"
-        );
+        showPopup("Upload Export Shelf dan Scan Fisik terlebih dahulu","⚠"
+                 );
 
 
         return;
@@ -629,9 +625,7 @@ function generateData(){
         console.error(err);
 
 
-        alert(
-        "Gagal membaca file"
-        );
+        showPopup("Gagal membaca file","❌");
 
 
     });
@@ -639,11 +633,6 @@ function generateData(){
 
 
 }
-
-
-
-
-
 
 
 
@@ -1497,10 +1486,7 @@ function downloadExcel(){
     if(hasilGlobal.length===0){
 
 
-        alert(
-        "Belum ada data hasil"
-        );
-
+        showPopup("Belum ada data hasil","⚠");
 
         return;
 
@@ -1509,33 +1495,24 @@ function downloadExcel(){
 
 
 
-
-
-
-
     let exportData =
-itemizeGlobal.map(row=>({
+       hasilGlobal.map(row=>({
 
-    SKU:
-    row.sku,
+    let exportData = hasilGlobal.map(row=>({
 
-    Rack_Number:
-    row.rack,
+    SKU: row.sku,
 
-    Qty_System:
-    row.system,
+    Rack_Number: row.rack,
 
-    Description:
-    row.desc,
+    Description: row.desc,
 
-    Rack_Area:
-    row.rackArea,
+    Qty_System: row.system,
 
-    Display:
-    row.display,
+    Qty_Fisik: row.fisik,
 
-    Remark:
-    row.remark
+    Selisih: row.selisih,
+
+    Status: row.status
 
 }));
 
@@ -1679,9 +1656,8 @@ function generateItemize(){
     if(!masterFile || scanFiles.length===0){
 
 
-        alert(
-        "Upload Master dan Scan TXT terlebih dahulu"
-        );
+        showPopup("Upload Master dan Scan TXT terlebih dahulu","⚠"
+                 );
 
 
         return;
@@ -1814,32 +1790,21 @@ function generateItemize(){
        
        tampilkanItemizeResult(itemizeGlobal);
        
-       alert("Generate selesai.\nKlik SAVE untuk menyimpan.");
+       updateSaveStatus(true);
     
     })
 
     .catch(err=>{
 
+    console.error(err);
 
-        console.error(err);
+    showPopup("Gagal proses Itemize","❌");
 
-
-        alert(
-        "Gagal proses Itemize"
-        );
-
-
-    });
+});
 
 
 
 }
-
-
-
-
-
-
 
 
 
@@ -2543,11 +2508,8 @@ function downloadItemizeExcel(){
 
 
     if(itemizeGlobal.length===0){
-
-
-        alert(
-        "Belum ada data Itemize"
-        );
+       
+       showPopup("Belum ada data Itemize","⚠");
 
 
         return;
@@ -2704,10 +2666,18 @@ localStorage.getItem("storeCode");
 
 const data = itemizeGlobal;
 
+const btnSave =
+document.getElementById("btnSave");
+
+btnSave.disabled = true;
+
 
 if(!storeCode){
 
-alert("Session login hilang");
+showPopup(
+"Session login hilang",
+"❌"
+);
 return;
 
 }
@@ -2763,16 +2733,16 @@ showPopup(result.message,"✔");
 
 .catch(err=>{
 
+    console.error(err);
 
-console.error("SAVE ERROR:",err);
+    btnSave.disabled = false;
 
-alert(
-"Gagal koneksi ke server"
-);
-
+    showPopup(
+        "Gagal koneksi ke server",
+        "❌"
+    );
 
 });
-
 
 }
 
@@ -2901,9 +2871,7 @@ function deleteItemizeData(){
 
         console.error(err);
 
-        alert(
-        "Delete gagal koneksi"
-        );
+        showPopup("Delete gagal koneksi","❌");
 
 
     });
@@ -2950,6 +2918,7 @@ function updateSaveStatus(changed){
     }
 
 }
+let popupTimer;
 
 function showPopup(message,icon="✔"){
 
@@ -2962,11 +2931,13 @@ function showPopup(message,icon="✔"){
 
     overlay.classList.add("show");
 
-    setTimeout(()=>{
+    clearTimeout(popupTimer);
 
-        overlay.classList.remove("show");
+popupTimer = setTimeout(()=>{
 
-    },2000);
+    overlay.classList.remove("show");
+
+},2000);
 
 }
 
