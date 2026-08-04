@@ -252,9 +252,6 @@ button:hover{
 
 
 
-
-
-
 /* =====================================================
    HEADER MODULE
 ===================================================== */
@@ -1375,5 +1372,90 @@ small{
     background:#eaf8ec;
 
     color:#2e7d32;
+
+}
+.popupOverlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.35);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+    z-index:9999;
+
+}
+
+.popupOverlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.popupBox{
+
+    width:320px;
+
+    background:#fff;
+
+    border-radius:14px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+    animation:popup .25s ease;
+
+}
+
+.popupIcon{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+
+}
+
+.popupText{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+@keyframes popup{
+
+    from{
+
+        transform:scale(.8);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
 
 }
