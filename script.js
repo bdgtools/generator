@@ -1489,16 +1489,8 @@ function downloadExcel(){
         showPopup("Belum ada data hasil","⚠");
 
         return;
-
-
     }
-
-
-
-    let exportData =
-       hasilGlobal.map(row=>({
-
-    let exportData = hasilGlobal.map(row=>({
+let exportData = hasilGlobal.map(row=>({
 
     SKU: row.sku,
 
@@ -1515,9 +1507,6 @@ function downloadExcel(){
     Status: row.status
 
 }));
-
-
-
 
 
     let ws =
@@ -2799,9 +2788,7 @@ function loadItemize(){
 
 
 
-function deleteItemizeData(){
-
-    async function deleteItemizeData(){
+async function deleteItemizeData(){
 
     const ok = await showConfirm(
         "Yakin ingin menghapus semua data Itemize?"
