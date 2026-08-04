@@ -1639,11 +1639,19 @@ function generateItemize(){
 
 
 
-    const scanFiles =
-
+    let scanFiles = Array.from(
     document
     .getElementById("itemizeScanFile")
-    .files;
+    .files
+);
+
+
+// cegah master masuk sebagai scan
+scanFiles = scanFiles.filter(file=>{
+
+    return file.name !== masterFile.name;
+
+});
 
 
 
@@ -1651,6 +1659,16 @@ function generateItemize(){
 
 
     if(!masterFile || scanFiles.length===0){
+       if(scanFiles.length===0){
+
+    showPopup(
+        "File Scan TXT tidak ditemukan",
+        "⚠"
+    );
+
+    return;
+
+}
 
 
         showPopup("Upload Master dan Scan TXT terlebih dahulu","⚠"
@@ -1716,12 +1734,18 @@ function generateItemize(){
         for(let i=1;i<data.length;i++){
 
 
+    let result =
+    parseItemizeScan(
+        data[i]
+    );
 
-            let result =
 
-            parseItemizeScan(
-                data[i]
-            );
+    // jika bukan format scan, skip
+    if(Object.keys(result).length===0){
+
+        continue;
+
+    }
 
 
 
@@ -1906,8 +1930,10 @@ function parseItemizeScan(text){
 
 
 
-        if(col.length>=3){
-
+        if(
+           col.length>=3 &&
+           col[1].includes("-")
+        ){
 
 
             let rack =
