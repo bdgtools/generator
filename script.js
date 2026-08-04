@@ -2755,7 +2755,7 @@ if(result.success){
 
 }
 
-alert(result.message);
+showPopup(result.message,"✔");
 
 
 
@@ -2890,7 +2890,7 @@ function deleteItemizeData(){
         }
 
 
-        alert(result.message);
+        showPopup(result.message,"✔");
 
 
 
@@ -2948,6 +2948,25 @@ function updateSaveStatus(changed){
         status.style.color="#2e7d32";
 
     }
+
+}
+
+function showPopup(message,icon="✔"){
+
+    const overlay =
+    document.getElementById("popupOverlay");
+
+    document.getElementById("popupIcon").innerHTML=icon;
+
+    document.getElementById("popupText").innerHTML=message;
+
+    overlay.classList.add("show");
+
+    setTimeout(()=>{
+
+        overlay.classList.remove("show");
+
+    },2000);
 
 }
 
