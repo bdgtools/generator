@@ -2177,7 +2177,7 @@ function mergeItemize(oldData, newData){
             database[item.sku].rackArea =
                 [...rack].join(", ");
 
-            database[item.sku].remark = "Scanned";
+            database[item.sku].remark = item.remark;
 
             if(rack.size>1){
 
