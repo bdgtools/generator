@@ -1,3 +1,12 @@
+console.log("MR DIY SCRIPT BERHASIL LOAD");
+
+/* =====================================================
+   MR DIY STORE TOOLS v2.0
+   MAIN SCRIPT
+===================================================== */
+
+
+let hasilGlobal = [];
 /* =====================================================
    MR DIY STORE TOOLS v2.0
    MAIN SCRIPT
