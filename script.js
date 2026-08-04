@@ -108,6 +108,8 @@ function login(){
     msg.innerHTML =
     "Checking...";
 
+   showLoading("Login...");
+
 
 
 
@@ -141,6 +143,8 @@ function login(){
 
 
         console.log(data);
+
+       hideLoading();
 
 
 
@@ -213,6 +217,7 @@ function login(){
 
 
     .catch(err=>{
+       hideLoading();
 
     console.error(err);
 
@@ -485,6 +490,7 @@ function backDashboard(){
 
 
 function generateData(){
+   showLoading("Generate Stock...");
 
 
     const sistemFile =
@@ -547,8 +553,9 @@ function generateData(){
 
 
     Promise.all(proses)
+       .then(files=>{
 
-    .then(files=>{
+    hideLoading();
 
 
 
@@ -628,6 +635,7 @@ function generateData(){
     })
 
     .catch(err=>{
+       hideLoading();
 
 
         console.error(err);
@@ -1492,6 +1500,7 @@ function downloadExcel(){
 
 
     if(hasilGlobal.length===0){
+       showLoading("Creating Excel...");
 
 
         showPopup("Belum ada data hasil","⚠");
@@ -1618,6 +1627,7 @@ let exportData = hasilGlobal.map(row=>({
         wb,
         filename
     );
+   hideLoading();
 
 
 
@@ -1629,6 +1639,7 @@ let exportData = hasilGlobal.map(row=>({
 
 
 function generateItemize(){
+   showLoading("Generate Itemize...");
 
 
     const masterFile =
@@ -1713,6 +1724,8 @@ scanFiles = scanFiles.filter(file=>{
     Promise.all(files)
 
     .then(data=>{
+
+    hideLoading();
 
 
 
@@ -1816,6 +1829,7 @@ scanFiles = scanFiles.filter(file=>{
     })
 
     .catch(err=>{
+       hideLoading();
 
     console.error(err);
 
@@ -2709,7 +2723,7 @@ if(btnSave){
     btnSave.disabled = true;
 }
 
-
+showLoading("Saving...");
 fetch(GAS_URL,{
     method:"POST",
 
@@ -2732,6 +2746,7 @@ fetch(GAS_URL,{
 .then(res=>res.text())
 
 .then(text=>{
+   hideLoading();
 
 
 console.log("SERVER:",text);
@@ -2758,6 +2773,7 @@ showPopup(result.message,"✔");
 })
 
 .catch(err=>{
+   hideLoading();
 
     console.error(err);
 
@@ -2839,7 +2855,8 @@ async function deleteItemizeData(){
     const storeCode =
     localStorage.getItem("storeCode");
 
-
+   showLoading("Deleting...");
+   
     fetch(GAS_URL,{
 
         method:"POST",
@@ -2863,6 +2880,7 @@ async function deleteItemizeData(){
     .then(res=>res.text())
 
     .then(text=>{
+       hideLoading();
 
 
         console.log(text);
@@ -2899,6 +2917,7 @@ async function deleteItemizeData(){
     })
 
     .catch(err=>{
+       hideLoading();
 
 
         console.error(err);
@@ -3001,6 +3020,26 @@ function showConfirm(message){
         };
 
     });
+
+}
+
+function showLoading(text="Loading..."){
+
+    document.getElementById("loadingText").innerHTML=text;
+
+    document
+        .getElementById("loadingOverlay")
+        .classList
+        .add("show");
+
+}
+
+function hideLoading(){
+
+    document
+        .getElementById("loadingOverlay")
+        .classList
+        .remove("show");
 
 }
 
