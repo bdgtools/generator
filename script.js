@@ -1806,6 +1806,8 @@ function generateItemize(){
 
        isItemizeChanged = true;
        
+       updateSaveStatus(true);
+       
        document.getElementById("btnSave").disabled = false;
        
        tampilkanItemizeSummary(itemizeGlobal);
@@ -2745,9 +2747,11 @@ JSON.parse(text);
 
 if(result.success){
 
-    isItemizeChanged = false;
+    isItemizeChanged=false;
 
-    document.getElementById("btnSave").disabled = true;
+    document.getElementById("btnSave").disabled=true;
+
+    updateSaveStatus(false);
 
 }
 
@@ -2798,6 +2802,10 @@ function loadItemize(){
 
             tampilkanItemizeSummary(itemizeGlobal);
             tampilkanItemizeResult(itemizeGlobal);
+           
+           updateSaveStatus(false);
+           
+           document.getElementById("btnSave").disabled = true;
 
         }else{
 
@@ -2913,4 +2921,33 @@ window.addEventListener("beforeunload",function(e){
     }
 
 });
+
+function updateSaveStatus(changed){
+
+    const status =
+    document.getElementById("saveStatus");
+
+    if(!status) return;
+
+    if(changed){
+
+        status.innerHTML =
+        "🟡 Ada perubahan, klik SAVE untuk menyimpan.";
+
+        status.style.background="#fff8e1";
+
+        status.style.color="#e65100";
+
+    }else{
+
+        status.innerHTML =
+        "🟢 Semua perubahan sudah disimpan.";
+
+        status.style.background="#e8f5e9";
+
+        status.style.color="#2e7d32";
+
+    }
+
+}
 
