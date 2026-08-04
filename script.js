@@ -2191,22 +2191,43 @@ function mergeItemize(oldData, newData){
             database[item.sku].rackArea =
                 [...rack].join(", ");
 
-            database[item.sku].remark = item.remark;
+            if(database[item.sku].remark==="Scanned"){
+               
+               // tetap scanned
+            }else{
+
+    database[item.sku].remark=item.remark;
+
+}
 
             if(rack.size>1){
 
-                database[item.sku].display =
-                    "Double Display";
-
-            }else{
-
-                const area=[...rack][0];
-
-                database[item.sku].display =
-                    area===database[item.sku].rack
-                    ? "Single Display"
-                    : "Wrong Area";
-
+                database[item.sku].display =if(rack.size==0){
+                   
+                   database[item.sku].display="-";
+                   
+                   database[item.sku].remark="Unscan";
+                }
+               else if(rack.size>1){
+               
+               database[item.sku].display="Double Display";
+               
+               database[item.sku].remark="Scanned";
+            
+            }
+            else{
+               
+               const area=[...rack][0];
+               
+               database[item.sku].display =
+                  
+                  area===database[item.sku].rack
+                  
+                  ? "Single Display"
+                  
+                  : "Wrong Area";
+               
+               database[item.sku].remark="Scanned";
             }
 
         }else{
