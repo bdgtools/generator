@@ -1359,3 +1359,21 @@ small{
 
 
 }
+
+.saveStatus{
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    background:#eaf8ec;
+
+    color:#2e7d32;
+
+}
