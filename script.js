@@ -2790,14 +2790,16 @@ function loadItemize(){
     .then(res=>res.json())
     .then(result=>{
 
-        console.log("LOAD", result);
+        console.log("LOAD DARI SHEET", result.data);
 
         if(result.success){
-
-            itemizeGlobal = result.data || [];
-
-            tampilkanItemizeSummary(itemizeGlobal);
-            tampilkanItemizeResult(itemizeGlobal);
+           
+           itemizeGlobal = [];
+           itemizeGlobal = result.data || [];
+           
+           tampilkanItemizeSummary(itemizeGlobal);
+           
+           tampilkanItemizeResult(itemizeGlobal);
            
            updateSaveStatus(false);
            
