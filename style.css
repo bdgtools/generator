@@ -1459,3 +1459,81 @@ small{
     }
 
 }
+
+/* ===========================
+   LOADING
+=========================== */
+
+.loadingOverlay{
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:99999;
+
+    visibility:hidden;
+    opacity:0;
+
+    transition:.25s;
+
+}
+
+.loadingOverlay.show{
+
+    visibility:visible;
+    opacity:1;
+
+}
+
+.loadingBox{
+
+    background:white;
+
+    padding:30px 45px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    min-width:220px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+
+}
+
+.loader{
+
+    width:45px;
+    height:45px;
+
+    border:5px solid #ddd;
+    border-top:5px solid #FFD400;
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+
+    margin:auto auto 15px;
+
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+#loadingText{
+
+    font-size:15px;
+    font-weight:bold;
+
+}
