@@ -8,6 +8,8 @@ let hasilGlobal = [];
 
 let itemizeGlobal = [];
 
+let isItemizeChanged = false;
+
 
 // GOOGLE APPS SCRIPT URL
 
@@ -1797,36 +1799,18 @@ function generateItemize(){
 
 
         }
-
-
-
-
-
-
-
-        itemizeGlobal =
-
-        prosesItemize(
-            master,
-            scan
-        );
-
-
-
-
-
-
-        tampilkanItemizeSummary(
-            itemizeGlobal
-        );
-
-
-
-        tampilkanItemizeResult(
-           itemizeGlobal
-        );
        
-       saveItemize();
+       const hasilBaru = prosesItemize(master, scan);
+       
+       itemizeGlobal = mergeItemize(itemizeGlobal, hasilBaru);
+
+       isItemizeChanged = true;
+       
+       tampilkanItemizeSummary(itemizeGlobal);
+       
+       tampilkanItemizeResult(itemizeGlobal);
+       
+       alert("Generate selesai.\nKlik SAVE untuk menyimpan.");
     
     })
 
@@ -2161,6 +2145,73 @@ function prosesItemize(master,scan){
     return hasil;
 
 
+
+}
+
+function mergeItemize(oldData, newData){
+
+    const database = {};
+
+    // masukkan data lama
+    oldData.forEach(item=>{
+
+        database[item.sku] = {...item};
+
+    });
+
+    // merge data baru
+    newData.forEach(item=>{
+
+        if(database[item.sku]){
+
+            let rack = new Set();
+
+            if(database[item.sku].rackArea !== "-"){
+
+                database[item.sku].rackArea
+                    .split(",")
+                    .forEach(r=>rack.add(r.trim()));
+
+            }
+
+            if(item.rackArea !== "-"){
+
+                item.rackArea
+                    .split(",")
+                    .forEach(r=>rack.add(r.trim()));
+
+            }
+
+            database[item.sku].rackArea =
+                [...rack].join(", ");
+
+            database[item.sku].remark = "Scanned";
+
+            if(rack.size>1){
+
+                database[item.sku].display =
+                    "Double Display";
+
+            }else{
+
+                const area=[...rack][0];
+
+                database[item.sku].display =
+                    area===database[item.sku].rack
+                    ? "Single Display"
+                    : "Wrong Area";
+
+            }
+
+        }else{
+
+            database[item.sku]=item;
+
+        }
+
+    });
+
+    return Object.values(database);
 
 }
 
@@ -2690,6 +2741,12 @@ const result =
 JSON.parse(text);
 
 
+if(result.success){
+
+    isItemizeChanged = false;
+
+}
+
 alert(result.message);
 
 
@@ -2841,4 +2898,15 @@ function deleteItemizeData(){
 
 
 }
+window.addEventListener("beforeunload",function(e){
+
+    if(isItemizeChanged){
+
+        e.preventDefault();
+
+        e.returnValue="";
+
+    }
+
+});
 
