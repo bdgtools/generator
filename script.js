@@ -18,6 +18,8 @@ let itemizeGlobal = [];
 
 let isItemizeChanged = false;
 
+let masterGlobal = {};
+
 
 // GOOGLE APPS SCRIPT URL
 
@@ -1691,22 +1693,6 @@ scanFiles = scanFiles.filter(file=>{
 
     }
 
-
-
-
-
-
-    let files=[];
-
-
-
-    files.push(
-        readTXT(masterFile)
-    );
-
-
-
-
     for(let i=0;i<scanFiles.length;i++){
 
 
@@ -1810,9 +1796,54 @@ scanFiles = scanFiles.filter(file=>{
 
         }
        
-       const hasilBaru = prosesItemize(master, scan);
-       
-       itemizeGlobal = mergeItemize(itemizeGlobal, hasilBaru);
+       const hasilBaru = [];
+
+// hanya proses SKU yang benar-benar discan
+Object.keys(scan).forEach(sku=>{
+
+    if(!master[sku]) return;
+
+    const item = master[sku];
+
+    const rackArea = scan[sku].join(", ");
+
+    let display;
+
+    if(scan[sku].length>1){
+
+        display = "Double Display";
+
+    }else{
+
+        display =
+            scan[sku][0]===item.rack
+            ? "Single Display"
+            : "Wrong Area";
+
+    }
+
+    hasilBaru.push({
+
+        sku:item.sku,
+
+        rack:item.rack,
+
+        system:item.system,
+
+        desc:item.desc,
+
+        rackArea:rackArea,
+
+        display:display,
+
+        remark:"Scanned"
+
+    });
+
+});
+
+itemizeGlobal =
+    mergeItemize(itemizeGlobal, hasilBaru);
 
        isItemizeChanged = true;
        
@@ -1915,6 +1946,35 @@ function parseItemizeMaster(text){
 
     return master;
 
+
+}
+function loadMasterFile(){
+
+    const masterFile =
+        document.getElementById("itemizeMasterFile").files[0];
+
+    if(!masterFile){
+
+        showPopup("Upload Master TXT terlebih dahulu","⚠");
+
+        return Promise.reject();
+
+    }
+
+    return readTXT(masterFile)
+
+        .then(text=>{
+
+            masterGlobal =
+                parseItemizeMaster(text);
+
+            console.log(
+                "MASTER LOADED :",
+                Object.keys(masterGlobal).length,
+                "SKU"
+            );
+
+        });
 
 }
 
@@ -2158,81 +2218,66 @@ function mergeItemize(oldData, newData){
 
     const database = {};
 
-    // masukkan data lama
+    // Jadikan data lama sebagai database
     oldData.forEach(item=>{
 
         database[item.sku] = {...item};
 
     });
 
-    // merge data baru
+    // Update hanya SKU yang discan
     newData.forEach(item=>{
 
-        if(database[item.sku]){
+        if(item.remark!=="Scanned") return;
 
-            let rack = new Set();
+        if(!database[item.sku]){
 
-            if(database[item.sku].rackArea !== "-"){
+            database[item.sku]={...item};
+            return;
 
-                database[item.sku].rackArea
-                    .split(",")
-                    .forEach(r=>rack.add(r.trim()));
+        }
 
-            }
+        const rackSet = new Set();
 
-            if(item.rackArea !== "-"){
+        if(database[item.sku].rackArea &&
+           database[item.sku].rackArea!=="-"){
 
-                item.rackArea
-                    .split(",")
-                    .forEach(r=>rack.add(r.trim()));
+            database[item.sku]
+                .rackArea
+                .split(",")
 
-            }
+                .forEach(r=>rackSet.add(r.trim()));
 
-            database[item.sku].rackArea =
-                [...rack].join(", ");
+        }
 
-            if(database[item.sku].remark==="Scanned"){
-               
-               // tetap scanned
-            }else{
+        if(item.rackArea &&
+           item.rackArea!=="-"){
 
-    database[item.sku].remark=item.remark;
+            item.rackArea
+                .split(",")
 
-}
+                .forEach(r=>rackSet.add(r.trim()));
 
-            if(rack.size>1){
+        }
 
-                database[item.sku].display =if(rack.size==0){
-                   
-                   database[item.sku].display="-";
-                   
-                   database[item.sku].remark="Unscan";
-                }
-               else if(rack.size>1){
-               
-               database[item.sku].display="Double Display";
-               
-               database[item.sku].remark="Scanned";
-            
-            }
-            else{
-               
-               const area=[...rack][0];
-               
-               database[item.sku].display =
-                  
-                  area===database[item.sku].rack
-                  
-                  ? "Single Display"
-                  
-                  : "Wrong Area";
-               
-               database[item.sku].remark="Scanned";
-            }
+        database[item.sku].rackArea =
+            [...rackSet].join(", ");
+
+        database[item.sku].remark="Scanned";
+
+        if(rackSet.size==1){
+
+            const area=[...rackSet][0];
+
+            database[item.sku].display =
+                area===database[item.sku].rack
+                ? "Single Display"
+                : "Wrong Area";
 
         }else{
 
-            database[item.sku]=item;
+            database[item.sku].display =
+                "Double Display";
 
         }
 
@@ -2831,12 +2876,62 @@ function loadItemize(){
 
         if(result.success){
            
-           itemizeGlobal = [];
-           itemizeGlobal = result.data || [];
-           
-           tampilkanItemizeSummary(itemizeGlobal);
-           
-           tampilkanItemizeResult(itemizeGlobal);
+           itemizeGlobal = (result.data || []).map(item=>{
+
+    const rackArea =
+        item.rackArea && item.rackArea.trim() !== ""
+            ? item.rackArea
+            : "-";
+
+    let display = item.display || "-";
+    let remark = item.remark || "Unscan";
+
+    // Hitung ulang supaya selalu konsisten
+    if(rackArea === "-"){
+
+        display = "-";
+        remark = "Unscan";
+
+    }else{
+
+        const rackList = rackArea
+            .split(",")
+            .map(r=>r.trim())
+            .filter(r=>r);
+
+        remark = "Scanned";
+
+        if(rackList.length > 1){
+
+            display = "Double Display";
+
+        }else{
+
+            display =
+                rackList[0] === item.rack
+                ? "Single Display"
+                : "Wrong Area";
+
+        }
+
+    }
+
+    return{
+
+        ...item,
+
+        rackArea,
+
+        display,
+
+        remark
+
+    };
+
+});
+
+tampilkanItemizeSummary(itemizeGlobal);
+tampilkanItemizeResult(itemizeGlobal);
            
            updateSaveStatus(false);
            
@@ -2915,19 +3010,18 @@ async function deleteItemizeData(){
         if(result.success){
 
 
-            itemizeGlobal=[];
-
-
-            document
-            .getElementById("itemizeSummary")
-            .innerHTML="";
-
-
-            document
-            .getElementById("itemizeResult")
-            .innerHTML="";
-
-
+            itemizeGlobal = [];
+           
+           isItemizeChanged = false;
+           
+           updateSaveStatus(false);
+           
+           document.getElementById("btnSave").disabled = true;
+           
+           tampilkanItemizeSummary(itemizeGlobal);
+           
+           tampilkanItemizeResult(itemizeGlobal);
+        
         }
 
 
