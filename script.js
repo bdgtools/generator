@@ -6,7 +6,6 @@ console.log("MR DIY SCRIPT BERHASIL LOAD");
 ===================================================== */
 
 
-let hasilGlobal = [];
 /* =====================================================
    MR DIY STORE TOOLS v2.0
    MAIN SCRIPT
@@ -2667,8 +2666,6 @@ const data = itemizeGlobal;
 const btnSave =
 document.getElementById("btnSave");
 
-btnSave.disabled = true;
-
 
 if(!storeCode){
 
@@ -2676,10 +2673,15 @@ showPopup(
 "Session login hilang",
 "❌"
 );
+
 return;
 
 }
 
+
+if(btnSave){
+    btnSave.disabled = true;
+}
 
 
 fetch(GAS_URL,{
