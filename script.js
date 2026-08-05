@@ -1641,234 +1641,179 @@ let exportData = hasilGlobal.map(row=>({
 
 
 function generateItemize(){
-   showLoading("Generate Itemize...");
 
+    console.log("=== GENERATE ITEMIZE ===");
+
+    showLoading("Generate Itemize...");
 
     const masterFile =
-
-    document
-    .getElementById("itemizeMasterFile")
-    .files[0];
-
-
+        document.getElementById("itemizeMasterFile").files[0];
 
     let scanFiles = Array.from(
-    document
-    .getElementById("itemizeScanFile")
-    .files
-);
-
-
-// cegah master masuk sebagai scan
-scanFiles = scanFiles.filter(file=>{
-
-    return file.name !== masterFile.name;
-
-});
-
-
-
-
-
-
-    if(!masterFile || scanFiles.length===0){
-       if(scanFiles.length===0){
-
-    showPopup(
-        "File Scan TXT tidak ditemukan",
-        "⚠"
+        document.getElementById("itemizeScanFile").files
     );
 
-    return;
+    // Validasi Master
+    if(!masterFile){
 
-}
+        hideLoading();
 
-
-        showPopup("Upload Master dan Scan TXT terlebih dahulu","⚠"
-                 );
-
-
-        return;
-
-
-    }
-
-    for(let i=0;i<scanFiles.length;i++){
-
-
-        files.push(
-            readTXT(scanFiles[i])
+        showPopup(
+            "Upload Master TXT terlebih dahulu",
+            "⚠"
         );
 
-
+        return;
     }
 
+    // Hilangkan master jika ikut terpilih sebagai scan
+    scanFiles = scanFiles.filter(file=>file.name !== masterFile.name);
 
+    // Validasi Scan
+    if(scanFiles.length===0){
 
+        hideLoading();
 
+        showPopup(
+            "File Scan TXT tidak ditemukan",
+            "⚠"
+        );
+
+        return;
+    }
+
+    // Siapkan Promise baca file
+    const files = [readTXT(masterFile)];
+
+    scanFiles.forEach(file=>{
+        files.push(readTXT(file));
+    });
 
     Promise.all(files)
 
     .then(data=>{
 
-    hideLoading();
+        console.log("SEMUA FILE BERHASIL DIBACA");
 
+        const master =
+            parseItemizeMaster(data[0]);
 
-
-        let master =
-
-        parseItemizeMaster(
-            data[0]
+        console.log(
+            "MASTER SKU :",
+            Object.keys(master).length
         );
 
+        let scan = {};
 
-
-
-        let scan={};
-
-
-
-
-
+        // Gabungkan semua file scan
         for(let i=1;i<data.length;i++){
 
+            const result =
+                parseItemizeScan(data[i]);
 
-    let result =
-    parseItemizeScan(
-        data[i]
-    );
+            if(Object.keys(result).length===0){
+                continue;
+            }
 
-
-    // jika bukan format scan, skip
-    if(Object.keys(result).length===0){
-
-        continue;
-
-    }
-
-
-
-
-            Object.keys(result)
-
-            .forEach(sku=>{
-
+            Object.keys(result).forEach(sku=>{
 
                 if(!scan[sku]){
-
-
                     scan[sku]=[];
-
-
                 }
 
+                result[sku].forEach(rack=>{
 
-
-
-
-                result[sku]
-                .forEach(rack=>{
-
-
-                    if(
-                    !scan[sku]
-                    .includes(rack)
-                    ){
-
-
-                        scan[sku]
-                        .push(rack);
-
-
+                    if(!scan[sku].includes(rack)){
+                        scan[sku].push(rack);
                     }
-
-
 
                 });
 
+            });
 
+        }
 
+        console.log(
+            "SCAN SKU :",
+            Object.keys(scan).length
+        );
+
+        const hasilBaru=[];
+
+        Object.keys(scan).forEach(sku=>{
+
+            if(!master[sku]) return;
+
+            const item = master[sku];
+
+            const rackArea =
+                scan[sku].join(", ");
+
+            let display;
+
+            if(scan[sku].length>1){
+
+                display="Double Display";
+
+            }else{
+
+                display =
+                    scan[sku][0]===item.rack
+                    ? "Single Display"
+                    : "Wrong Area";
+
+            }
+
+            hasilBaru.push({
+
+                sku:item.sku,
+                rack:item.rack,
+                system:item.system,
+                desc:item.desc,
+                rackArea:rackArea,
+                display:display,
+                remark:"Scanned"
 
             });
 
+        });
 
+        console.log(
+            "HASIL BARU :",
+            hasilBaru.length
+        );
 
+        itemizeGlobal =
+            mergeItemize(itemizeGlobal, hasilBaru);
 
-        }
-       
-       const hasilBaru = [];
+        isItemizeChanged = true;
 
-// hanya proses SKU yang benar-benar discan
-Object.keys(scan).forEach(sku=>{
+        updateSaveStatus(true);
 
-    if(!master[sku]) return;
+        document.getElementById("btnSave").disabled = false;
 
-    const item = master[sku];
+        tampilkanItemizeSummary(itemizeGlobal);
 
-    const rackArea = scan[sku].join(", ");
+        tampilkanItemizeResult(itemizeGlobal);
 
-    let display;
+        hideLoading();
 
-    if(scan[sku].length>1){
+        console.log("GENERATE ITEMIZE SELESAI");
 
-        display = "Double Display";
-
-    }else{
-
-        display =
-            scan[sku][0]===item.rack
-            ? "Single Display"
-            : "Wrong Area";
-
-    }
-
-    hasilBaru.push({
-
-        sku:item.sku,
-
-        rack:item.rack,
-
-        system:item.system,
-
-        desc:item.desc,
-
-        rackArea:rackArea,
-
-        display:display,
-
-        remark:"Scanned"
-
-    });
-
-});
-
-itemizeGlobal =
-    mergeItemize(itemizeGlobal, hasilBaru);
-
-       isItemizeChanged = true;
-       
-       updateSaveStatus(true);
-       
-       document.getElementById("btnSave").disabled = false;
-       
-       tampilkanItemizeSummary(itemizeGlobal);
-       
-       tampilkanItemizeResult(itemizeGlobal);
-       
-       updateSaveStatus(true);
-    
     })
 
     .catch(err=>{
-       hideLoading();
 
-    console.error(err);
+        hideLoading();
 
-    showPopup("Gagal proses Itemize","❌");
+        console.error("ERROR GENERATE :", err);
 
-});
+        showPopup(
+            "Gagal proses Itemize",
+            "❌"
+        );
 
-
+    });
 
 }
 
