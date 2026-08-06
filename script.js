@@ -2462,41 +2462,36 @@ data.forEach(row=>{
 
 html += `
 
-
-
 <tr class="${cls}">
 
+<td class="copySku"
+onclick="copyText('${row.sku}')">
+${row.sku}
+</td>
 
-<td>${row.sku}</td>
-
-
-<td>${row.rack}</td>
+<td class="copyRack"
+onclick="copyText('${row.rack}')">
+${row.rack}
+</td>
 
 <td>${row.system}</td>
 
 <td>${row.desc}</td>
 
-
-<td>${row.rackArea}</td>
-
+<td class="copyRack"
+onclick="copyText('${row.rackArea}')">
+${row.rackArea}
+</td>
 
 <td>${row.display}</td>
 
-
 <td>${row.remark}</td>
-
-
 
 </tr>
 
-
-
 `;
 
-
-
 });
-
 
 
 
@@ -2548,6 +2543,20 @@ function updateCounter(total){
     .innerHTML=
 
     `Showing <b>${total}</b> of <b>${itemizeGlobal.length}</b> SKU`;
+
+}
+
+function copyText(text){
+
+    if(!text || text === "-") return;
+
+    navigator.clipboard.writeText(text)
+    .then(()=>{
+        showPopup("Copied: " + text,"📋");
+    })
+    .catch(()=>{
+        showPopup("Gagal copy","❌");
+    });
 
 }
 
