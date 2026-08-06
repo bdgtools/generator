@@ -954,6 +954,24 @@ tbody tr:hover{
 
 }
 
+.copySku,
+.copyRack{
+
+    cursor:pointer;
+
+    color:#1565c0;
+
+    font-weight:600;
+
+}
+
+.copySku:hover,
+.copyRack:hover{
+
+    text-decoration:underline;
+
+}
+
 
 
 
