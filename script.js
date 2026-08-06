@@ -2201,43 +2201,31 @@ function tampilkanItemizeSummary(data){
     let total=data.length;
 
 
-    let scanned=0;
+let scanned=0;
+let unscan=0;
+let doubleDisplay=0;
+let wrongArea=0;
 
+data.forEach(row=>{
 
-    let unscan=0;
-   
-   const percent =
-    total === 0
-    ? 0
-    : ((scanned / total) * 100).toFixed(2);
-   
-   let doubleDisplay=0;
-   
-   let wrongArea=0;
+    if(row.remark==="Scanned")
+        scanned++;
 
-   let percentage=0;
-   
-   data.forEach(row=>{
-      
-      if(row.remark==="Scanned")
-         scanned++;
-      
-      if(row.remark==="Unscan")
-         unscan++;
-      
-      if(row.display==="Double Display")
+    if(row.remark==="Unscan")
+        unscan++;
 
+    if(row.display==="Double Display")
         doubleDisplay++;
-      
-      if(row.display==="Wrong Area")
-         
-         wrongArea++;
-   
-   });
-   percentage =
-    total
-    ? ((scanned/total)*100).toFixed(2)
-    : 0;
+
+    if(row.display==="Wrong Area")
+        wrongArea++;
+
+});
+
+const percentage =
+total
+? ((scanned/total)*100).toFixed(2)
+: 0;
    
    let html=`
    
