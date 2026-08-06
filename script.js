@@ -2196,19 +2196,22 @@ function mergeItemize(oldData,newData){
 }
 function tampilkanItemizeSummary(data){
 
-
-
-    let total=data.length;
-
-
-let scanned=0;
-let unscan=0;
-let doubleDisplay=0;
-let wrongArea=0;
-
-data.forEach(row=>{
-
-    if(row.remark==="Scanned")
+   let currentFilter = "all";
+   
+   let currentKeyword = "";
+   
+   let total=data.length;
+   let scanned=0;
+   
+   let unscan=0;
+   
+   let doubleDisplay=0;
+   
+   let wrongArea=0;
+   
+   data.forEach(row=>{
+      
+      if(row.remark==="Scanned")
         scanned++;
 
     if(row.remark==="Unscan")
@@ -2323,37 +2326,59 @@ let currentFilter="all";
 
 function filterItemize(type){
 
-    currentFilter=type;
+    currentFilter = type;
+    applyItemizeFilter();
 
-    let data=[...itemizeGlobal];
+}
 
-    switch(type){
+function searchItemize(keyword){
+
+    currentKeyword = keyword.toLowerCase();
+    applyItemizeFilter();
+
+}
+
+function applyItemizeFilter(){
+
+    let data = [...itemizeGlobal];
+
+    switch(currentFilter){
 
         case "scanned":
-
-            data=data.filter(x=>x.remark==="Scanned");
+            data = data.filter(x=>x.remark==="Scanned");
             break;
 
         case "unscan":
-
-            data=data.filter(x=>x.remark==="Unscan");
+            data = data.filter(x=>x.remark==="Unscan");
             break;
 
         case "double":
-
-            data=data.filter(
-                x=>x.display==="Double Display"
-            );
+            data = data.filter(x=>x.display==="Double Display");
             break;
 
         case "wrong":
-
-            data=data.filter(
-                x=>x.display==="Wrong Area"
-            );
+            data = data.filter(x=>x.display==="Wrong Area");
             break;
 
     }
+
+    if(currentKeyword){
+
+        data = data.filter(row=>
+
+            row.sku.toLowerCase().includes(currentKeyword) ||
+
+            row.desc.toLowerCase().includes(currentKeyword) ||
+
+            row.rack.toLowerCase().includes(currentKeyword)
+
+        );
+
+    }
+
+    updateFilterCard();
+
+    updateCounter(data.length);
 
     tampilkanItemizeResult(data);
 
