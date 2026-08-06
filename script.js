@@ -391,15 +391,14 @@ function logout(){
    
    updateSaveStatus(false);
    
-   document.getElementById("btnSave").disabled = true;
+   const btnSave =
+document.getElementById("btnSave");
 
+if(btnSave){
+    btnSave.disabled=true;
 }
 
-
-
-
-
-
+}
 
 
 
@@ -1491,143 +1490,92 @@ function filterTabel(){
 
 
 function downloadExcel(){
-   
- if(hasilGlobal.length===0){
 
-    showPopup(
-    "Belum ada data hasil",
-    "⚠"
-    );
+    if(hasilGlobal.length===0){
 
-    return;
+        showPopup(
+            "Belum ada data hasil",
+            "⚠"
+        );
 
-}
+        return;
 
-showLoading("Creating Excel...");
     }
-let exportData = hasilGlobal.map(row=>({
 
-    SKU: row.sku,
 
-    Rack_Number: row.rack,
+    showLoading("Creating Excel...");
 
-    Description: row.desc,
 
-    Qty_System: row.system,
+    let exportData = hasilGlobal.map(row=>({
 
-    Qty_Fisik: row.fisik,
+        SKU: row.sku,
 
-    Selisih: row.selisih,
+        Rack_Number: row.rack,
 
-    Status: row.status
+        Description: row.desc,
 
-}));
+        Qty_System: row.system,
+
+        Qty_Fisik: row.fisik,
+
+        Selisih: row.selisih,
+
+        Status: row.status
+
+    }));
 
 
     let ws =
-
-    XLSX.utils
-    .json_to_sheet(exportData);
-
-
-
-
-
+    XLSX.utils.json_to_sheet(exportData);
 
 
     ws["!cols"]=[
 
-
         {wch:15},
-
-
         {wch:15},
-
-
         {wch:40},
-
-
         {wch:12},
-
-
         {wch:12},
-
-
         {wch:12},
-
-
         {wch:15}
-
-
 
     ];
 
 
-
-
-
-
     let wb =
-
-    XLSX.utils
-    .book_new();
+    XLSX.utils.book_new();
 
 
-
-
-
-    XLSX.utils
-    .book_append_sheet(
-
+    XLSX.utils.book_append_sheet(
         wb,
-
         ws,
-
         "Stock Balance"
-
     );
 
 
-
-
-
-
-    let date =
-    new Date();
-
-
+    let date=new Date();
 
 
     let filename =
-
     "StockBalance_" +
-
     date.getFullYear()+"-"+
 
-    String(
-    date.getMonth()+1
-    )
+    String(date.getMonth()+1)
     .padStart(2,"0")+"-"+
 
-    String(
-    date.getDate()
-    )
+    String(date.getDate())
     .padStart(2,"0")+
 
     ".xlsx";
-
-
-
-
 
 
     XLSX.writeFile(
         wb,
         filename
     );
-   hideLoading();
 
 
+    hideLoading();
 
 }
 /* =====================================================
@@ -1745,7 +1693,12 @@ function generateItemize(){
        
        updateSaveStatus(true);
        
-       document.getElementById("btnSave").disabled = false;
+       const btnSave =
+document.getElementById("btnSave");
+
+if(btnSave){
+    btnSave.disabled=false;
+}
 
         tampilkanItemizeSummary(itemizeGlobal);
 
@@ -2118,6 +2071,27 @@ function mergeItemize(oldData,newData){
 
     const database={};
 
+
+    // simpan data lama dulu
+    oldData.forEach(item=>{
+
+        database[item.sku]={
+            ...item
+        };
+
+    });
+
+
+    // update dengan master terbaru
+    newData.forEach(item=>{
+
+        database[item.sku]={
+            ...database[item.sku],
+            ...item
+        };
+
+    });
+
     // Data hasil generate terbaru menjadi dasar
     newData.forEach(item=>{
 
@@ -2237,6 +2211,7 @@ onclick="filterItemize('all')">
 </div>
 
 <div class="card tally"
+data-filter="scanned"
 onclick="filterItemize('scanned')">
 
 <h3>${scanned}</h3>
@@ -2246,6 +2221,7 @@ onclick="filterItemize('scanned')">
 </div>
 
 <div class="card progress"
+data-filter="scanned"
 onclick="filterItemize('scanned')">
 
 <h3>${percentage}%</h3>
@@ -2290,14 +2266,12 @@ onclick="filterItemize('wrong')">
 
 </div>
 
-document
-.getElementById("itemizeSummary")
-.innerHTML=html;
-
-
-
 `;
 
+
+document
+.getElementById("itemizeSummary")
+.innerHTML = html;
 
 }
 
@@ -2310,6 +2284,8 @@ function filterItemize(type){
     currentFilter = type;
 
     applyItemizeFilter();
+
+    updateFilterCard();
 
 }
 
@@ -2329,6 +2305,13 @@ function applyItemizeFilter(){
     let data=[...itemizeGlobal];
 
 
+    if(currentFilter==="all"){
+
+        data=[...itemizeGlobal];
+
+    }
+
+
     if(currentFilter==="scanned"){
 
         data=data.filter(
@@ -2336,7 +2319,6 @@ function applyItemizeFilter(){
         );
 
     }
-
 
     if(currentFilter==="unscan"){
 
@@ -2376,14 +2358,14 @@ function applyItemizeFilter(){
 
         ||
 
-        row.desc
-        .toLowerCase()
-        .includes(currentKeyword)
+        (row.desc || "")
+.toLowerCase()
+.includes(currentKeyword)
 
         ||
 
-        row.rack
-        .toLowerCase()
+       (row.rack || "")
+.toLowerCase()
         .includes(currentKeyword)
 
         );
@@ -2401,14 +2383,6 @@ function applyItemizeFilter(){
 
 
 function tampilkanItemizeResult(data){
-
-
-function searchItemize(keyword){
-
-    currentKeyword = keyword.toLowerCase();
-    applyItemizeFilter();
-
-}
 
     let html = `
 
@@ -2645,28 +2619,15 @@ XLSX.utils
 
 ws["!cols"]=[
 
-
 {wch:15},
-
 {wch:15},
-
+{wch:12},
 {wch:40},
-
 {wch:25},
-
 {wch:20},
-
 {wch:15}
 
-
-
 ];
-
-
-
-
-
-
 
 let wb =
 
@@ -2735,27 +2696,18 @@ filename
 }
 
 
-
-
-
-
-
-
-
 /* =====================================================
    SAVE ITEMIZE TO GOOGLE SHEET
 ===================================================== */
 
-
-
 function saveItemize(){
-
 
 const storeCode =
 localStorage.getItem("storeCode");
 
 
 const data = itemizeGlobal;
+
 
 const btnSave =
 document.getElementById("btnSave");
@@ -2777,7 +2729,10 @@ if(btnSave){
     btnSave.disabled = true;
 }
 
+
 showLoading("Saving...");
+
+
 fetch(GAS_URL,{
     method:"POST",
 
@@ -2797,10 +2752,13 @@ fetch(GAS_URL,{
 
 })
 
+
 .then(res=>res.text())
 
+
 .then(text=>{
-   hideLoading();
+
+hideLoading();
 
 
 console.log("SERVER:",text);
@@ -2814,40 +2772,50 @@ if(result.success){
 
     isItemizeChanged=false;
 
-    const btn =
-document.getElementById("btnSave");
 
-if(btn){
-    btn.disabled=true;
-}
-   
+    if(btnSave){
+        btnSave.disabled=true;
+    }
+
 
     updateSaveStatus(false);
 
 }
 
-showPopup(result.message,"✔");
 
+showPopup(
+result.message,
+"✔"
+);
 
 
 })
 
+
 .catch(err=>{
-   hideLoading();
 
-    console.error(err);
 
-    btnSave.disabled = false;
+hideLoading();
 
-    showPopup(
-        "Gagal koneksi ke server",
-        "❌"
-    );
+
+console.error(err);
+
+
+if(btnSave){
+    btnSave.disabled=false;
+}
+
+
+showPopup(
+"Gagal koneksi ke server",
+"❌"
+);
+
 
 });
 
-}
 
+}
 
 /* =====================================================
    LOAD ITEMIZE AFTER LOGIN
@@ -2873,10 +2841,10 @@ function loadItemize(){
            itemizeGlobal = (result.data || []).map(item=>{
 
     const rackArea =
-        item.rackArea && item.rackArea.trim() !== ""
-            ? item.rackArea
+        item.rackArea &&
+        String(item.rackArea).trim() !== ""
+            ? String(item.rackArea)
             : "-";
-
     let display = item.display || "-";
     let remark = item.remark || "Unscan";
 
@@ -2929,8 +2897,12 @@ tampilkanItemizeResult(itemizeGlobal);
            
            updateSaveStatus(false);
            
-           document.getElementById("btnSave").disabled = true;
+           const btnSave =
+document.getElementById("btnSave");
 
+if(btnSave){
+    btnSave.disabled=true;
+}
         }else{
 
             console.log(result.message);
@@ -3010,7 +2982,12 @@ async function deleteItemizeData(){
            
            updateSaveStatus(false);
            
-           document.getElementById("btnSave").disabled = true;
+          const btnSave =
+document.getElementById("btnSave");
+
+if(btnSave){
+    btnSave.disabled=true;
+}
            
            tampilkanItemizeSummary(itemizeGlobal);
            
