@@ -134,8 +134,10 @@ function login(){
 
 
 
-    fetch(url)
-
+    fetch(url,{
+    method:"GET",
+    redirect:"follow"
+})
 
     .then(res=>res.json())
 
@@ -219,15 +221,16 @@ function login(){
 
 
     .catch(err=>{
+       
        hideLoading();
-
-    console.error(err);
-
-    msg.innerHTML="";
-
-    showPopup("Connection Error","❌");
-
-});
+       
+       console.error("LOGIN ERROR:",err);
+       
+       msg.innerHTML =
+          
+          err.message;
+    
+    });
 
 
 
