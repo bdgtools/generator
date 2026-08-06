@@ -131,15 +131,51 @@ function login(){
     encodeURIComponent(password);
 
 
-
-
-
-
-
     fetch(url,{
-    method:"GET",
-    redirect:"follow"
+   console.log("LOGIN URL:",url);
+
+
+fetch(url)
+
+.then(res=>{
+
+console.log(
+"HTTP STATUS",
+res.status
+);
+
+
+return res.text();
+
+
 })
+
+.then(text=>{
+
+
+console.log(
+"SERVER RESPONSE:",
+text
+);
+
+
+let data;
+
+
+try{
+
+data=JSON.parse(text);
+
+
+}catch(e){
+
+throw new Error(
+"Response bukan JSON : "+text
+);
+
+
+}
+   console.log(data);
 
     .then(res=>res.json())
 
