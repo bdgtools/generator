@@ -2524,13 +2524,32 @@ document
 
 }
 
+function updateFilterCard(){
 
+    document
+    .querySelectorAll(".summary .card")
+    .forEach(card=>card.classList.remove("active"));
 
+    const card =
+    document.querySelector(`[data-filter="${currentFilter}"]`);
 
+    if(card){
 
+        card.classList.add("active");
 
+    }
 
+}
 
+function updateCounter(total){
+
+    document
+    .getElementById("itemizeCounter")
+    .innerHTML=
+
+    `Showing <b>${total}</b> of <b>${itemizeGlobal.length}</b> SKU`;
+
+}
 
 /* =====================================================
    DOWNLOAD ITEMIZE EXCEL
