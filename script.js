@@ -19,6 +19,8 @@ let itemizeGlobal = [];
 let isItemizeChanged = false;
 
 let masterGlobal = {};
+let currentFilter="all";
+let currentKeyword="";
 
 
 // GOOGLE APPS SCRIPT URL
@@ -335,10 +337,8 @@ function logout(){
     localStorage.removeItem(
         "storeName"
     );
-
-
-
-    hasilGlobal=[];
+   
+   hasilGlobal=[];
 
 
     itemizeGlobal=[];
@@ -516,15 +516,16 @@ function generateData(){
 
     if(!sistemFile || fisikFiles.length===0){
 
+    hideLoading();
 
-        showPopup("Upload Export Shelf dan Scan Fisik terlebih dahulu","⚠"
-                 );
+    showPopup(
+    "Upload Export Shelf dan Scan Fisik terlebih dahulu",
+    "⚠"
+    );
 
+    return;
 
-        return;
-
-    }
-
+}
 
 
 
@@ -612,27 +613,24 @@ function generateData(){
 
 
 
-        hasilGlobal =
-        prosesStock(
-            fisik,
-            sistem
-        );
-
+hasilGlobal =
+prosesStock(
+    fisik,
+    sistem
+);
 
 
 
 
 
         tampilkanSummary(
-            hasilGlobal
-        );
+    hasilGlobal
+);
 
 
-
-        tampilkanHasil(
-            hasilGlobal
-        );
-
+tampilkanHasil(
+    hasilGlobal
+);
 
 
 
@@ -1390,16 +1388,8 @@ function filterTabel(){
     .getElementById("filter")
     .value;
 
-
-
-
-
-    let data =
-    hasilGlobal.filter(row=>{
-
-
-
-
+   let data =
+      hasilGlobal.filter(row=>{
 
         let cocokSearch =
 
@@ -1501,16 +1491,19 @@ function filterTabel(){
 
 
 function downloadExcel(){
+   
+ if(hasilGlobal.length===0){
 
+    showPopup(
+    "Belum ada data hasil",
+    "⚠"
+    );
 
+    return;
 
-    if(hasilGlobal.length===0){
-       showLoading("Creating Excel...");
+}
 
-
-        showPopup("Belum ada data hasil","⚠");
-
-        return;
+showLoading("Creating Excel...");
     }
 let exportData = hasilGlobal.map(row=>({
 
@@ -2198,10 +2191,6 @@ function mergeItemize(oldData,newData){
 
 }
 function tampilkanItemizeSummary(data){
-
-   let currentFilter = "all";
-   
-   let currentKeyword = "";
    
    let total=data.length;
    let scanned=0;
@@ -2238,9 +2227,10 @@ let html=`
 <div class="summary">
 
 <div class="card total"
+data-filter="all"
 onclick="filterItemize('all')">
-
 <h3>${total}</h3>
+
 
 <p>Total SKU</p>
 
@@ -2300,20 +2290,13 @@ onclick="filterItemize('wrong')">
 
 </div>
 
-`;
-
-
-
-`;
-
-
-
-
-
 document
 .getElementById("itemizeSummary")
 .innerHTML=html;
 
+
+
+`;
 
 
 }
@@ -2322,17 +2305,103 @@ document
    ITEMIZE RESULT TABLE
 ===================================================== */
 
-
-function tampilkanItemizeResult(data){
-
-let currentFilter="all";
-
 function filterItemize(type){
 
     currentFilter = type;
+
     applyItemizeFilter();
 
 }
+
+
+function searchItemize(keyword){
+
+    currentKeyword =
+    keyword.toLowerCase();
+
+    applyItemizeFilter();
+
+}
+
+
+function applyItemizeFilter(){
+
+    let data=[...itemizeGlobal];
+
+
+    if(currentFilter==="scanned"){
+
+        data=data.filter(
+        x=>x.remark==="Scanned"
+        );
+
+    }
+
+
+    if(currentFilter==="unscan"){
+
+        data=data.filter(
+        x=>x.remark==="Unscan"
+        );
+
+    }
+
+
+    if(currentFilter==="double"){
+
+        data=data.filter(
+        x=>x.display==="Double Display"
+        );
+
+    }
+
+
+    if(currentFilter==="wrong"){
+
+        data=data.filter(
+        x=>x.display==="Wrong Area"
+        );
+
+    }
+
+
+
+    if(currentKeyword){
+
+        data=data.filter(row=>
+
+        row.sku
+        .toLowerCase()
+        .includes(currentKeyword)
+
+        ||
+
+        row.desc
+        .toLowerCase()
+        .includes(currentKeyword)
+
+        ||
+
+        row.rack
+        .toLowerCase()
+        .includes(currentKeyword)
+
+        );
+
+    }
+
+
+
+    updateCounter(data.length);
+
+    tampilkanItemizeResult(data);
+
+}
+
+
+
+function tampilkanItemizeResult(data){
+
 
 function searchItemize(keyword){
 
@@ -2341,51 +2410,6 @@ function searchItemize(keyword){
 
 }
 
-function applyItemizeFilter(){
-
-    let data = [...itemizeGlobal];
-
-    switch(currentFilter){
-
-        case "scanned":
-            data = data.filter(x=>x.remark==="Scanned");
-            break;
-
-        case "unscan":
-            data = data.filter(x=>x.remark==="Unscan");
-            break;
-
-        case "double":
-            data = data.filter(x=>x.display==="Double Display");
-            break;
-
-        case "wrong":
-            data = data.filter(x=>x.display==="Wrong Area");
-            break;
-
-    }
-
-    if(currentKeyword){
-
-        data = data.filter(row=>
-
-            row.sku.toLowerCase().includes(currentKeyword) ||
-
-            row.desc.toLowerCase().includes(currentKeyword) ||
-
-            row.rack.toLowerCase().includes(currentKeyword)
-
-        );
-
-    }
-
-    updateFilterCard();
-
-    updateCounter(data.length);
-
-    tampilkanItemizeResult(data);
-
-}
     let html = `
 
 
@@ -2562,6 +2586,7 @@ function copyText(text){
     });
 
 }
+
 
 /* =====================================================
    DOWNLOAD ITEMIZE EXCEL
@@ -2789,7 +2814,13 @@ if(result.success){
 
     isItemizeChanged=false;
 
-    document.getElementById("btnSave").disabled=true;
+    const btn =
+document.getElementById("btnSave");
+
+if(btn){
+    btn.disabled=true;
+}
+   
 
     updateSaveStatus(false);
 
