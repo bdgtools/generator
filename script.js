@@ -1667,7 +1667,10 @@ function generateItemize(){
     }
 
     // Hilangkan master jika ikut terpilih sebagai scan
-    scanFiles = scanFiles.filter(file=>file.name !== masterFile.name);
+   scanFiles =
+    scanFiles.filter(
+        file=>file!==masterFile
+    );
 
     // Validasi Scan
     if(scanFiles.length===0){
@@ -1737,60 +1740,16 @@ function generateItemize(){
             "SCAN SKU :",
             Object.keys(scan).length
         );
-
-        const hasilBaru=[];
-
-        Object.keys(scan).forEach(sku=>{
-
-            if(!master[sku]) return;
-
-            const item = master[sku];
-
-            const rackArea =
-                scan[sku].join(", ");
-
-            let display;
-
-            if(scan[sku].length>1){
-
-                display="Double Display";
-
-            }else{
-
-                display =
-                    scan[sku][0]===item.rack
-                    ? "Single Display"
-                    : "Wrong Area";
-
-            }
-
-            hasilBaru.push({
-
-                sku:item.sku,
-                rack:item.rack,
-                system:item.system,
-                desc:item.desc,
-                rackArea:rackArea,
-                display:display,
-                remark:"Scanned"
-
-            });
-
-        });
-
-        console.log(
-            "HASIL BARU :",
-            hasilBaru.length
-        );
-
-        itemizeGlobal =
-            mergeItemize(itemizeGlobal, hasilBaru);
-
-        isItemizeChanged = true;
-
-        updateSaveStatus(true);
-
-        document.getElementById("btnSave").disabled = false;
+       
+       const hasilBaru = prosesItemize(master, scan);
+       
+       itemizeGlobal = mergeItemize(itemizeGlobal, hasilBaru);
+       
+       isItemizeChanged = true;
+       
+       updateSaveStatus(true);
+       
+       document.getElementById("btnSave").disabled = false;
 
         tampilkanItemizeSummary(itemizeGlobal);
 
@@ -2159,87 +2118,82 @@ function prosesItemize(master,scan){
 
 }
 
-function mergeItemize(oldData, newData){
+function mergeItemize(oldData,newData){
 
-    const database = {};
+    const database={};
 
-    // Jadikan data lama sebagai database
-    oldData.forEach(item=>{
-
-        database[item.sku] = {...item};
-
-    });
-
-    // Update hanya SKU yang discan
+    // Data hasil generate terbaru menjadi dasar
     newData.forEach(item=>{
 
-        if(item.remark!=="Scanned") return;
+        database[item.sku]={...item};
 
-        if(!database[item.sku]){
+    });
 
-            database[item.sku]={...item};
+    // Pertahankan rackArea hasil scan lama
+    oldData.forEach(old=>{
+
+        if(
+            old.remark!=="Scanned" ||
+            !database[old.sku]
+        ){
             return;
-
         }
 
-        const rackSet = new Set();
+        const rackSet=new Set();
 
-        if(database[item.sku].rackArea &&
-           database[item.sku].rackArea!=="-"){
+        if(old.rackArea && old.rackArea!=="-"){
+            old.rackArea
+                .split(",")
+                .forEach(r=>rackSet.add(r.trim()));
+        }
 
-            database[item.sku]
+        if(
+            database[old.sku].rackArea &&
+            database[old.sku].rackArea!=="-"
+        ){
+            database[old.sku]
                 .rackArea
                 .split(",")
-
                 .forEach(r=>rackSet.add(r.trim()));
-
         }
 
-        if(item.rackArea &&
-           item.rackArea!=="-"){
+        database[old.sku].rackArea =
+            rackSet.size
+            ? [...rackSet].join(", ")
+            : "-";
 
-            item.rackArea
-                .split(",")
+        if(rackSet.size){
 
-                .forEach(r=>rackSet.add(r.trim()));
+            database[old.sku].remark="Scanned";
 
-        }
+            if(rackSet.size>1){
 
-        database[item.sku].rackArea =
-            [...rackSet].join(", ");
+                database[old.sku].display="Double Display";
 
-        database[item.sku].remark="Scanned";
+            }else{
 
-        if(rackSet.size==1){
+                const area=[...rackSet][0];
 
-            const area=[...rackSet][0];
-
-            database[item.sku].display =
-                area===database[item.sku].rack
-                ? "Single Display"
-                : "Wrong Area";
-
-        }else{
-
-            database[item.sku].display =
-                "Double Display";
+                database[old.sku].display =
+                    area===database[old.sku].rack
+                    ? "Single Display"
+                    : "Wrong Area";
+            }
 
         }
 
     });
 
-    return Object.values(database);
+    return Object.values(database)
+        .sort((a,b)=>
+            a.rack.localeCompare(
+                b.rack,
+                undefined,
+                {numeric:true}
+            )
+        );
 
 }
-
-
-
-
-
-
-
-
-
 function tampilkanItemizeSummary(data){
 
 
@@ -2251,67 +2205,59 @@ function tampilkanItemizeSummary(data){
 
 
     let unscan=0;
+   
+   const percent =
+    total === 0
+    ? 0
+    : ((scanned / total) * 100).toFixed(2);
+   
+   let doubleDisplay=0;
+   
+   let wrongArea=0;
 
-
-    let doubleDisplay=0;
-
-
-    let wrongArea=0;
-
-
-
-
-
-
-
-    data.forEach(row=>{
-
-
-
-        if(row.remark==="Scanned")
-
-        scanned++;
-
-
-
-
-        if(row.remark==="Unscan")
-
-        unscan++;
-
-
-
-
-
-        if(row.display==="Double Display")
+   let percentage=0;
+   
+   data.forEach(row=>{
+      
+      if(row.remark==="Scanned")
+         scanned++;
+      
+      if(row.remark==="Unscan")
+         unscan++;
+      
+      if(row.display==="Double Display")
 
         doubleDisplay++;
+      
+      if(row.display==="Wrong Area")
+         
+         wrongArea++;
+   
+   });
+   percentage =
+    total
+    ? ((scanned/total)*100).toFixed(2)
+    : 0;
+   
+   let html=`
+   
+   <div class="progressBox">
+    <div class="progressTitle">
+        Scan Progress (${percentage}%)
+    </div>
 
+    <div class="progressBar">
 
+        <div
+            class="progressFill"
+            style="width:${percentage}%">
+        </div>
 
+    </div>
 
-
-        if(row.display==="Wrong Area")
-
-        wrongArea++;
-
-
-
-
-    });
-
-
-
-
-
-
-
-    let html=`
-
-
+</div>
+   
 <div class="summary">
-
-
 
 <div class="card total">
 
@@ -2321,20 +2267,11 @@ function tampilkanItemizeSummary(data){
 
 </div>
 
-
-
-
-<div class="card tally">
-
-<h3>${scanned}</h3>
-
-<p>Scanned</p>
-
+<<div class="card tally">
+    <h3>${scanned}</h3>
+    <small>${percent}%</small>
+    <p>Scanned</p>
 </div>
-
-
-
-
 
 <div class="card short">
 
@@ -2345,9 +2282,6 @@ function tampilkanItemizeSummary(data){
 </div>
 
 
-
-
-
 <div class="card extra">
 
 <h3>${doubleDisplay}</h3>
@@ -2355,10 +2289,6 @@ function tampilkanItemizeSummary(data){
 <p>Double Display</p>
 
 </div>
-
-
-
-
 
 <div class="card wrongArea">
 
