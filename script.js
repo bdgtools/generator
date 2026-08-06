@@ -2227,27 +2227,12 @@ total
 ? ((scanned/total)*100).toFixed(2)
 : 0;
    
-   let html=`
-   
-   <div class="progressBox">
-    <div class="progressTitle">
-        Scan Progress (${percentage}%)
-    </div>
+let html=`
 
-    <div class="progressBar">
-
-        <div
-            class="progressFill"
-            style="width:${percentage}%">
-        </div>
-
-    </div>
-
-</div>
-   
 <div class="summary">
 
-<div class="card total">
+<div class="card total"
+onclick="filterItemize('all')">
 
 <h3>${total}</h3>
 
@@ -2255,13 +2240,33 @@ total
 
 </div>
 
-<<div class="card tally">
-    <h3>${scanned}</h3>
-    <small>${percent}%</small>
-    <p>Scanned</p>
+<div class="card tally"
+onclick="filterItemize('scanned')">
+
+<h3>${scanned}</h3>
+
+<p>Scanned</p>
+
 </div>
 
-<div class="card short">
+<div class="card progress"
+onclick="filterItemize('scanned')">
+
+<h3>${percentage}%</h3>
+
+<div class="progressBar">
+
+<div class="progressFill"
+style="width:${percentage}%"></div>
+
+</div>
+
+<p>Scan Progress</p>
+
+</div>
+
+<div class="card short"
+onclick="filterItemize('unscan')">
 
 <h3>${unscan}</h3>
 
@@ -2269,8 +2274,8 @@ total
 
 </div>
 
-
-<div class="card extra">
+<div class="card extra"
+onclick="filterItemize('double')">
 
 <h3>${doubleDisplay}</h3>
 
@@ -2278,7 +2283,8 @@ total
 
 </div>
 
-<div class="card wrongArea">
+<div class="card wrongArea"
+onclick="filterItemize('wrong')">
 
 <h3>${wrongArea}</h3>
 
@@ -2286,9 +2292,9 @@ total
 
 </div>
 
-
-
 </div>
+
+`;
 
 
 
@@ -2313,7 +2319,45 @@ document
 
 function tampilkanItemizeResult(data){
 
+let currentFilter="all";
 
+function filterItemize(type){
+
+    currentFilter=type;
+
+    let data=[...itemizeGlobal];
+
+    switch(type){
+
+        case "scanned":
+
+            data=data.filter(x=>x.remark==="Scanned");
+            break;
+
+        case "unscan":
+
+            data=data.filter(x=>x.remark==="Unscan");
+            break;
+
+        case "double":
+
+            data=data.filter(
+                x=>x.display==="Double Display"
+            );
+            break;
+
+        case "wrong":
+
+            data=data.filter(
+                x=>x.display==="Wrong Area"
+            );
+            break;
+
+    }
+
+    tampilkanItemizeResult(data);
+
+}
     let html = `
 
 
