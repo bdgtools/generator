@@ -68,7 +68,8 @@ function updateStoreInfo(storeCode,storeName){
 
 function login(){
 
-   console.log("FUNCTION LOGIN JALAN");
+    console.log("FUNCTION LOGIN JALAN");
+
 
     const storeCode =
     document
@@ -92,14 +93,10 @@ function login(){
 
 
 
-
-
     if(!storeCode || !password){
-
 
         msg.innerHTML =
         "Store Code dan Password wajib diisi";
-
 
         return;
 
@@ -107,88 +104,51 @@ function login(){
 
 
 
+    msg.innerHTML="Checking...";
 
-
-    msg.innerHTML =
-    "Checking...";
-
-   showLoading("Login...");
-
-
+    showLoading("Login...");
 
 
 
     const url =
-
     GAS_URL +
-
     "?action=login" +
-
     "&storeCode=" +
     encodeURIComponent(storeCode) +
-
     "&password=" +
     encodeURIComponent(password);
 
 
-    fetch(url,{
-   console.log("LOGIN URL:",url);
+
+    console.log("LOGIN URL:",url);
 
 
-fetch(url)
 
-.then(res=>{
-
-console.log(
-"HTTP STATUS",
-res.status
-);
+    fetch(url)
 
 
-return res.text();
+    .then(res=>{
 
+        console.log(
+            "HTTP STATUS",
+            res.status
+        );
 
-})
+        return res.json();
 
-.then(text=>{
-
-
-console.log(
-"SERVER RESPONSE:",
-text
-);
-
-
-let data;
-
-
-try{
-
-data=JSON.parse(text);
-
-
-}catch(e){
-
-throw new Error(
-"Response bukan JSON : "+text
-);
-
-
-}
-   console.log(data);
-
-    .then(res=>res.json())
+    })
 
 
     .then(data=>{
 
 
+        console.log(
+            "SERVER RESPONSE:",
+            data
+        );
 
-        console.log(data);
 
-       hideLoading();
-
-
+        hideLoading();
 
 
 
@@ -202,13 +162,10 @@ throw new Error(
             );
 
 
-
             localStorage.setItem(
                 "storeName",
                 data.storeName
             );
-
-
 
 
 
@@ -218,13 +175,9 @@ throw new Error(
 
 
 
-
-
             document
             .getElementById("dashboardPage")
             .style.display="block";
-
-
 
 
 
@@ -234,24 +187,20 @@ throw new Error(
             );
 
 
-
-
-
             loadItemize();
 
 
 
-
-
-        }else{
+        }
+        else{
 
 
             msg.innerHTML =
-            "Store Code / Password salah";
+            data.message ||
+            "Login gagal";
 
 
         }
-
 
 
 
@@ -259,22 +208,25 @@ throw new Error(
 
 
     .catch(err=>{
-       
-       hideLoading();
-       
-       console.error("LOGIN ERROR:",err);
-       
-       msg.innerHTML =
-          
-          err.message;
-    
+
+
+        hideLoading();
+
+
+        console.error(
+            "LOGIN ERROR:",
+            err
+        );
+
+
+        msg.innerHTML =
+        err.message;
+
+
     });
 
 
-
 }
-
-
 
 /* =====================================================
    AUTO LOGIN SESSION
