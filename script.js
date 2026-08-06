@@ -3103,12 +3103,19 @@ function showConfirm(message){
 
 function showLoading(text="Loading..."){
 
-    document.getElementById("loadingText").innerHTML=text;
+    const overlay =
+    document.getElementById("loadingOverlay");
 
-    document
-        .getElementById("loadingOverlay")
-        .classList
-        .add("show");
+    const txt =
+    document.getElementById("loadingText");
+
+
+    if(!overlay || !txt) return;
+
+
+    txt.innerHTML=text;
+
+    overlay.classList.add("show");
 
 }
 
