@@ -721,96 +721,89 @@ ITEMIZE MODULE
 
     <section class="box">
 
-
-        <h2>
-
-            Upload Data
-
-        </h2>
-
-
-
-        <label>
-    Export Shelf Master
-</label>
-
-<input 
-    type="file"
-    id="itemizeMasterFile"
-    accept=".txt,.csv">
-
-
-<br><br>
+<h2>
+Upload Data
+</h2>
 
 
 <label>
-    Scan TXT
+Export Shelf Master
+</label>
+
+<input 
+type="file"
+id="itemizeMasterFile">
+
+
+<label>
+Scan TXT
 </label>
 
 <input
-    type="file"
-    id="itemizeScanFile"
-    accept=".txt,.csv"
-    multiple>
+type="file"
+id="itemizeScanFile"
+multiple>
 
 
 </section>
 
 
-
-
 <section class="actionArea">
 
+<button
+class="actionBtn generateBtn"
+onclick="generateItemize()">
 
-    <button
-        class="actionBtn generateBtn"
-        onclick="generateItemize()">
+⚙ Generate
 
-        ⚙ Generate
-
-    </button>
-
+</button>
 
 
+<button
+class="actionBtn downloadBtn"
+onclick="downloadItemizeExcel()">
 
-    <button
-        class="actionBtn downloadBtn"
-        onclick="downloadItemizeExcel()">
+⬇ Download Excel
 
-        ⬇ Download Excel
-
-    </button>
-
+</button>
 
 
+<button
+class="actionBtn"
+onclick="deleteItemizeData()">
 
-    <button
-        class="actionBtn"
-        onclick="deleteItemizeData()">
+🗑 Delete Data
 
-        🗑 Delete Data
+</button>
 
-    </button>
-    
-    <button
-    id="btnSave"
-    class="actionBtn saveBtn"
-    onclick="saveItemize()"
-    disabled>
 
-    💾 Save
-    
-    </button>
-   <div id="saveStatus" class="saveStatus">
-    🟢 Semua perubahan sudah disimpan
-</div>
+<button
+id="btnSave"
+class="actionBtn saveBtn"
+onclick="saveItemize()"
+disabled>
 
+💾 Save
+
+</button>
+
+</section>
+
+
+
+<!-- ITEMIZE SUMMARY -->
 <div id="itemizeSummary"></div>
 
-<div id="itemizeCounter" class="itemizeCounter"></div>
+
+
+<div id="itemizeCounter"></div>
+
+
 
 <section class="box">
-    <div id="itemizeResult"></div>
+
+<div id="itemizeResult"></div>
+
 </section>
     
 
