@@ -73,7 +73,10 @@ function login(){
     }
 
     msg.innerHTML="";
+
+setTimeout(()=>{
     showLoading("Login...");
+},100);
 
     const url =
         GAS_URL +
@@ -83,8 +86,10 @@ function login(){
 
     console.log(url);
 
-    fetch(url)
-    .then(res=>res.text())
+    setTimeout(()=>{
+
+fetch(url)
+.then(res=>res.text())
     .then(text=>{
 
         console.log("RAW:",text);
@@ -99,6 +104,10 @@ function login(){
 
             localStorage.setItem("storeCode",data.storeCode);
             localStorage.setItem("storeName",data.storeName);
+           localStorage.setItem(
+    "loginTime",
+    Date.now()
+);
 
             updateStoreInfo(data.storeCode,data.storeName);
 
@@ -116,12 +125,15 @@ function login(){
     })
     .catch(err=>{
 
-        hideLoading();
-        console.error(err);
-        msg.innerHTML=err.message;
+    hideLoading();
 
-    });
+    console.error(err);
 
+    msg.innerHTML=err.message;
+
+});
+
+},100);
 }
 
 /* =====================================================
@@ -132,6 +144,35 @@ function login(){
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
+   const loginTime =
+localStorage.getItem("loginTime");
+
+
+if(loginTime){
+
+    const satuJam =
+    60 * 60 * 1000;
+
+
+    if(
+        Date.now() - Number(loginTime)
+        > satuJam
+    ){
+
+        alert(
+        "Session habis, silakan login kembali."
+        );
+
+
+        localStorage.clear();
+
+        location.reload();
+
+        return;
+
+    }
+
+}
 
 
     const storeCode =
@@ -221,6 +262,10 @@ function logout(){
     localStorage.removeItem(
         "storeName"
     );
+
+   localStorage.removeItem(
+    "loginTime"
+);
    
    hasilGlobal=[];
 
