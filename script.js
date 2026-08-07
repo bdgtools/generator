@@ -2012,113 +2012,133 @@ function mergeItemize(oldData,newData){
 
 }
 function tampilkanItemizeSummary(data){
-   
-   let total=data.length;
-   let scanned=0;
-   
-   let unscan=0;
-   
-   let doubleDisplay=0;
-   
-   let wrongArea=0;
-   
-   data.forEach(row=>{
-      
-      if(row.remark==="Scanned")
+
+let total=data.length;
+
+let scanned=0;
+let unscan=0;
+let doubleDisplay=0;
+let wrongArea=0;
+
+
+data.forEach(row=>{
+
+    if(row.remark==="Scanned")
         scanned++;
+
 
     if(row.remark==="Unscan")
         unscan++;
 
+
     if(row.display==="Double Display")
         doubleDisplay++;
+
 
     if(row.display==="Wrong Area")
         wrongArea++;
 
 });
 
+
 const percentage =
 total
-? ((scanned/total)*100).toFixed(2)
-: 0;
-   
-let html=`
+?
+((scanned/total)*100).toFixed(2)
+:
+0;
+
+
+
+let html = `
 
 <div class="summary">
 
-<div class="card total"
-data-filter="all"
-onclick="filterItemize('all')">
-<h3>${total}</h3>
+
+    <div class="card total"
+         data-filter="all"
+         onclick="filterItemize('all')">
+
+        <h3>${total}</h3>
+
+        <p>Total SKU</p>
+
+    </div>
 
 
-<p>Total SKU</p>
 
-</div>
+    <div class="card tally"
+         data-filter="scanned"
+         onclick="filterItemize('scanned')">
 
-<div class="card tally"
-data-filter="scanned"
-onclick="filterItemize('scanned')">
+        <h3>${scanned}</h3>
 
-<h3>${scanned}</h3>
+        <p>Scanned</p>
 
-<p>Scanned</p>
+    </div>
 
-</div>
 
-<div class="card progress"
-data-filter="scanned"
-onclick="filterItemize('scanned')">
 
-<h3>${percentage}%</h3>
 
-<div class="progressBar">
+    <div class="card short"
+         data-filter="unscan"
+         onclick="filterItemize('unscan')">
 
-<div class="progressFill"
-style="width:${percentage}%"></div>
+        <h3>${unscan}</h3>
 
-</div>
+        <p>Unscan</p>
 
-<p>Scan Progress</p>
+    </div>
 
-</div>
 
-<div class="card short"
-onclick="filterItemize('unscan')">
 
-<h3>${unscan}</h3>
 
-<p>Unscan</p>
 
-</div>
+    <div class="card extra"
+         data-filter="wrong"
+         onclick="filterItemize('wrong')">
 
-<div class="card extra"
-onclick="filterItemize('double')">
+        <h3>${wrongArea}</h3>
 
-<h3>${doubleDisplay}</h3>
+        <p>Wrong Area</p>
 
-<p>Double Display</p>
+    </div>
 
-</div>
 
-<div class="card wrongArea"
-onclick="filterItemize('wrong')">
 
-<h3>${wrongArea}</h3>
 
-<p>Wrong Area</p>
 
-</div>
+    <div class="card"
+         data-filter="double"
+         onclick="filterItemize('double')">
+
+        <h3>${doubleDisplay}</h3>
+
+        <p>Double Display</p>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <h3>${percentage}%</h3>
+
+        <p>Progress</p>
+
+    </div>
+
 
 </div>
 
 `;
 
 
+
 document
 .getElementById("itemizeSummary")
 .innerHTML = html;
+
 
 }
 
