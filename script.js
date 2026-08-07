@@ -128,15 +128,41 @@ function login(){
 .then(res => res.text())
 .then(text => {
 
-    console.log(text);
+    console.log("SERVER RAW:", text);
 
     const data = JSON.parse(text);
 
-    console.log(data);
+    console.log("SERVER RESPONSE:", data);
+
+    hideLoading();
+
+    if(data.success){
+
+        localStorage.setItem("storeCode", data.storeCode);
+        localStorage.setItem("storeName", data.storeName);
+
+        document.getElementById("loginPage").style.display="none";
+        document.getElementById("dashboardPage").style.display="block";
+
+        updateStoreInfo(data.storeCode,data.storeName);
+
+        loadItemize();
+
+    }else{
+
+        msg.innerHTML = data.message || "Login gagal";
+
+    }
 
 })
-.catch(err => {
+.catch(err=>{
+
+    hideLoading();
+
     console.error(err);
+
+    msg.innerHTML = err.message;
+
 });
 
         console.log(
