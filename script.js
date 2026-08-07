@@ -2903,23 +2903,21 @@ function updateSaveStatus(changed){
 
     if(changed){
 
-        status.innerHTML =
-        "🟡 Ada perubahan, klik SAVE untuk menyimpan.";
+    status.innerHTML =
+    "🟡 Terdapat perubahan baru, belum disimpan.";
 
-        status.style.background="#fff8e1";
+    status.style.background="#fff8e1";
+    status.style.color="#e65100";
 
-        status.style.color="#e65100";
+}
+   else{
 
-    }else{
+    status.innerHTML =
+    "🟢 Semua perubahan sudah tersimpan.";
 
-        status.innerHTML =
-        "🟢 Semua perubahan sudah disimpan.";
-
-        status.style.background="#e8f5e9";
-
-        status.style.color="#2e7d32";
-
-    }
+    status.style.background="#FFD400";
+    status.style.color="#111";
+   }
 
 }
 let popupTimer;
