@@ -55,201 +55,72 @@ function updateStoreInfo(storeCode,storeName){
 }
 
 
-
-
-
-
-
-
 /* =====================================================
    LOGIN
 ===================================================== */
-
 
 function login(){
 
     console.log("FUNCTION LOGIN JALAN");
 
-
-    const storeCode =
-    document
-    .getElementById("storeCode")
-    .value
-    .trim();
-
-
-
-    const password =
-    document
-    .getElementById("password")
-    .value
-    .trim();
-
-
-
-    const msg =
-    document
-    .getElementById("loginMsg");
-
-
+    const storeCode=document.getElementById("storeCode").value.trim();
+    const password=document.getElementById("password").value.trim();
+    const msg=document.getElementById("loginMsg");
 
     if(!storeCode || !password){
-
-        msg.innerHTML =
-        "Store Code dan Password wajib diisi";
-
+        msg.innerHTML="Store Code dan Password wajib diisi";
         return;
-
     }
-
-
 
     msg.innerHTML="Checking...";
-
     showLoading("Login...");
 
-
-
     const url =
-    GAS_URL +
-    "?action=login" +
-    "&storeCode=" +
-    encodeURIComponent(storeCode) +
-    "&password=" +
-    encodeURIComponent(password);
+        GAS_URL +
+        "?action=login" +
+        "&storeCode=" + encodeURIComponent(storeCode) +
+        "&password=" + encodeURIComponent(password);
 
+    console.log(url);
 
+    fetch(url)
+    .then(res=>res.text())
+    .then(text=>{
 
-    console.log("LOGIN URL:",url);
+        console.log("RAW:",text);
 
+        const data=JSON.parse(text);
 
-
-   fetch(url)
-.then(res => res.text())
-
-    console.log("SERVER RAW:", text);
-
-    const data = JSON.parse(text);
-
-    console.log("SERVER RESPONSE:", data);
-
-    hideLoading();
-
-    if(data.success){
-
-        localStorage.setItem("storeCode", data.storeCode);
-        localStorage.setItem("storeName", data.storeName);
-
-        document.getElementById("loginPage").style.display="none";
-        document.getElementById("dashboardPage").style.display="block";
-
-        updateStoreInfo(data.storeCode,data.storeName);
-
-        loadItemize();
-
-    }else{
-
-        msg.innerHTML = data.message || "Login gagal";
-
-    }
-.catch(err=>{
-
-    hideLoading();
-
-    console.error(err);
-
-    msg.innerHTML = err.message;
-
-});
-    })
-
-
-    .then(data=>{
-
-
-        console.log(
-            "SERVER RESPONSE:",
-            data
-        );
-
+        console.log(data);
 
         hideLoading();
-
-
 
         if(data.success){
 
+            localStorage.setItem("storeCode",data.storeCode);
+            localStorage.setItem("storeName",data.storeName);
 
+            updateStoreInfo(data.storeCode,data.storeName);
 
-            localStorage.setItem(
-                "storeCode",
-                data.storeCode
-            );
-
-
-            localStorage.setItem(
-                "storeName",
-                data.storeName
-            );
-
-
-
-            document
-            .getElementById("loginPage")
-            .style.display="none";
-
-
-
-            document
-            .getElementById("dashboardPage")
-            .style.display="block";
-
-
-
-            updateStoreInfo(
-                data.storeCode,
-                data.storeName
-            );
-
+            document.getElementById("loginPage").style.display="none";
+            document.getElementById("dashboardPage").style.display="block";
 
             loadItemize();
 
+        }else{
 
-
-        }
-        else{
-
-
-            msg.innerHTML =
-            data.message ||
-            "Login gagal";
-
+            msg.innerHTML=data.message;
 
         }
-
-
 
     })
-
-
     .catch(err=>{
 
-
         hideLoading();
-
-
-        console.error(
-            "LOGIN ERROR:",
-            err
-        );
-
-
-        msg.innerHTML =
-        err.message;
-
+        console.error(err);
+        msg.innerHTML=err.message;
 
     });
-
 
 }
 
