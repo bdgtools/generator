@@ -72,7 +72,7 @@ function login(){
         return;
     }
 
-    msg.innerHTML="Checking...";
+    msg.innerHTML="";
     showLoading("Login...");
 
     const url =
