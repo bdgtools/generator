@@ -290,85 +290,48 @@ if(btnSave){
    MODULE CONTROL
 ===================================================== */
 
-
 function openModule(module){
 
+    document.getElementById("dashboardPage").style.display="none";
 
+    document.querySelectorAll(".modulePage")
+    .forEach(el=>el.style.display="none");
 
-    document
-    .getElementById("dashboardPage")
-    .style.display="none";
-
-
-
-
-
-    document
-    .querySelectorAll(".modulePage")
-    .forEach(el=>{
-
-
-        el.style.display="none";
-
-
-    });
-
-
-
-
-
-    const target =
-    document.getElementById(
-        module+"Module"
-    );
-
-
-
-
+    const target=document.getElementById(module+"Module");
 
     if(target){
-
-
         target.style.display="block";
-
-
     }
 
+    // Tampilkan hanya jika modul Itemize
+    const counter=document.getElementById("itemizeCounter");
 
+    if(counter){
+        counter.style.display =
+            module==="itemize"
+            ? "block"
+            : "none";
+    }
 
 }
 
-
-
-
-
-
-
-
-
 function backDashboard(){
-
-
 
     document
     .querySelectorAll(".modulePage")
     .forEach(el=>{
-
-
         el.style.display="none";
-
-
     });
-
-
-
-
 
     document
     .getElementById("dashboardPage")
     .style.display="block";
 
-
+    // Sembunyikan counter Itemize
+    const counter = document.getElementById("itemizeCounter");
+    if(counter){
+        counter.style.display = "none";
+    }
 
 }
 /* =====================================================
