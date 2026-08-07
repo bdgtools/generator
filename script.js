@@ -124,10 +124,20 @@ function login(){
 
 
 
-    fetch(url)
+   fetch(url)
+.then(res => res.text())
+.then(text => {
 
+    console.log(text);
 
-    .then(res=>{
+    const data = JSON.parse(text);
+
+    console.log(data);
+
+})
+.catch(err => {
+    console.error(err);
+});
 
         console.log(
             "HTTP STATUS",
