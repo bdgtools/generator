@@ -152,8 +152,6 @@ function login(){
         msg.innerHTML = data.message || "Login gagal";
 
     }
-
-})
 .catch(err=>{
 
     hideLoading();
