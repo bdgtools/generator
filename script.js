@@ -126,7 +126,6 @@ function login(){
 
    fetch(url)
 .then(res => res.text())
-.then(text => {
 
     console.log("SERVER RAW:", text);
 
@@ -164,14 +163,6 @@ function login(){
     msg.innerHTML = err.message;
 
 });
-
-        console.log(
-            "HTTP STATUS",
-            res.status
-        );
-
-        return res.json();
-
     })
 
 
