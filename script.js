@@ -3832,7 +3832,6 @@ function tampilkanSalesResult(data){
 
 }
 
-```js
 // =====================================================
 // FILTER TANGGAL
 // =====================================================
@@ -3849,10 +3848,8 @@ function filterSalesTable(){
         .getElementById("salesDateTo")
         .value;
 
-
     let filtered =
         [...salesGlobal];
-
 
     // =============================================
     // FILTER DARI TANGGAL
@@ -3869,7 +3866,6 @@ function filterSalesTable(){
 
     }
 
-
     // =============================================
     // FILTER SAMPAI TANGGAL
     // =============================================
@@ -3885,7 +3881,6 @@ function filterSalesTable(){
 
     }
 
-
     // =============================================
     // UPDATE SUMMARY
     // =============================================
@@ -3894,7 +3889,6 @@ function filterSalesTable(){
         filtered
     );
 
-
     // =============================================
     // UPDATE TABLE
     // =============================================
@@ -3902,7 +3896,6 @@ function filterSalesTable(){
     tampilkanSalesResult(
         filtered
     );
-
 
     // =============================================
     // UPDATE GRAPH
@@ -3913,9 +3906,6 @@ function filterSalesTable(){
     );
 
 }
-```
-
-
 
 
 // =====================================================
