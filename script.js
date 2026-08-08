@@ -11,323 +11,477 @@ console.log("MR DIY SCRIPT BERHASIL LOAD");
    MAIN SCRIPT
 ===================================================== */
 
-
 let hasilGlobal = [];
-
 let itemizeGlobal = [];
-
 let isItemizeChanged = false;
 
 let masterGlobal = {};
-let currentFilter="all";
-let currentKeyword="";
+let currentFilter = "all";
+let currentKeyword = "";
 
+// =====================================================
+// SESSION
+// =====================================================
 
-// GOOGLE APPS SCRIPT URL
+const SESSION_DURATION = 60 * 60 * 1000; // 1 jam
+let sessionTimer = null;
 
 const GAS_URL =
-"https://script.google.com/macros/s/AKfycbzPkU1IngIVVAkdqyb4803fjwWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
+"https://script.google.com/macros/s/AKfycbzPk1UIngIVVAkdqyb4803fjWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
 
 
+// =====================================================
+// SESSION ACTIVITY
+// =====================================================
+
+function resetSessionTimer(){
+
+    const storeCode =
+        localStorage.getItem("storeCode");
+
+    if(!storeCode){
+        return;
+    }
+
+    localStorage.setItem(
+        "lastActivity",
+        Date.now()
+    );
+
+    clearTimeout(sessionTimer);
+
+    sessionTimer =
+        setTimeout(
+            autoLogout,
+            SESSION_DURATION
+        );
+}
 
 
+// =====================================================
+// CEK SESSION
+// =====================================================
 
-/* =====================================================
-   STORE INFO
-===================================================== */
+function checkSession(){
 
+    const storeCode =
+        localStorage.getItem("storeCode");
+
+    if(!storeCode){
+        return false;
+    }
+
+    const lastActivity =
+        Number(
+            localStorage.getItem("lastActivity")
+        );
+
+    if(!lastActivity){
+
+        resetSessionTimer();
+
+        return true;
+    }
+
+    const inactive =
+        Date.now() - lastActivity;
+
+    if(inactive >= SESSION_DURATION){
+
+        autoLogout();
+
+        return false;
+    }
+
+    clearTimeout(sessionTimer);
+
+    sessionTimer =
+        setTimeout(
+            autoLogout,
+            SESSION_DURATION - inactive
+        );
+
+    return true;
+}
+
+
+// =====================================================
+// AUTO LOGOUT
+// =====================================================
+
+function autoLogout(){
+
+    clearTimeout(sessionTimer);
+
+    localStorage.removeItem("storeCode");
+    localStorage.removeItem("storeName");
+    localStorage.removeItem("loginTime");
+    localStorage.removeItem("lastActivity");
+
+    hasilGlobal = [];
+    itemizeGlobal = [];
+
+    isItemizeChanged = false;
+
+    const btnSave =
+        document.getElementById("btnSave");
+
+    if(btnSave){
+        btnSave.disabled = true;
+    }
+
+    document
+        .querySelectorAll(".modulePage")
+        .forEach(el=>{
+            el.style.display = "none";
+        });
+
+    const dashboard =
+        document.getElementById("dashboardPage");
+
+    if(dashboard){
+        dashboard.style.display = "none";
+    }
+
+    const loginPage =
+        document.getElementById("loginPage");
+
+    if(loginPage){
+        loginPage.style.display = "block";
+    }
+
+    const storeCodeInput =
+        document.getElementById("storeCode");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    if(storeCodeInput){
+        storeCodeInput.value = "";
+    }
+
+    if(passwordInput){
+        passwordInput.value = "";
+    }
+
+    updateSaveStatus(false);
+
+    showPopup(
+        "Session habis, silakan login kembali.",
+        "⏱"
+    );
+}
+
+
+// =====================================================
+// DETEKSI AKTIVITAS USER
+// =====================================================
+
+[
+    "click",
+    "mousemove",
+    "keydown",
+    "scroll",
+    "touchstart"
+].forEach(eventName=>{
+
+    document.addEventListener(
+        eventName,
+        ()=>{
+            if(
+                localStorage.getItem("storeCode")
+            ){
+                resetSessionTimer();
+            }
+        },
+        {passive:true}
+    );
+
+});
+
+
+// =====================================================
+// STORE INFO
+// =====================================================
 
 function updateStoreInfo(storeCode,storeName){
-
 
     document
     .querySelectorAll(".storeInfo")
     .forEach(el=>{
 
-
         el.innerHTML =
         `${storeCode} - ${storeName || ""}`;
 
-
     });
-
 
 }
 
 
-/* =====================================================
-   LOGIN
-===================================================== */
+// =====================================================
+// LOGIN
+// =====================================================
 
 function login(){
 
     console.log("FUNCTION LOGIN JALAN");
 
-    const storeCode=document.getElementById("storeCode").value.trim();
-    const password=document.getElementById("password").value.trim();
-    const msg=document.getElementById("loginMsg");
+    const storeCode =
+        document
+        .getElementById("storeCode")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("password")
+        .value
+        .trim();
+
+    const msg =
+        document.getElementById("loginMsg");
 
     if(!storeCode || !password){
-        msg.innerHTML="Store Code dan Password wajib diisi";
+
+        msg.innerHTML =
+            "Store Code dan Password wajib diisi";
+
+        showPopup(
+            "Store Code dan Password wajib diisi",
+            "⚠"
+        );
+
         return;
     }
 
-    msg.innerHTML="";
+    msg.innerHTML = "";
 
-setTimeout(()=>{
     showLoading("Login...");
-},100);
 
     const url =
         GAS_URL +
         "?action=login" +
-        "&storeCode=" + encodeURIComponent(storeCode) +
-        "&password=" + encodeURIComponent(password);
+        "&storeCode=" +
+        encodeURIComponent(storeCode) +
+        "&password=" +
+        encodeURIComponent(password);
 
-    console.log(url);
+    fetch(url)
 
-    setTimeout(()=>{
+    .then(res=>res.text())
 
-fetch(url)
-.then(res=>res.text())
     .then(text=>{
 
-        console.log("RAW:",text);
+        console.log("LOGIN RAW:",text);
 
-        const data=JSON.parse(text);
+        let data;
 
-        console.log(data);
+        try{
+
+            data = JSON.parse(text);
+
+        }catch(err){
+
+            throw new Error(
+                "Response server tidak valid"
+            );
+
+        }
 
         hideLoading();
 
         if(data.success){
 
-            localStorage.setItem("storeCode",data.storeCode);
-            localStorage.setItem("storeName",data.storeName);
-           localStorage.setItem(
-    "loginTime",
-    Date.now()
-);
+            localStorage.setItem(
+                "storeCode",
+                data.storeCode
+            );
 
-            updateStoreInfo(data.storeCode,data.storeName);
+            localStorage.setItem(
+                "storeName",
+                data.storeName || ""
+            );
 
-            document.getElementById("loginPage").style.display="none";
-            document.getElementById("dashboardPage").style.display="block";
+            localStorage.setItem(
+                "loginTime",
+                Date.now()
+            );
+
+            localStorage.setItem(
+                "lastActivity",
+                Date.now()
+            );
+
+            updateStoreInfo(
+                data.storeCode,
+                data.storeName
+            );
+
+            document
+                .getElementById("loginPage")
+                .style.display = "none";
+
+            document
+                .getElementById("dashboardPage")
+                .style.display = "block";
+
+            resetSessionTimer();
+
+            showPopup(
+                "Login berhasil",
+                "✔"
+            );
 
             loadItemize();
 
         }else{
 
-            msg.innerHTML=data.message;
+            msg.innerHTML =
+                data.message ||
+                "Login gagal";
+
+            showPopup(
+                data.message ||
+                "Login gagal",
+                "❌"
+            );
 
         }
 
     })
+
     .catch(err=>{
 
-    hideLoading();
+        hideLoading();
 
-    console.error(err);
-
-    msg.innerHTML=err.message;
-
-});
-
-},100);
-}
-
-/* =====================================================
-   AUTO LOGIN SESSION
-===================================================== */
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-   const loginTime =
-localStorage.getItem("loginTime");
-
-
-if(loginTime){
-
-    const satuJam =
-    60 * 60 * 1000;
-
-
-    if(
-        Date.now() - Number(loginTime)
-        > satuJam
-    ){
-
-        alert(
-        "Session habis, silakan login kembali."
+        console.error(
+            "LOGIN ERROR:",
+            err
         );
 
+        msg.innerHTML =
+            err.message;
 
-        localStorage.clear();
-
-        location.reload();
-
-        return;
-
-    }
-
-}
-
-
-    const storeCode =
-    localStorage.getItem("storeCode");
-
-
-
-    const storeName =
-    localStorage.getItem("storeName");
-
-
-
-
-
-    if(storeCode){
-
-
-
-        document
-        .getElementById("loginPage")
-        .style.display="none";
-
-
-
-        document
-        .getElementById("dashboardPage")
-        .style.display="block";
-
-
-
-        updateStoreInfo(
-            storeCode,
-            storeName
+        showPopup(
+            "Gagal koneksi ke server",
+            "❌"
         );
-
-
-
-        loadItemize();
-
-
-    }
-
-
-
-
-    const btn =
-    document.getElementById("loginBtn");
-
-
-
-    if(btn){
-
-
-        btn.addEventListener(
-            "click",
-            login
-        );
-
-
-    }
-
-
-
-});
-
-
-
-
-
-
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-
-function logout(){
-
-
-
-    localStorage.removeItem(
-        "storeCode"
-    );
-
-
-    localStorage.removeItem(
-        "storeName"
-    );
-
-   localStorage.removeItem(
-    "loginTime"
-);
-   
-   hasilGlobal=[];
-
-
-    itemizeGlobal=[];
-
-
-
-
-
-    document
-    .querySelectorAll(".modulePage")
-    .forEach(el=>{
-
-
-        el.style.display="none";
-
 
     });
 
-
-
-
-
-    document
-    .getElementById("dashboardPage")
-    .style.display="none";
-
-
-
-
-
-    document
-    .getElementById("loginPage")
-    .style.display="block";
-
-
-
-
-
-    document
-    .getElementById("storeCode")
-    .value="";
-
-
-
-    document
-    .getElementById("password")
-    .value="";
-   
-   isItemizeChanged = false;
-   
-   updateSaveStatus(false);
-   
-   const btnSave =
-document.getElementById("btnSave");
-
-if(btnSave){
-    btnSave.disabled=true;
 }
 
+
+// =====================================================
+// AUTO LOGIN SAAT PAGE LOAD
+// =====================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    ()=>{
+
+        const storeCode =
+            localStorage.getItem("storeCode");
+
+        if(storeCode){
+
+            if(!checkSession()){
+                return;
+            }
+
+            const storeName =
+                localStorage.getItem("storeName");
+
+            updateStoreInfo(
+                storeCode,
+                storeName
+            );
+
+            document
+                .getElementById("loginPage")
+                .style.display = "none";
+
+            document
+                .getElementById("dashboardPage")
+                .style.display = "block";
+
+            loadItemize();
+
+        }
+
+        const btn =
+            document.getElementById("loginBtn");
+
+        if(btn){
+
+            btn.addEventListener(
+                "click",
+                login
+            );
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// LOGOUT MANUAL
+// =====================================================
+
+function logout(){
+
+    clearTimeout(sessionTimer);
+
+    localStorage.removeItem("storeCode");
+    localStorage.removeItem("storeName");
+    localStorage.removeItem("loginTime");
+    localStorage.removeItem("lastActivity");
+
+    hasilGlobal = [];
+    itemizeGlobal = [];
+
+    isItemizeChanged = false;
+
+    document
+        .querySelectorAll(".modulePage")
+        .forEach(el=>{
+            el.style.display = "none";
+        });
+
+    document
+        .getElementById("dashboardPage")
+        .style.display = "none";
+
+    document
+        .getElementById("loginPage")
+        .style.display = "block";
+
+    document
+        .getElementById("storeCode")
+        .value = "";
+
+    document
+        .getElementById("password")
+        .value = "";
+
+    updateSaveStatus(false);
+
+    const btnSave =
+        document.getElementById("btnSave");
+
+    if(btnSave){
+        btnSave.disabled = true;
+    }
+
+    showPopup(
+        "Logout berhasil",
+        "✔"
+    );
+
 }
+
+
 
 
 
