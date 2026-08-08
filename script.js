@@ -3884,27 +3884,6 @@ function filterSalesTable(){
 
 }
 
-```javascript
-// =====================================================
-// SALES FILTER
-// =====================================================
-
-function filterSalesTable(){
-
-    const from =
-        document
-        .getElementById("salesDateFrom")
-        .value;
-
-    const to =
-        document
-        .getElementById("salesDateTo")
-        .value;
-
-
-    let filtered =
-        [...salesGlobal];
-
 
     // =============================================
     // FILTER DARI TANGGAL
