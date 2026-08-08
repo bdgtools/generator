@@ -27,7 +27,7 @@ const SESSION_DURATION = 60 * 60 * 1000; // 1 jam
 let sessionTimer = null;
 
 const GAS_URL =
-"https://script.google.com/macros/s/AKfycbzPk1UIngIVVAkdqyb4803fjWj-xFblnUo2xSypsF1QWvZWh6fK8X_XZUYmMBdT1Xz/exec";
+"https://script.google.com/macros/s/AKfycby-6p9xJjnL_kAF40w9YBjEixvZlrZUNL6DrvA5MDIWbOSTS_kGMCBxtp_tDxw_ffvc/exec";
 
 
 // =====================================================
