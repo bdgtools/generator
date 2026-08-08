@@ -3829,9 +3829,91 @@ function filterSalesTable(){
 
 }
 
+```javascript
+// =====================================================
+// SALES FILTER
+// =====================================================
+
+function filterSalesTable(){
+
+    const from =
+        document
+        .getElementById("salesDateFrom")
+        .value;
+
+    const to =
+        document
+        .getElementById("salesDateTo")
+        .value;
+
+
+    let filtered =
+        [...salesGlobal];
+
+
+    // =============================================
+    // FILTER DARI TANGGAL
+    // =============================================
+
+    if(from){
+
+        filtered =
+            filtered.filter(row => {
+
+                return row.isoDate >= from;
+
+            });
+
+    }
+
+
+    // =============================================
+    // FILTER SAMPAI TANGGAL
+    // =============================================
+
+    if(to){
+
+        filtered =
+            filtered.filter(row => {
+
+                return row.isoDate <= to;
+
+            });
+
+    }
+
+
+    // =============================================
+    // UPDATE SUMMARY
+    // =============================================
+
+    tampilkanSalesSummary(
+        filtered
+    );
+
+
+    // =============================================
+    // UPDATE TABLE
+    // =============================================
+
+    tampilkanSalesResult(
+        filtered
+    );
+
+
+    // =============================================
+    // UPDATE GRAPH
+    // =============================================
+
+    tampilkanSalesChart(
+        filtered
+    );
+
+}
+
 
 // =====================================================
-// RESET FILTER
+// RESET SALES FILTER
 // =====================================================
 
 function resetSalesFilter(){
@@ -3844,12 +3926,22 @@ function resetSalesFilter(){
         .getElementById("salesDateTo")
         .value = "";
 
+
+    // kembali ke seluruh data bulan
+
     tampilkanSalesSummary(
         salesGlobal
     );
+
 
     tampilkanSalesResult(
         salesGlobal
     );
 
+
+    tampilkanSalesChart(
+        salesGlobal
+    );
+
 }
+```
