@@ -221,6 +221,7 @@ function updateStoreInfo(storeCode,storeName){
 // =====================================================
 // LOGIN
 // =====================================================
+
 function login(){
 
     console.log("FUNCTION LOGIN JALAN");
@@ -260,10 +261,14 @@ function login(){
     msg.innerHTML = "";
 
     // =============================================
-    // TAMPILKAN LOADING
+    // LOADING
     // =============================================
 
     showLoading("Login...");
+
+    // =============================================
+    // URL
+    // =============================================
 
     const url =
         GAS_URL +
@@ -273,18 +278,20 @@ function login(){
         "&password=" +
         encodeURIComponent(password);
 
-    console.log(
-        "LOGIN URL:",
-        url
-    );
+    console.log("LOGIN URL:", url);
 
     // =============================================
-    // REQUEST LOGIN
+    // FETCH
     // =============================================
 
     fetch(url)
 
     .then(res => {
+
+        console.log(
+            "LOGIN STATUS:",
+            res.status
+        );
 
         if(!res.ok){
 
@@ -313,17 +320,20 @@ function login(){
             data =
                 JSON.parse(text);
 
-        }catch(err){
+        }
+
+        catch(err){
+
+            console.error(
+                "JSON ERROR:",
+                err
+            );
 
             throw new Error(
                 "Response server tidak valid"
             );
 
         }
-
-        // =========================================
-        // MATIKAN LOADING
-        // =========================================
 
         hideLoading();
 
@@ -333,9 +343,14 @@ function login(){
 
         if(data.success){
 
+            console.log(
+                "LOGIN BERHASIL:",
+                data
+            );
+
             localStorage.setItem(
                 "storeCode",
-                data.storeCode
+                data.storeCode || storeCode
             );
 
             localStorage.setItem(
@@ -354,8 +369,8 @@ function login(){
             );
 
             updateStoreInfo(
-                data.storeCode,
-                data.storeName
+                data.storeCode || storeCode,
+                data.storeName || ""
             );
 
             document
@@ -373,6 +388,10 @@ function login(){
                 "✔"
             );
 
+            // =====================================
+            // LOAD ITEMIZE
+            // =====================================
+
             loadItemize();
 
         }
@@ -382,6 +401,11 @@ function login(){
         // =========================================
 
         else{
+
+            console.warn(
+                "LOGIN DITOLAK:",
+                data.message
+            );
 
             msg.innerHTML =
                 data.message ||
@@ -398,10 +422,6 @@ function login(){
     })
 
     .catch(err => {
-
-        // =========================================
-        // PASTIKAN LOADING MATI
-        // =========================================
 
         hideLoading();
 
@@ -422,7 +442,6 @@ function login(){
     });
 
 }
-```
 
 
 // =====================================================
@@ -1187,7 +1206,6 @@ function prosesStock(fisik,sistem){
 ===================================================== */
 
 
-
 function tampilkanSummary(data){
 
 
@@ -1227,9 +1245,6 @@ function tampilkanSummary(data){
 
 
     });
-
-
-
 
 
     let html=`
