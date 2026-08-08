@@ -1400,14 +1400,6 @@ function tampilkanHasil(data){
 
 }
 
-
-
-
-
-
-
-
-
 /* =====================================================
    SEARCH & FILTER
 ===================================================== */
@@ -1477,8 +1469,6 @@ function filterTabel(){
 
 
 
-
-
         if(filter==="minus"){
 
 
@@ -1487,8 +1477,6 @@ function filterTabel(){
 
 
         }
-
-
 
 
 
@@ -1970,13 +1958,6 @@ function parseItemizeScan(text){
 
 
 }
-
-
-
-
-
-
-
 
 
 function prosesItemize(master,scan){
@@ -3200,3 +3181,675 @@ function hideLoading(){
 
 }
 
+// =====================================================
+// SALES CHECK MODULE
+// =====================================================
+
+let salesGlobal = [];
+
+
+// =====================================================
+// BULAN
+// =====================================================
+
+const salesMonths = [
+
+    {
+        value: "1",
+        name: "Januari"
+    },
+
+    {
+        value: "2",
+        name: "Februari"
+    },
+
+    {
+        value: "3",
+        name: "Maret"
+    },
+
+    {
+        value: "4",
+        name: "April"
+    },
+
+    {
+        value: "5",
+        name: "Mei"
+    },
+
+    {
+        value: "6",
+        name: "Juni"
+    },
+
+    {
+        value: "7",
+        name: "Juli"
+    },
+
+    {
+        value: "8",
+        name: "Agustus"
+    },
+
+    {
+        value: "9",
+        name: "September"
+    },
+
+    {
+        value: "10",
+        name: "Oktober"
+    },
+
+    {
+        value: "11",
+        name: "November"
+    },
+
+    {
+        value: "12",
+        name: "Desember"
+    }
+
+];
+
+
+// =====================================================
+// PILIH TAHUN
+// =====================================================
+
+function loadSalesMonths(){
+
+    const year =
+        document
+        .getElementById("salesYear")
+        .value;
+
+    const monthBox =
+        document
+        .getElementById("salesMonthBox");
+
+    const monthSelect =
+        document
+        .getElementById("salesMonth");
+
+    if(!year){
+
+        monthBox.style.display = "none";
+
+        return;
+
+    }
+
+    monthSelect.innerHTML = `
+        <option value="">
+            Pilih Bulan
+        </option>
+    `;
+
+    salesMonths.forEach(month=>{
+
+        monthSelect.innerHTML += `
+
+            <option value="${month.value}">
+                ${month.name}
+            </option>
+
+        `;
+
+    });
+
+    monthBox.style.display = "block";
+
+    document
+        .getElementById("salesStoreBox")
+        .style.display = "none";
+
+    document
+        .getElementById("salesSummary")
+        .style.display = "none";
+
+    document
+        .getElementById("salesFilterBox")
+        .style.display = "none";
+
+    document
+        .getElementById("salesTableBox")
+        .style.display = "none";
+
+}
+
+
+// =====================================================
+// LOAD STORE
+// =====================================================
+
+function loadSalesStores(){
+
+    const year =
+        document
+        .getElementById("salesYear")
+        .value;
+
+    const month =
+        document
+        .getElementById("salesMonth")
+        .value;
+
+    const storeBox =
+        document
+        .getElementById("salesStoreBox");
+
+    const storeSelect =
+        document
+        .getElementById("salesStore");
+
+    if(!year || !month){
+
+        storeBox.style.display = "none";
+
+        return;
+
+    }
+
+    showLoading(
+        "Loading Store..."
+    );
+
+    fetch(
+        GAS_URL +
+        "?action=getSalesStores" +
+        "&year=" +
+        encodeURIComponent(year) +
+        "&month=" +
+        encodeURIComponent(month)
+    )
+
+    .then(res=>res.json())
+
+    .then(result=>{
+
+        hideLoading();
+
+        if(!result.success){
+
+            showPopup(
+                result.message ||
+                "Gagal mengambil Store",
+                "❌"
+            );
+
+            return;
+        }
+
+        storeSelect.innerHTML = `
+
+            <option value="">
+                Pilih Store
+            </option>
+
+        `;
+
+        result.stores.forEach(store=>{
+
+            storeSelect.innerHTML += `
+
+                <option value="${store.code}">
+                    ${store.code}
+                    ${store.name
+                        ? "- " + store.name
+                        : ""}
+                </option>
+
+            `;
+
+        });
+
+        storeBox.style.display = "block";
+
+        document
+            .getElementById("salesSummary")
+            .style.display = "none";
+
+        document
+            .getElementById("salesFilterBox")
+            .style.display = "none";
+
+        document
+            .getElementById("salesTableBox")
+            .style.display = "none";
+
+    })
+
+    .catch(err=>{
+
+        hideLoading();
+
+        console.error(
+            "SALES STORE ERROR:",
+            err
+        );
+
+        showPopup(
+            "Gagal koneksi ke server",
+            "❌"
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// LOAD SALES DATA
+// =====================================================
+
+function loadSalesData(){
+
+    const year =
+        document
+        .getElementById("salesYear")
+        .value;
+
+    const month =
+        document
+        .getElementById("salesMonth")
+        .value;
+
+    const store =
+        document
+        .getElementById("salesStore")
+        .value;
+
+    if(!year || !month || !store){
+
+        return;
+
+    }
+
+    showLoading(
+        "Loading Sales..."
+    );
+
+    fetch(
+        GAS_URL +
+        "?action=getSalesData" +
+        "&year=" +
+        encodeURIComponent(year) +
+        "&month=" +
+        encodeURIComponent(month) +
+        "&store=" +
+        encodeURIComponent(store)
+    )
+
+    .then(res=>res.json())
+
+    .then(result=>{
+
+        hideLoading();
+
+        if(!result.success){
+
+            showPopup(
+                result.message ||
+                "Data Sales tidak ditemukan",
+                "❌"
+            );
+
+            return;
+        }
+
+        salesGlobal =
+            result.data || [];
+
+        tampilkanSalesSummary(
+            salesGlobal
+        );
+
+        tampilkanSalesResult(
+            salesGlobal
+        );
+
+        document
+            .getElementById("salesSummary")
+            .style.display = "block";
+
+        document
+            .getElementById("salesFilterBox")
+            .style.display = "block";
+
+        document
+            .getElementById("salesTableBox")
+            .style.display = "block";
+
+    })
+
+    .catch(err=>{
+
+        hideLoading();
+
+        console.error(
+            "SALES DATA ERROR:",
+            err
+        );
+
+        showPopup(
+            "Gagal koneksi ke server",
+            "❌"
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// FORMAT RUPIAH
+// =====================================================
+
+function formatRupiah(value){
+
+    const number =
+        Number(value) || 0;
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }
+    ).format(number);
+
+}
+
+
+// =====================================================
+// FORMAT ANGKA
+// =====================================================
+
+function formatNumber(value){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            maximumFractionDigits: 2
+        }
+    ).format(
+        Number(value) || 0
+    );
+
+}
+
+
+// =====================================================
+// SUMMARY
+// =====================================================
+
+function tampilkanSalesSummary(data){
+
+    let totalSales = 0;
+    let totalTransaction = 0;
+
+    data.forEach(row=>{
+
+        totalSales +=
+            Number(row.sales) || 0;
+
+        totalTransaction +=
+            Number(row.transaction) || 0;
+
+    });
+
+
+    /*
+       UPT dan ATV dihitung dari
+       total data periode.
+    */
+
+    const totalUPT =
+        data.length
+        ? data.reduce(
+            (sum,row)=>
+                sum +
+                (
+                    Number(row.upt) || 0
+                ),
+            0
+        ) / data.length
+        : 0;
+
+
+    const ATV =
+        totalTransaction > 0
+        ? totalSales /
+          totalTransaction
+        : 0;
+
+
+    document
+        .getElementById("salesTotal")
+        .innerHTML =
+        formatRupiah(
+            totalSales
+        );
+
+
+    document
+        .getElementById("salesTransaction")
+        .innerHTML =
+        formatNumber(
+            totalTransaction
+        );
+
+
+    document
+        .getElementById("salesUPT")
+        .innerHTML =
+        formatNumber(
+            totalUPT
+        );
+
+
+    document
+        .getElementById("salesATV")
+        .innerHTML =
+        formatRupiah(
+            ATV
+        );
+
+}
+
+
+// =====================================================
+// SALES TABLE
+// =====================================================
+
+function tampilkanSalesResult(data){
+
+    let html = `
+
+        <div style="overflow-x:auto">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Tanggal</th>
+
+                    <th>Sales</th>
+
+                    <th>Transaksi</th>
+
+                    <th>UPT</th>
+
+                    <th>ATV</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    if(data.length === 0){
+
+        html += `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    style="text-align:center"
+                >
+                    Tidak ada data
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    data.forEach(row=>{
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${row.date}
+                </td>
+
+                <td>
+                    ${formatRupiah(
+                        row.sales
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.transaction
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.upt
+                    )}
+                </td>
+
+                <td>
+                    ${formatRupiah(
+                        row.atv
+                    )}
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("salesResult")
+        .innerHTML = html;
+
+}
+
+
+// =====================================================
+// FILTER TANGGAL
+// =====================================================
+
+function filterSalesTable(){
+
+    const from =
+        document
+        .getElementById("salesDateFrom")
+        .value;
+
+    const to =
+        document
+        .getElementById("salesDateTo")
+        .value;
+
+
+    let data =
+        [...salesGlobal];
+
+
+    if(from){
+
+        data =
+            data.filter(row=>
+                row.isoDate >= from
+            );
+
+    }
+
+
+    if(to){
+
+        data =
+            data.filter(row=>
+                row.isoDate <= to
+            );
+
+    }
+
+
+    tampilkanSalesSummary(
+        data
+    );
+
+    tampilkanSalesResult(
+        data
+    );
+
+}
+
+
+// =====================================================
+// RESET FILTER
+// =====================================================
+
+function resetSalesFilter(){
+
+    document
+        .getElementById("salesDateFrom")
+        .value = "";
+
+    document
+        .getElementById("salesDateTo")
+        .value = "";
+
+    tampilkanSalesSummary(
+        salesGlobal
+    );
+
+    tampilkanSalesResult(
+        salesGlobal
+    );
+
+}
