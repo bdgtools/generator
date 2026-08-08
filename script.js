@@ -3447,6 +3447,10 @@ function loadSalesStores(){
 // LOAD SALES DATA
 // =====================================================
 
+// =====================================================
+// LOAD SALES DATA
+// =====================================================
+
 function loadSalesData(){
 
     const year =
@@ -3464,15 +3468,18 @@ function loadSalesData(){
         .getElementById("salesStore")
         .value;
 
+
     if(!year || !month || !store){
 
         return;
 
     }
 
+
     showLoading(
         "Loading Sales..."
     );
+
 
     fetch(
         GAS_URL +
@@ -3485,11 +3492,18 @@ function loadSalesData(){
         encodeURIComponent(store)
     )
 
-    .then(res=>res.json())
 
-    .then(result=>{
+    .then(res => res.json())
+
+
+    .then(result => {
 
         hideLoading();
+
+
+        // =============================================
+        // CEK RESPONSE
+        // =============================================
 
         if(!result.success){
 
@@ -3500,48 +3514,82 @@ function loadSalesData(){
             );
 
             return;
+
         }
+
+
+        // =============================================
+        // SIMPAN DATA
+        // =============================================
 
         salesGlobal =
             result.data || [];
+
+
+        // =============================================
+        // TAMPILKAN SUMMARY
+        // =============================================
 
         tampilkanSalesSummary(
             salesGlobal
         );
 
+
+        // =============================================
+        // TAMPILKAN TABLE
+        // =============================================
+
         tampilkanSalesResult(
             salesGlobal
         );
 
-       tampilkanSalesChart(
-          salesGlobal
-       );
+
+        // =============================================
+        // TAMPILKAN CHART
+        // =============================================
+
+        tampilkanSalesChart(
+            salesGlobal
+        );
+
+
+        // =============================================
+        // TAMPILKAN CONTAINER
+        // =============================================
 
         document
             .getElementById("salesSummary")
             .style.display = "block";
 
+
         document
             .getElementById("salesFilterBox")
             .style.display = "block";
+
 
         document
             .getElementById("salesTableBox")
             .style.display = "block";
 
-    })
-       document
-    .getElementById("salesChartBox")
-    .style.display = "block";
 
-    .catch(err=>{
+        document
+            .getElementById("salesChartBox")
+            .style.display = "block";
+
+
+    })
+
+
+    .catch(err => {
 
         hideLoading();
+
 
         console.error(
             "SALES DATA ERROR:",
             err
         );
+
 
         showPopup(
             "Gagal koneksi ke server",
