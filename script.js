@@ -3513,6 +3513,10 @@ function loadSalesData(){
             salesGlobal
         );
 
+       tampilkanSalesChart(
+          salesGlobal
+       );
+
         document
             .getElementById("salesSummary")
             .style.display = "block";
@@ -3526,6 +3530,9 @@ function loadSalesData(){
             .style.display = "block";
 
     })
+       document
+    .getElementById("salesChartBox")
+    .style.display = "block";
 
     .catch(err=>{
 
@@ -3945,3 +3952,307 @@ function resetSalesFilter(){
 
 }
 ```
+```javascript
+// =====================================================
+// SALES CHART
+// =====================================================
+
+let salesChartInstance = null;
+let salesTransactionChartInstance = null;
+
+
+// =====================================================
+// TAMPILKAN SALES CHART
+// =====================================================
+
+function tampilkanSalesChart(data){
+
+    const chartBox =
+        document
+        .getElementById("salesChartBox");
+
+
+    if(!chartBox){
+        return;
+    }
+
+
+    if(!data || data.length === 0){
+
+        chartBox.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    chartBox.style.display =
+        "block";
+
+
+    // =============================================
+    // DATA
+    // =============================================
+
+    const labels =
+        data.map(row =>
+            row.date
+        );
+
+
+    const salesData =
+        data.map(row =>
+            Number(row.sales) || 0
+        );
+
+
+    const transactionData =
+        data.map(row =>
+            Number(row.transaction) || 0
+        );
+
+
+    // =============================================
+    // SALES CHART
+    // =============================================
+
+    const salesCanvas =
+        document
+        .getElementById("salesChart");
+
+
+    if(!salesCanvas){
+        return;
+    }
+
+
+    // Hancurkan chart lama
+
+    if(salesChartInstance){
+
+        salesChartInstance.destroy();
+
+    }
+
+
+    salesChartInstance =
+        new Chart(
+            salesCanvas,
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Sales",
+
+                            data:
+                                salesData,
+
+                            tension:
+                                0.3,
+
+                            fill:
+                                false,
+
+                            borderWidth:
+                                2,
+
+                            pointRadius:
+                                4
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    interaction: {
+
+                        mode:
+                            "index",
+
+                        intersect:
+                            false
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display:
+                                true
+
+                        },
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label:
+                                    function(context){
+
+                                        return (
+                                            "Sales: " +
+                                            formatRupiah(
+                                                context.raw
+                                            )
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero:
+                                true,
+
+                            ticks: {
+
+                                callback:
+                                    function(value){
+
+                                        return formatRupiah(
+                                            value
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    // =============================================
+    // TRANSACTION CHART
+    // =============================================
+
+    const transactionCanvas =
+        document
+        .getElementById(
+            "salesTransactionChart"
+        );
+
+
+    if(!transactionCanvas){
+        return;
+    }
+
+
+    if(
+        salesTransactionChartInstance
+    ){
+
+        salesTransactionChartInstance
+            .destroy();
+
+    }
+
+
+    salesTransactionChartInstance =
+        new Chart(
+            transactionCanvas,
+            {
+
+                type:
+                    "bar",
+
+                data: {
+
+                    labels:
+                        labels,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Transaksi",
+
+                            data:
+                                transactionData,
+
+                            borderWidth:
+                                1
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive:
+                        true,
+
+                    maintainAspectRatio:
+                        false,
+
+                    plugins: {
+
+                        legend: {
+
+                            display:
+                                true
+
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero:
+                                true,
+
+                            ticks: {
+
+                                precision:
+                                    0
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+```
+
