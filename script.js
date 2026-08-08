@@ -221,8 +221,6 @@ function updateStoreInfo(storeCode,storeName){
 // =====================================================
 // LOGIN
 // =====================================================
-
-```javascript
 function login(){
 
     console.log("FUNCTION LOGIN JALAN");
