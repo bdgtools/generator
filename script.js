@@ -3832,7 +3832,7 @@ function tampilkanSalesResult(data){
 
 }
 
-
+```js
 // =====================================================
 // FILTER TANGGAL
 // =====================================================
@@ -3850,39 +3850,8 @@ function filterSalesTable(){
         .value;
 
 
-    let data =
+    let filtered =
         [...salesGlobal];
-
-
-    if(from){
-
-        data =
-            data.filter(row=>
-                row.isoDate >= from
-            );
-
-    }
-
-
-    if(to){
-
-        data =
-            data.filter(row=>
-                row.isoDate <= to
-            );
-
-    }
-
-
-    tampilkanSalesSummary(
-        data
-    );
-
-    tampilkanSalesResult(
-        data
-    );
-
-}
 
 
     // =============================================
@@ -3942,6 +3911,12 @@ function filterSalesTable(){
     tampilkanSalesChart(
         filtered
     );
+
+}
+```
+
+
+
 
 // =====================================================
 // RESET SALES FILTER
@@ -4276,5 +4251,3 @@ function tampilkanSalesChart(data){
         );
 
 }
-```
-
