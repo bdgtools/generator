@@ -3799,7 +3799,13 @@ function tampilkanSalesResult(data){
 
                     <th>Sales</th>
 
+                    <th>Target</th>
+
                     <th>Transaksi</th>
+
+                    <th>Traffic</th>
+
+                    <th>Qty Sold</th>
 
                     <th>UPT</th>
 
@@ -3821,7 +3827,7 @@ function tampilkanSalesResult(data){
             <tr>
 
                 <td
-                    colspan="5"
+                    colspan="8"
                     style="text-align:center"
                 >
                     Tidak ada data
@@ -3851,8 +3857,26 @@ function tampilkanSalesResult(data){
                 </td>
 
                 <td>
+                    ${formatRupiah(
+                        row.target
+                    )}
+                </td>
+
+                <td>
                     ${formatNumber(
                         row.transaction
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.traffic
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.qtySold
                     )}
                 </td>
 
@@ -3891,7 +3915,6 @@ function tampilkanSalesResult(data){
         .innerHTML = html;
 
 }
-
 // =====================================================
 // FILTER TANGGAL
 // =====================================================
