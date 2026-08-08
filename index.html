@@ -578,19 +578,23 @@ STOCK MODULE
 
 </div>
 
-
 <!-- ======================================================
 SALES MODULE
 ====================================================== -->
 
-<div id="salesModule" class="container modulePage" style="display:none">
-
+<div
+    id="salesModule"
+    class="container modulePage"
+    style="display:none"
+>
 
     <header class="header">
 
         <div class="userInfo">
 
-            👤 <span class="storeInfo"></span>
+            👤
+
+            <span class="storeInfo"></span>
 
         </div>
 
@@ -599,8 +603,9 @@ SALES MODULE
 
             <img
                 src="logo mrdiy.png"
-                class="logo">
-
+                class="logo"
+                alt="MR DIY"
+            >
 
             <div class="headerText">
 
@@ -614,7 +619,6 @@ SALES MODULE
 
             </div>
 
-
         </div>
 
 
@@ -624,32 +628,213 @@ SALES MODULE
 
         </button>
 
-
     </header>
 
 
-
+    <!-- ==================================================
+    SALES NAVIGATION
+    ================================================== -->
 
     <section class="box">
 
-
         <h2>
-
-            Sales Checker
-
+            Sales Check
         </h2>
 
+        <div class="salesNavigation">
 
-        <p>
+            <div class="salesSelectBox">
 
-            Module masih dalam pengembangan.
+                <label>
+                    Tahun
+                </label>
 
-        </p>
+                <select
+                    id="salesYear"
+                    onchange="loadSalesMonths()"
+                >
 
+                    <option value="">
+                        Pilih Tahun
+                    </option>
+
+                    <option value="2026">
+                        2026
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="salesSelectBox"
+                id="salesMonthBox"
+                style="display:none"
+            >
+
+                <label>
+                    Bulan
+                </label>
+
+                <select
+                    id="salesMonth"
+                    onchange="loadSalesStores()"
+                >
+
+                    <option value="">
+                        Pilih Bulan
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="salesSelectBox"
+                id="salesStoreBox"
+                style="display:none"
+            >
+
+                <label>
+                    Store
+                </label>
+
+                <select
+                    id="salesStore"
+                    onchange="loadSalesData()"
+                >
+
+                    <option value="">
+                        Pilih Store
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
 
     </section>
 
 
+    <!-- ==================================================
+    SALES SUMMARY
+    ================================================== -->
+
+    <div
+        id="salesSummary"
+        style="display:none"
+    >
+
+        <div class="summary">
+
+            <div class="card total">
+
+                <h3 id="salesTotal">
+                    0
+                </h3>
+
+                <p>
+                    Total Sales
+                </p>
+
+            </div>
+
+
+            <div class="card tally">
+
+                <h3 id="salesTransaction">
+                    0
+                </h3>
+
+                <p>
+                    Transaksi
+                </p>
+
+            </div>
+
+
+            <div class="card extra">
+
+                <h3 id="salesUPT">
+                    0
+                </h3>
+
+                <p>
+                    UPT
+                </p>
+
+            </div>
+
+
+            <div class="card short">
+
+                <h3 id="salesATV">
+                    0
+                </h3>
+
+                <p>
+                    ATV
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+    SALES FILTER
+    ================================================== -->
+
+    <section
+        class="box"
+        id="salesFilterBox"
+        style="display:none"
+    >
+
+        <div class="filterBar">
+
+            <input
+                type="date"
+                id="salesDateFrom"
+                onchange="filterSalesTable()"
+            >
+
+            <input
+                type="date"
+                id="salesDateTo"
+                onchange="filterSalesTable()"
+            >
+
+            <button
+                class="actionBtn"
+                onclick="resetSalesFilter()"
+            >
+                Reset
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+    SALES TABLE
+    ================================================== -->
+
+    <section
+        class="box"
+        id="salesTableBox"
+        style="display:none"
+    >
+
+        <div id="salesResult"></div>
+
+    </section>
 
 </div>
 
