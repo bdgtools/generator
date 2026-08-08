@@ -222,6 +222,7 @@ function updateStoreInfo(storeCode,storeName){
 // LOGIN
 // =====================================================
 
+```javascript
 function login(){
 
     console.log("FUNCTION LOGIN JALAN");
@@ -241,6 +242,10 @@ function login(){
     const msg =
         document.getElementById("loginMsg");
 
+    // =============================================
+    // VALIDASI
+    // =============================================
+
     if(!storeCode || !password){
 
         msg.innerHTML =
@@ -256,6 +261,10 @@ function login(){
 
     msg.innerHTML = "";
 
+    // =============================================
+    // TAMPILKAN LOADING
+    // =============================================
+
     showLoading("Login...");
 
     const url =
@@ -266,19 +275,45 @@ function login(){
         "&password=" +
         encodeURIComponent(password);
 
+    console.log(
+        "LOGIN URL:",
+        url
+    );
+
+    // =============================================
+    // REQUEST LOGIN
+    // =============================================
+
     fetch(url)
 
-    .then(res=>res.text())
+    .then(res => {
 
-    .then(text=>{
+        if(!res.ok){
 
-        console.log("LOGIN RAW:",text);
+            throw new Error(
+                "Server error: " +
+                res.status
+            );
+
+        }
+
+        return res.text();
+
+    })
+
+    .then(text => {
+
+        console.log(
+            "LOGIN RAW:",
+            text
+        );
 
         let data;
 
         try{
 
-            data = JSON.parse(text);
+            data =
+                JSON.parse(text);
 
         }catch(err){
 
@@ -288,7 +323,15 @@ function login(){
 
         }
 
+        // =========================================
+        // MATIKAN LOADING
+        // =========================================
+
         hideLoading();
+
+        // =========================================
+        // LOGIN BERHASIL
+        // =========================================
 
         if(data.success){
 
@@ -334,7 +377,13 @@ function login(){
 
             loadItemize();
 
-        }else{
+        }
+
+        // =========================================
+        // LOGIN GAGAL
+        // =========================================
+
+        else{
 
             msg.innerHTML =
                 data.message ||
@@ -350,7 +399,11 @@ function login(){
 
     })
 
-    .catch(err=>{
+    .catch(err => {
+
+        // =========================================
+        // PASTIKAN LOADING MATI
+        // =========================================
 
         hideLoading();
 
@@ -360,7 +413,8 @@ function login(){
         );
 
         msg.innerHTML =
-            err.message;
+            err.message ||
+            "Gagal koneksi ke server";
 
         showPopup(
             "Gagal koneksi ke server",
@@ -370,6 +424,7 @@ function login(){
     });
 
 }
+```
 
 
 // =====================================================
@@ -3395,17 +3450,13 @@ function loadSalesStores(){
 
         result.stores.forEach(store=>{
 
-            storeSelect.innerHTML += `
+           storeSelect.innerHTML += `
 
-                <option value="${store.code}">
-                    ${store.code}
-                    ${store.name
-                        ? "- " + store.name
-                        : ""}
-                </option>
+    <option value="${store.code}">
+        ${store.code}
+    </option>
 
-            `;
-
+`;
         });
 
         storeBox.style.display = "block";
