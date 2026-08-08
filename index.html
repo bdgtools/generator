@@ -785,6 +785,68 @@ SALES MODULE
 
     </div>
 
+    ```html
+<!-- ==================================================
+SALES CHART
+================================================== -->
+
+<section
+    class="box"
+    id="salesChartBox"
+    style="display:none"
+>
+
+    <h2>
+        Sales Harian
+    </h2>
+
+    <div
+        style="
+            width:100%;
+            overflow-x:auto;
+        "
+    >
+
+        <canvas
+            id="salesChart"
+            style="
+                min-width:700px;
+                height:350px;
+            "
+        ></canvas>
+
+    </div>
+
+
+    <h2
+        style="
+            margin-top:30px;
+        "
+    >
+        Transaksi Harian
+    </h2>
+
+    <div
+        style="
+            width:100%;
+            overflow-x:auto;
+        "
+    >
+
+        <canvas
+            id="salesTransactionChart"
+            style="
+                min-width:700px;
+                height:350px;
+            "
+        ></canvas>
+
+    </div>
+
+</section>
+```
+
+
 
     <!-- ==================================================
     SALES FILTER
